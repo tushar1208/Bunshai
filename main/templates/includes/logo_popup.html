@@ -1,0 +1,15 @@
+{%load static%}
+<!-- templates/includes/logo_popup.html -->
+<div class="modal modal-dark" id="logoModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Our Logo</h2>
+            <button class="modal-close" onclick="hideLogoPopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB Logo" style="max-width: 100%;">
+        </div>
+    </div>
+</div>

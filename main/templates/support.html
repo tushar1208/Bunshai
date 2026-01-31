@@ -1,0 +1,695 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Support Center{% endblock %}
+{% block page_subtitle %}24/7 Technical Support & Assistance{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/support.css' %}">
+<!-- Hero Section -->
+<section class="support-hero">
+    <div class="container">
+        <h1>We're Here to Help</h1>
+        <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; opacity: 0.9;">
+            24/7 technical support and customer service for all your needs
+        </p>
+    </div>
+</section>
+
+<!-- Support Options -->
+<section class="page-content">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 40px; color: var(--dark); font-size: 2.5rem;">
+            How Can We Help You?
+        </h2>
+
+        <div class="support-options">
+            <div class="support-card">
+                <i class="fas fa-headset"></i>
+                <h3>Live Chat Support</h3>
+                <p>Get instant answers from our support team through live chat. Available 24/7 for all customers.</p>
+                <button onclick="openLiveChat()" class="cta-btn" style="padding: 12px 30px; font-size: 1rem;">
+                    Start Live Chat
+                </button>
+            </div>
+
+            <div class="support-card">
+                <i class="fas fa-phone-alt"></i>
+                <h3>Phone Support</h3>
+                <p>Speak directly with our technical experts. Available during business hours for priority issues.</p>
+                <button onclick="callSupport()" class="cta-btn" style="padding: 12px 30px; font-size: 1rem;">
+                    Call Now
+                </button>
+            </div>
+
+            <div class="support-card">
+                <i class="fas fa-ticket-alt"></i>
+                <h3>Ticket System</h3>
+                <p>Submit detailed support tickets for complex issues. We'll get back to you within 2 hours.</p>
+                <button onclick="scrollToTicketForm()" class="cta-btn" style="padding: 12px 30px; font-size: 1rem;">
+                    Submit Ticket
+                </button>
+            </div>
+        </div>
+
+        <!-- Contact Methods -->
+        <div style="margin: 80px 0;">
+            <h2 style="text-align: center; margin-bottom: 40px; color: var(--dark); font-size: 2.2rem;">
+                Contact Information
+            </h2>
+
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="contact-method">
+                    <i class="fas fa-headset"></i>
+                    <div class="contact-info">
+                        <h4>24/7 Technical Support</h4>
+                        <p>Available round the clock for urgent technical issues</p>
+                        <small>Response time: Immediate for critical issues</small>
+                    </div>
+                    <a href="tel:+918091700280" style="color: var(--primary); text-decoration: none; font-weight: bold;">
+                        Call Now
+                    </a>
+                </div>
+
+                <div class="contact-method">
+                    <i class="fas fa-envelope"></i>
+                    <div class="contact-info">
+                        <h4>Email Support</h4>
+                        <p>support@bunshai.com</p>
+                        <small>Response time: Within 2 hours during business hours</small>
+                    </div>
+                    <a href="mailto:support@bunshai.com" style="color: var(--primary); text-decoration: none; font-weight: bold;">
+                        Email Now
+                    </a>
+                </div>
+
+                <div class="contact-method">
+                    <i class="fab fa-whatsapp"></i>
+                    <div class="contact-info">
+                        <h4>WhatsApp Support</h4>
+                        <p>+91 8091401208</p>
+                        <small>Available for quick queries and file sharing</small>
+                    </div>
+                    <a href="https://wa.me/918091401208?text=Hi%20BunShai%20Support%20Team" 
+                       target="_blank" 
+                       style="color: var(--primary); text-decoration: none; font-weight: bold;">
+                        Chat Now
+                    </a>
+                </div>
+
+                <div class="contact-method">
+                    <i class="fas fa-comments"></i>
+                    <div class="contact-info">
+                        <h4>Live Chat</h4>
+                        <p>Available on website</p>
+                        <small>Click the chat icon in bottom right corner</small>
+                    </div>
+                    <button onclick="openLiveChat()" 
+                            style="background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">
+                        Open Chat
+                    </button>
+                </div>
+
+                <div class="contact-method">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="contact-info">
+                        <h4>Office Address</h4>
+                        <p>BunShai TECHNOHUB Support Center</p>
+                        <small>Himachal Pradesh, India • Remote support available globally</small>
+                    </div>
+                    <button onclick="openMaps()" 
+                            style="background: transparent; color: var(--primary); border: 2px solid var(--primary); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">
+                        View Map
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--dark); font-size: 2.5rem; margin-bottom: 20px;">
+                    Frequently Asked Questions
+                </h2>
+                <p style="text-align: center; color: var(--dark-light); max-width: 600px; margin: 0 auto 40px;">
+                    Find quick answers to common questions
+                </p>
+
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            How do I reset my password?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>To reset your password:</p>
+                            <ol>
+                                <li>Go to the login page and click "Forgot Password"</li>
+                                <li>Enter your registered email address</li>
+                                <li>Check your email for reset instructions</li>
+                                <li>Click the link in the email and create a new password</li>
+                                <li>If you don't receive the email, check your spam folder</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            What are your support hours?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Our support availability:</p>
+                            <ul>
+                                <li><strong>24/7 Technical Support:</strong> Available for critical system issues</li>
+                                <li><strong>Phone Support:</strong> Monday-Friday, 9 AM - 6 PM IST</li>
+                                <li><strong>Email Support:</strong> 24/7 with response within 2 hours during business hours</li>
+                                <li><strong>Live Chat:</strong> 24/7 for all customers</li>
+                                <li><strong>Emergency Support:</strong> Available 24/7 for priority issues</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            How do I submit a support ticket?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>You can submit a support ticket through multiple channels:</p>
+                            <ul>
+                                <li>Use the ticket form on this page</li>
+                                <li>Email support@bunshai.com with your issue</li>
+                                <li>Use the support portal in your account dashboard</li>
+                                <li>Submit through our mobile app (coming soon)</li>
+                            </ul>
+                            <p><strong>Please include:</strong></p>
+                            <ul>
+                                <li>Detailed description of the issue</li>
+                                <li>Screenshots or error messages</li>
+                                <li>Steps to reproduce the issue</li>
+                                <li>Your account/order number if applicable</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            What is your average response time?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Our response times vary based on priority:</p>
+                            <ul>
+                                <li><strong>Critical Issues:</strong> Within 15 minutes (24/7)</li>
+                                <li><strong>High Priority:</strong> Within 1 hour</li>
+                                <li><strong>Medium Priority:</strong> Within 2 hours</li>
+                                <li><strong>Low Priority:</strong> Within 4 hours</li>
+                                <li><strong>General Inquiries:</strong> Within 24 hours</li>
+                            </ul>
+                            <p>Response times are during business hours unless marked as critical.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            Do you provide phone support?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, we provide phone support:</p>
+                            <ul>
+                                <li><strong>Support Number:</strong> +91 8091700280</li>
+                                <li><strong>Availability:</strong> Monday-Friday, 9 AM - 6 PM IST</li>
+                                <li><strong>Emergency Line:</strong> +91 8091401208 (24/7 for critical issues)</li>
+                                <li><strong>WhatsApp Support:</strong> +91 8091401208 (24/7)</li>
+                            </ul>
+                            <p>For faster service, please have your account information ready when calling.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            How do I track my support ticket?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>You can track your support ticket through:</p>
+                            <ul>
+                                <li><strong>Email Updates:</strong> You'll receive email notifications for all ticket updates</li>
+                                <li><strong>Support Portal:</strong> Log in to your account dashboard</li>
+                                <li><strong>Ticket Reference:</strong> Use the ticket ID provided in confirmation email</li>
+                                <li><strong>Live Chat:</strong> Ask our agents for updates using your ticket ID</li>
+                            </ul>
+                            <p>All tickets receive a unique ID that you can use for tracking.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Ticket Form -->
+        <div class="support-form-container" id="ticket-form">
+            <h2 style="text-align: center; margin-bottom: 40px; color: var(--dark);">
+                Submit Support Ticket
+            </h2>
+
+            <form id="supportTicketForm" class="contact-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" name="name" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" name="email" required placeholder="your.email@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" placeholder="+91 1234567890">
+                    </div>
+                    <div class="form-group">
+                        <label>Account/Order Number</label>
+                        <input type="text" name="account_number" placeholder="If applicable">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Issue Type *</label>
+                    <select name="issue_type" required>
+                        <option value="">Select issue type</option>
+                        <option value="technical">Technical Issue</option>
+                        <option value="billing">Billing Question</option>
+                        <option value="account">Account Issue</option>
+                        <option value="service">Service Request</option>
+                        <option value="bug">Bug Report</option>
+                        <option value="feature">Feature Request</option>
+                        <option value="general">General Inquiry</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Priority *</label>
+                    <select name="priority" required>
+                        <option value="">Select priority</option>
+                        <option value="low">Low - General question</option>
+                        <option value="medium">Medium - Minor issue</option>
+                        <option value="high">High - Affecting work</option>
+                        <option value="critical">Critical - System down</option>
+                    </select>
+                    <small style="color: var(--dark-light); display: block; margin-top: 5px;">
+                        Please select appropriate priority to help us serve you better
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject *</label>
+                    <input type="text" name="subject" required placeholder="Brief description of your issue">
+                </div>
+
+                <div class="form-group">
+                    <label>Detailed Description *</label>
+                    <textarea name="description" rows="6" required 
+                              placeholder="Please provide detailed information about your issue..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Attachments (Optional)</label>
+                    <div style="position: relative;">
+                        <input type="file" name="attachments" multiple 
+                               accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.txt"
+                               style="padding: 15px; border: 2px dashed #ddd; border-radius: var(--border-radius); width: 100%;">
+                        <div style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary);">
+                            <i class="fas fa-paperclip"></i>
+                        </div>
+                    </div>
+                    <small style="color: var(--dark-light); display: block; margin-top: 8px;">
+                        You can attach screenshots, error messages, or relevant documents (Max 10MB total)
+                    </small>
+                </div>
+
+                <div class="form-checkbox" style="margin: 20px 0;">
+                    <input type="checkbox" id="supportConsentCheck" required>
+                    <label for="supportConsentCheck">
+                        I consent to having my data processed in accordance with the 
+                        <a href="/privacy" style="color: var(--primary); text-decoration: none; font-weight: 500;">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" style="width: 100%; padding: 18px; font-size: 1.2rem;">
+                    <i class="fas fa-paper-plane"></i> Submit Ticket
+                </button>
+            </form>
+        </div>
+
+        <!-- Emergency Banner -->
+        <div class="emergency-banner">
+            <h3 style="color: white; margin-bottom: 15px; font-size: 1.8rem;">
+                <i class="fas fa-exclamation-triangle"></i> Emergency Support
+            </h3>
+            <p style="margin-bottom: 20px; font-size: 1.1rem; opacity: 0.9;">
+                For critical system outages or security incidents requiring immediate attention
+            </p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="tel:+918091401208" 
+                   style="background: white; color: #dc2626; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-phone-alt"></i> Emergency Hotline
+                </a>
+                <button onclick="openEmergencyChat()" 
+                        style="background: transparent; color: white; border: 2px solid white; padding: 12px 30px; border-radius: 30px; cursor: pointer; font-weight: bold; display: inline-flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-headset"></i> Emergency Chat
+                </button>
+            </div>
+        </div>
+
+        <!-- Support Resources -->
+        <div style="margin: 80px 0;">
+            <h2 style="text-align: center; margin-bottom: 40px; color: var(--dark); font-size: 2.2rem;">
+                Additional Resources
+            </h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                <div style="background: white; padding: 30px; border-radius: var(--border-radius-lg); text-align: center; box-shadow: var(--shadow);">
+                    <i class="fas fa-book" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h4 style="color: var(--dark); margin-bottom: 15px;">Knowledge Base</h4>
+                    <p style="color: var(--dark-light); margin-bottom: 20px;">
+                        Browse our comprehensive documentation and tutorials
+                    </p>
+                    <button onclick="openKnowledgeBase()" 
+                            style="background: var(--light); color: var(--primary); border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 500;">
+                        Access Now
+                    </button>
+                </div>
+
+                <div style="background: white; padding: 30px; border-radius: var(--border-radius-lg); text-align: center; box-shadow: var(--shadow);">
+                    <i class="fas fa-video" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h4 style="color: var(--dark); margin-bottom: 15px;">Video Tutorials</h4>
+                    <p style="color: var(--dark-light); margin-bottom: 20px;">
+                        Watch step-by-step guides and how-to videos
+                    </p>
+                    <button onclick="openVideoTutorials()" 
+                            style="background: var(--light); color: var(--primary); border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 500;">
+                        Watch Now
+                    </button>
+                </div>
+
+                <div style="background: white; padding: 30px; border-radius: var(--border-radius-lg); text-align: center; box-shadow: var(--shadow);">
+                    <i class="fas fa-comments" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h4 style="color: var(--dark); margin-bottom: 15px;">Community Forum</h4>
+                    <p style="color: var(--dark-light); margin-bottom: 20px;">
+                        Connect with other users and share solutions
+                    </p>
+                    <button onclick="openCommunityForum()" 
+                            style="background: var(--light); color: var(--primary); border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 500;">
+                        Join Community
+                    </button>
+                </div>
+
+                <div style="background: white; padding: 30px; border-radius: var(--border-radius-lg); text-align: center; box-shadow: var(--shadow);">
+                    <i class="fas fa-bug" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h4 style="color: var(--dark); margin-bottom: 15px;">Report Bug</h4>
+                    <p style="color: var(--dark-light); margin-bottom: 20px;">
+                        Report software bugs or security vulnerabilities
+                    </p>
+                    <button onclick="scrollToTicketForm()" 
+                            style="background: var(--light); color: var(--primary); border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 500;">
+                        Report Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // FAQ Toggle
+    function toggleFAQ(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('i');
+        
+        // Close all other FAQs
+        document.querySelectorAll('.faq-question').forEach(q => {
+            if (q !== element) {
+                q.classList.remove('active');
+                q.nextElementSibling.classList.remove('show');
+                q.querySelector('i').classList.remove('fa-chevron-up');
+                q.querySelector('i').classList.add('fa-chevron-down');
+            }
+        });
+        
+        // Toggle current FAQ
+        element.classList.toggle('active');
+        answer.classList.toggle('show');
+        
+        if (answer.classList.contains('show')) {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        } else {
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        }
+    }
+
+    // Open Live Chat
+    function openLiveChat() {
+        // In a real implementation, this would open your chat widget
+        alert('Opening live chat... (In production, this would connect to your chat service)');
+        
+        // Simulate chat opening
+        const chatWindow = document.createElement('div');
+        chatWindow.id = 'chat-window';
+        chatWindow.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+        `;
+        
+        chatWindow.innerHTML = `
+            <div style="background: var(--primary); color: white; padding: 15px; border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-headset"></i>
+                    <strong>Live Chat Support</strong>
+                </div>
+                <button onclick="closeChat()" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;">×</button>
+            </div>
+            <div style="flex: 1; padding: 20px; overflow-y: auto; background: var(--light);">
+                <div style="background: white; padding: 15px; border-radius: var(--border-radius); margin-bottom: 15px; box-shadow: var(--shadow);">
+                    <p style="margin: 0; color: var(--dark);"><strong>Support Agent:</strong> Hello! How can I help you today?</p>
+                </div>
+            </div>
+            <div style="padding: 15px; border-top: 1px solid #e5e7eb;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" placeholder="Type your message..." style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: var(--border-radius);">
+                    <button style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: var(--border-radius); cursor: pointer;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(chatWindow);
+    }
+
+    function closeChat() {
+        const chatWindow = document.getElementById('chat-window');
+        if (chatWindow) {
+            chatWindow.remove();
+        }
+    }
+
+    // Call Support
+    function callSupport() {
+        if (confirm('Call support number: +91 8091700280?')) {
+            window.location.href = 'tel:+918091700280';
+        }
+    }
+
+    // Scroll to ticket form
+    function scrollToTicketForm() {
+        window.scrollTo({
+            top: document.getElementById('ticket-form').offsetTop - 100,
+            behavior: 'smooth'
+        });
+        
+        // Focus on name field
+        setTimeout(() => {
+            document.querySelector('#ticket-form input[name="name"]').focus();
+        }, 500);
+    }
+
+    // Open Maps
+    function openMaps() {
+        window.open('https://www.google.com/maps/place/Himachal+Pradesh', '_blank');
+    }
+
+    // Open Emergency Chat
+    function openEmergencyChat() {
+        alert('Opening emergency chat... Redirecting to WhatsApp.');
+        window.open('https://wa.me/918091401208?text=EMERGENCY%20SUPPORT%20NEEDED', '_blank');
+    }
+
+    // Support resources functions
+    function openKnowledgeBase() {
+        alert('Knowledge base will open in a new tab. (In production, link to your documentation)');
+    }
+
+    function openVideoTutorials() {
+        alert('Video tutorials will open in a new tab. (In production, link to your YouTube channel)');
+    }
+
+    function openCommunityForum() {
+        alert('Community forum will open in a new tab. (In production, link to your forum)');
+    }
+
+    // Support Ticket Form Submission
+    document.getElementById('supportTicketForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+        
+        // Validate file size
+        const attachments = this.querySelector('input[name="attachments"]');
+        let totalSize = 0;
+        
+        if (attachments.files.length > 0) {
+            for (let file of attachments.files) {
+                totalSize += file.size;
+            }
+            
+            if (totalSize > 10 * 1024 * 1024) { // 10MB
+                alert('Total attachment size must be less than 10MB');
+                return false;
+            }
+        }
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        submitBtn.disabled = true;
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Generate ticket ID
+            const ticketId = 'TKT-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 20px;
+                border-radius: var(--border-radius);
+                z-index: 9999;
+                box-shadow: var(--shadow-lg);
+                animation: slideIn 0.3s ease;
+                max-width: 400px;
+            `;
+            
+            successMessage.innerHTML = `
+                <div style="display: flex; align-items: flex-start; gap: 15px;">
+                    <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <strong style="font-size: 1.1rem;">Ticket Submitted Successfully!</strong>
+                        <div style="margin-top: 10px; font-size: 0.95rem; opacity: 0.9;">
+                            <p>Your ticket ID: <strong>${ticketId}</strong></p>
+                            <p>We'll contact you within 2 hours.</p>
+                            <p style="margin-top: 10px; font-size: 0.9rem;">
+                                Save this ID for tracking: <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">${ticketId}</code>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(successMessage);
+            
+            // Reset form
+            this.reset();
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            
+            // Remove success message after 10 seconds
+            setTimeout(() => {
+                successMessage.remove();
+            }, 10000);
+            
+            // Store ticket ID in localStorage for tracking
+            const tickets = JSON.parse(localStorage.getItem('supportTickets') || '[]');
+            tickets.push({
+                id: ticketId,
+                date: new Date().toISOString(),
+                subject: data.subject,
+                status: 'open'
+            });
+            localStorage.setItem('supportTickets', JSON.stringify(tickets));
+            
+        }, 2000);
+        
+        return false;
+    });
+
+    // Initialize form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('supportTicketForm');
+        if (form) {
+            // Add real-time validation
+            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (!this.value.trim()) {
+                        this.style.borderColor = '#ef4444';
+                    } else {
+                        this.style.borderColor = '#ddd';
+                    }
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.style.borderColor = '#ddd';
+                    }
+                });
+            });
+        }
+        
+        // Check for existing tickets
+        const tickets = JSON.parse(localStorage.getItem('supportTickets') || '[]');
+        if (tickets.length > 0) {
+            console.log(`You have ${tickets.length} support ticket(s)`);
+        }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Ctrl + / to open chat
+        if (e.ctrlKey && e.key === '/') {
+            e.preventDefault();
+            openLiveChat();
+        }
+        
+        // Ctrl + T to open ticket form
+        if (e.ctrlKey && e.key === 't') {
+            e.preventDefault();
+            scrollToTicketForm();
+        }
+    });
+</script>
+{% endblock %}

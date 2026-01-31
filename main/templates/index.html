@@ -1,0 +1,727 @@
+<!-- {% extends "base.html" %} -->
+<!-- {% load static %} -->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Video Section -->
+<section class="video-hero" id="home">
+    <div class="video-container">
+        <video autoplay muted loop playsinline id="hero-video">
+            <source src="{% static 'video/3.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-overlay">
+            <div class="video-content">
+                <h1 class="animate__animated animate__fadeInDown">INNOVATION THAT INSPIRES</h1>
+                <p class="animate__animated animate__fadeInUp">We create digital experiences that transform brands and drive business growth</p>
+                <div class="hero-buttons">
+                    <button class="cta-btn animate__animated animate__fadeIn" onclick="showProposalPopup()">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </button>
+                    <!-- <a href="#services" class="cta-btn-secondary animate__animated animate__fadeIn">
+                        <i class="fas fa-play-circle"></i> Watch Demo
+                    </a> -->
+                </div>
+                <div class="scroll-indicator">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Counter -->
+<section class="stats-counter">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h3 class="counter" data-target="50">0</h3>
+                <p>Projects Delivered</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="counter" data-target="30">0</h3>
+                <p>Happy Clients</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 class="counter" data-target="15">0</h3>
+                <p>Countries Served</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h3 class="counter" data-target="5">0</h3>
+                <p>Years Experience</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Preview -->
+<section class="services-preview" id="services">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Services</h2>
+            <p class="subtitle">Comprehensive technology solutions for your business growth</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3>Web Development</h3>
+                <p>Custom websites and web applications built with the latest technologies for optimal performance.</p>
+                <div class="service-features">
+                    <span>React.js</span>
+                    <span>Node.js</span>
+                    <span>Django</span>
+                </div>
+                <a href="{% url 'services' %}" class="service-link">
+                    Learn More <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Mobile App Development</h3>
+                <p>iOS and Android applications designed for performance, engagement, and user satisfaction.</p>
+                <div class="service-features">
+                    <span>React Native</span>
+                    <span>Flutter</span>
+                    <span>Swift</span>
+                </div>
+                <a href="{% url 'services' %}" class="service-link">
+                    Learn More <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI Solutions</h3>
+                <p>Intelligent systems that learn, adapt, and automate your business processes for efficiency.</p>
+                <div class="service-features">
+                    <span>Machine Learning</span>
+                    <span>Chatbots</span>
+                    <span>Predictive Analytics</span>
+                </div>
+                <a href="{% url 'services' %}" class="service-link">
+                    Learn More <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3>Cloud Solutions</h3>
+                <p>Scalable cloud infrastructure and services for secure, reliable, and cost-effective operations.</p>
+                <div class="service-features">
+                    <span>AWS</span>
+                    <span>Azure</span>
+                    <span>Google Cloud</span>
+                </div>
+                <a href="{% url 'services' %}" class="service-link">
+                    Learn More <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Cybersecurity</h3>
+                <p>Comprehensive security solutions to protect your digital assets from evolving threats.</p>
+                <div class="service-features">
+                    <span>Network Security</span>
+                    <span>Data Protection</span>
+                    <span>Threat Detection</span>
+                </div>
+                <a href="{% url 'services' %}" class="service-link">
+                    Learn More <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Digital Marketing</h3>
+                <p>Data-driven marketing strategies to increase online visibility and drive business growth.</p>
+                <div class="service-features">
+                    <span>SEO</span>
+                    <span>Social Media</span>
+                    <span>PPC</span>
+                </div>
+                <a href="{% url 'services' %}" class="service-link">
+                    Learn More <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="services-cta">
+            <a href="{% url 'services' %}" class="btn-primary">
+                <i class="fas fa-eye"></i> View All Services
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Image Slider Section -->
+<section class="image-slider-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Projects</h2>
+            <p class="subtitle">Showcasing our recent successful implementations</p>
+        </div>
+        
+        <div class="slider-container">
+            <div class="slider" id="image-slider">
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                        alt="E-commerce Platform">
+                    <div class="slide-content">
+                        <h3>E-commerce Platform</h3>
+                        <p>Fully responsive online store with payment integration and inventory management</p>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">MongoDB</span>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                        alt="Fitness Mobile App">
+                    <div class="slide-content">
+                        <h3>Fitness Mobile App</h3>
+                        <p>Workout tracking application with personalized plans and progress analytics</p>
+                        <span class="tech-tag">React Native</span>
+                        <span class="tech-tag">Firebase</span>
+                        <span class="tech-tag">Redux</span>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1534723328310-e82dad3ee43f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                        alt="AI Chatbot System">
+                    <div class="slide-content">
+                        <h3>AI Chatbot System</h3>
+                        <p>Intelligent customer service automation with natural language processing</p>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">TensorFlow</span>
+                        <span class="tech-tag">NLP</span>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                        alt="Analytics Dashboard">
+                    <div class="slide-content">
+                        <h3>Analytics Dashboard</h3>
+                        <p>Real-time business intelligence and data visualization platform</p>
+                        <span class="tech-tag">Vue.js</span>
+                        <span class="tech-tag">D3.js</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                        alt="IoT Smart Home">
+                    <div class="slide-content">
+                        <h3>Smart Home System</h3>
+                        <p>IoT-based home automation and control system with mobile integration</p>
+                        <span class="tech-tag">IoT</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">MongoDB</span>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                        alt="Banking App UI">
+                    <div class="slide-content">
+                        <h3>Banking App UI</h3>
+                        <p>Modern financial application with intuitive user experience and security</p>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">TypeScript</span>
+                        <span class="tech-tag">Material UI</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slider-controls">
+            <button class="nav-btn prev" id="slider-prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="slider-dots" id="slider-dots"></div>
+            <button class="nav-btn next" id="slider-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        
+        <div class="portfolio-cta">
+            <a id="openProposalBtn"  class="btn-secondary" >
+                <i class="fas fa-briefcase"></i> Start Your Project
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="why-choose-us">
+    <div class="container">
+        <div class="section-header">
+            <h2>Why Choose BunShai TECHNOHUB</h2>
+            <p class="subtitle">What sets us apart from the competition</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Fast Delivery</h3>
+                <p>We deliver projects on time with agile methodology and efficient project management.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Enterprise Security</h3>
+                <p>Bank-level security protocols and compliance with international standards.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Round-the-clock technical support and maintenance for uninterrupted operations.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3>Transparent Pricing</h3>
+                <p>No hidden costs. Clear pricing models with detailed breakdowns.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Expert Team</h3>
+                <p>50+ certified professionals with diverse technology expertise.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h3>Quality Guarantee</h3>
+                <p>100% satisfaction guarantee with comprehensive testing and quality assurance.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Preview -->
+<section class="about-preview" id="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>About BunShai TECHNOHUB</h2>
+                <p class="lead">We are a global technology partner dedicated to delivering innovative solutions that drive business growth and digital transformation.</p>
+                
+                <div class="about-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>5+ years of industry experience</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>50+ successful projects delivered</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>24/7 dedicated support team</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Agile development methodology</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Global client base across 15+ countries</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>ISO certified quality processes</span>
+                    </div>
+                </div>
+                
+                <div class="about-cta">
+                    <a href="{% url 'about' %}" class="btn-primary">
+                        <i class="fas fa-info-circle"></i> Learn More About Us
+                    </a>
+                    <a href="{% url 'contact' %}" class="btn-secondary">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                    alt="Our Team at Work" loading="lazy">
+                <div class="image-overlay">
+                    <div class="overlay-content">
+                        <h4>Expert Team</h4>
+                        <p>50+ Technology Experts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technology Stack -->
+<section class="tech-stack-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Technology Stack</h2>
+            <p class="subtitle">Cutting-edge technologies we work with</p>
+        </div>
+        
+        <div class="tech-slider">
+            <div class="tech-items">
+                <div class="tech-item">
+                    <i class="fab fa-react"></i>
+                    <span>React.js</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-node-js"></i>
+                    <span>Node.js</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-python"></i>
+                    <span>Python</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-aws"></i>
+                    <span>AWS</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-docker"></i>
+                    <span>Docker</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-google"></i>
+                    <span>Google Cloud</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-react"></i>
+                    <span>React Native</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-vuejs"></i>
+                    <span>Vue.js</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-microsoft"></i>
+                    <span>Azure</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-database"></i>
+                    <span>MongoDB</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-database"></i>
+                    <span>PostgreSQL</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-laravel"></i>
+                    <span>Laravel</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <h2>What Our Clients Say</h2>
+            <p class="subtitle">Success stories from businesses we've transformed</p>
+        </div>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p>"BunShai transformed our outdated website into a modern, responsive platform that has significantly increased our online engagement and conversions."</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Sarah Johnson">
+                    </div>
+                    <div class="author-info">
+                        <h4>Sarah Johnson</h4>
+                        <p>CEO, TechInnovate Solutions</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p>"The mobile app developed by BunShai has exceeded our expectations. Their attention to detail and commitment to quality is impressive. User engagement increased by 300%."</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen">
+                    </div>
+                    <div class="author-info">
+                        <h4>Michael Chen</h4>
+                        <p>Product Manager, Global Retail</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p>"Working with BunShai has been a game-changer for our business. Their AI solutions have streamlined our operations and improved efficiency by 40%."</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Emily Rodriguez">
+                    </div>
+                    <div class="author-info">
+                        <h4>Emily Rodriguez</h4>
+                        <p>Operations Director, FutureTech</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p>"BunShai combines technical excellence with reliability. Their team delivered a scalable, high-quality solution on time, and the results have been impressive. "</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        <img src="{%static 'images/client/client1.jpeg' %}" alt="Dr. Anuradha Thakur">
+                    </div>
+                    <div class="author-info">
+                        <h4>Dr. Anuradha Thakur</h4>
+                        <p>PhD Chemistry, Pretoria University, South Africa</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="testimonials-cta">
+            <a href="#" class="btn-secondary" onclick="showProposalPopup()">
+                <i class="fas fa-comment"></i> Share Your Experience
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Process Overview -->
+<section class="process-overview">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Process</h2>
+            <p class="subtitle">How we deliver successful projects every time</p>
+        </div>
+        
+        <div class="process-timeline">
+            <div class="process-step">
+                <div class="step-number">01</div>
+                <div class="step-content">
+                    <h3>Discovery</h3>
+                    <p>Understanding your business goals and requirements through detailed analysis</p>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">02</div>
+                <div class="step-content">
+                    <h3>Planning</h3>
+                    <p>Creating a comprehensive project roadmap with clear milestones and deliverables</p>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">03</div>
+                <div class="step-content">
+                    <h3>Development</h3>
+                    <p>Building your solution using agile methodologies with regular updates</p>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">04</div>
+                <div class="step-content">
+                    <h3>Testing</h3>
+                    <p>Rigorous quality assurance and testing to ensure flawless performance</p>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">05</div>
+                <div class="step-content">
+                    <h3>Deployment</h3>
+                    <p>Seamless launch and implementation with full support and training</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Business?</h2>
+            <p>Let's discuss your project and create a customized solution that drives results.</p>
+            <div class="cta-buttons">
+                <button class="btn-primary" onclick="showProposalPopup()">
+                    <i class="fas fa-calendar-check"></i> Schedule Free Consultation
+                </button>
+                <a href="tel:+918091401208" class="btn-secondary">
+                    <i class="fas fa-phone"></i> Call Us Now
+                </a>
+            </div>
+            <div class="contact-info">
+                <p><i class="fas fa-envelope"></i> team.bunshailogicloop@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +91 8091401208</p>
+                <p><i class="fas fa-clock"></i> Available 24/7</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Preview -->
+<section class="blog-preview">
+    <div class="container">
+        <div class="section-header">
+            <h2>Latest Insights</h2>
+            <p class="subtitle">Stay updated with technology trends and insights</p>
+        </div>
+        
+        <div class="blog-grid">
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="AI Trends">
+                    <div class="blog-category">AI/ML</div>
+                </div>
+                <div class="blog-content">
+                    <h3>AI Revolution in 2024</h3>
+                    <p>Discover how artificial intelligence is transforming businesses across industries.</p>
+                    <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cloud Computing">
+                    <div class="blog-category">Cloud</div>
+                </div>
+                <div class="blog-content">
+                    <h3>Cloud Migration Strategies</h3>
+                    <p>Best practices for successful cloud migration and optimization.</p>
+                    <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cybersecurity">
+                    <div class="blog-category">Security</div>
+                </div>
+                <div class="blog-content">
+                    <h3>Cybersecurity Trends 2024</h3>
+                    <p>Essential security measures every business should implement.</p>
+                    <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Subscription -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-content">
+            <div class="newsletter-text">
+                <h2>Stay Updated</h2>
+                <p>Subscribe to our newsletter for the latest technology insights and updates.</p>
+            </div>
+            <div class="newsletter-form">
+                <form id="newsletter-form">
+                    <input type="email" placeholder="Enter your email address" required>
+                    <button type="submit">
+                        <i class="fas fa-paper-plane"></i> Subscribe
+                    </button>
+                </form>
+                <p class="privacy-note">We respect your privacy. Unsubscribe at any time.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New {{ form_type }} - BunShai TECHNOHUB</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .email-header {
+            background: linear-gradient(135deg, #7d0022, #a73356);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .email-header .subtitle {
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        .email-body {
+            padding: 30px;
+        }
+        .form-details {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .detail-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .detail-value {
+            color: #0f172a;
+            font-size: 16px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #7d0022, #a73356);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        .email-footer {
+            background: #f1f5f9;
+            padding: 20px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .footer-links {
+            margin-top: 15px;
+        }
+        .footer-links a {
+            color: #7d0022;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>New {{ form_type }}</h1>
+            <p class="subtitle">BunShai TECHNOHUB</p>
+        </div>
+        
+        <div class="email-body">
+            <p>Hello Team,</p>
+            <p>A new {{ form_type|lower }} has been submitted through the website.</p>
+            
+            <div class="form-details">
+                {% for key, value in data.items %}
+                <div class="detail-item">
+                    <div class="detail-label">{{ key|title }}</div>
+                    <div class="detail-value">{{ value|default:"Not provided" }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <p>
+                <strong>Timestamp:</strong> {{ timestamp }}<br>
+                <strong>IP Address:</strong> {{ request_ip|default:"Not available" }}
+            </p>
+            
+            <p>Please review this submission and take appropriate action.</p>
+            
+            <a href="{{ admin_url }}" class="cta-button">View in Admin Panel</a>
+        </div>
+        
+        <div class="email-footer">
+            <p>&copy; {% now "Y" %} BunShai TECHNOHUB. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://bunshai.com">Website</a>
+                <a href="https://bunshai.com/admin">Admin Panel</a>
+                <a href="mailto:support@bunshai.com">Support</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

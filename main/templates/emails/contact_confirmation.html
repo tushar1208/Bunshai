@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #7d0022; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; background: #f8f9fa; }
+        .footer { background: #f1f1f1; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+        .btn { background: #7d0022; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; }
+        .verification-box { background: white; padding: 20px; border: 2px dashed #7d0022; text-align: center; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BunShai TECHNOHUB Newsletter</h1>
+            <p>Welcome to Our Community!</p>
+        </div>
+        
+        <div class="content">
+            <h2>Welcome Aboard, {{ subscriber.email }}!</h2>
+            
+            <p>Thank you for subscribing to the BunShai TECHNOHUB newsletter. You're now part of our exclusive community of technology enthusiasts and business professionals.</p>
+            
+            <div class="verification-box">
+                <h3>📧 Subscription Confirmed</h3>
+                <p>You will receive:</p>
+                <ul style="text-align: left; margin: 15px 0;">
+                    <li>Monthly technology insights</li>
+                    <li>Exclusive offers and discounts</li>
+                    <li>Product announcements</li>
+                    <li>Industry news and trends</li>
+                </ul>
+            </div>
+            
+            <p><strong>What to expect:</strong></p>
+            <ul>
+                <li>Your first newsletter will arrive in the next 24 hours</li>
+                <li>We respect your inbox - no spam, only valuable content</li>
+                <li>You can unsubscribe at any time</li>
+            </ul>
+            
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="https://bunshai.com/blog" class="btn">Read Our Latest Articles</a>
+            </p>
+            
+            <p><small>Verification Token: {{ verification_token|slice:":8" }}... (For internal use)</small></p>
+        </div>
+        
+        <div class="footer">
+            <p>© {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+            <p>
+                <a href="https://bunshai.com/unsubscribe?email={{ subscriber.email|urlencode }}&token={{ verification_token }}" 
+                   style="color: #666; text-decoration: underline;">
+                    Unsubscribe
+                </a> | 
+                <a href="https://bunshai.com/privacy" style="color: #666; text-decoration: underline;">
+                    Privacy Policy
+                </a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

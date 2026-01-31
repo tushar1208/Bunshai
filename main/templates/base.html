@@ -1,0 +1,365 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BunShai TECHNOHUB - Your Technology Partner{% endblock %}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="BunShai TECHNOHUB - Leading IT consulting, software development, cloud solutions, cybersecurity, and digital marketing services provider.">
+    <meta name="keywords" content="IT consulting, software development, cloud solutions, cybersecurity, digital marketing, web development, mobile apps">
+    <meta name="author" content="BunShai TECHNOHUB">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="BunShai TECHNOHUB - Your Technology Partner">
+    <meta property="og:description" content="Innovation that inspires - Creating digital experiences that transform brands and drive business growth">
+    <meta property="og:image" content="{% static 'images/Logo1.png' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BunShai TECHNOHUB">
+    <meta name="twitter:description" content="Your Global Technology Partner">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'images/Logo1.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/Logo1.png' %}">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/proposal_popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/company-profile.css' %}"> -->
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Security Meta Tags -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader">
+        <div class="loader-content">
+            <img src="{% static 'images/Logo1.png' %}" alt="Loading" class="loader-logo">
+            <div class="loader-spinner"></div>
+            <p>Loading Innovation...</p>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header {% if not request.path == '/' %}dark-header{% endif %}" id="main-header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Mobile Menu Toggle -->
+                <div class="menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <!-- Brand Logo -->
+                <div class="brand">
+                    <a href="#" class="logo-link" id="logoTrigger">
+                        <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB Logo" class="logo-img">
+                        <h1>BunShai TECHNOHUB</h1>
+                    </a>
+                </div>
+
+                
+                <!-- Navigation -->
+                <nav id="main-nav">
+                    <div class="nav-close" id="nav-close" aria-label="Close menu">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    
+                    <div class="nav-content">
+                        <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        
+                        <div class="nav-dropdown">
+                            <a class="nav-link">
+                                <i class="fas fa-building"></i> About <i class="fas fa-chevron-down"></i>
+                            </a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'about' %}">About Us</a>
+                                <a href="{% url 'company_profile' %}">Company Profile</a>
+                                <a href="{% url 'md_profile' %}">MD Profile</a>
+                                <a href="{% url 'about' %}#team">Our Team</a>
+                                <a href="{% url 'about' %}#values">Core Values</a>
+                            </div>
+                        </div>
+                         
+                        <div class="nav-dropdown">
+                            <a class="nav-link">
+                                <i class="fas fa-cogs"></i> Services <i class="fas fa-chevron-down"></i>
+                            </a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'service_detail' 'it-consulting' %}">IT Consulting</a>
+                                <a href="{% url 'service_detail' 'digital-marketing' %}">Digital Marketing</a>
+                                <a href="{% url 'service_detail' 'cloud-solutions' %}">Cloud Solutions</a>
+                                <a href="{% url 'service_detail' 'software-development' %}">Software Development</a>
+                                <a href="{% url 'service_detail' 'cybersecurity' %}">Cybersecurity</a>
+                                <a href="{% url 'service_detail' 'data-analytics' %}">Data & Analytics</a>
+                            </div>
+                        </div>
+                        
+                        <a href="{% url 'career' %}" class="nav-link {% if '/career/' in request.path %}active{% endif %}">
+                            <i class="fas fa-briefcase"></i> Careers
+                        </a>
+                        
+                        <a href="{% url 'contact' %}" class="nav-link {% if '/contact/' in request.path %}active{% endif %}">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </div>
+                </nav>
+                
+                <!-- Header Actions -->
+                <!-- <div class="header-actions">
+                    <button class="lets-connect-btn" id="openProposalBtn">
+                        <i class="fas fa-rocket"></i> Let's Connect 🔥
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Header Actions -->
+        <div class="header-actions">
+            <button class="lets-connect-btn" id="openProposalBtn">
+                <i class="fas fa-rocket"></i> Let's Connect
+            </button>
+        </div>
+
+        {% if request.path == '/' %}
+        <!-- Hero Section -->
+        <section class="video-hero" id="home">
+            <div class="video-container">
+                <video autoplay muted loop playsinline id="hero-video">
+                    <source src="{% static 'video/3.mp4' %}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <div class="video-overlay">
+                    <div class="container">
+                        <div class="video-content">
+                            <h1 class="animate__animated animate__fadeInDown">INNOVATION THAT INSPIRES</h1>
+                            <p class="animate__animated animate__fadeInUp">We create digital experiences that transform brands and drive business growth</p>
+                            <div class="hero-buttons">
+                                <button class="cta-btn animate__animated animate__fadeIn" onclick="showProposalPopup()">
+                                    <i class="fas fa-rocket"></i> Get Started
+                                </button>
+                                <a href="{% url 'services' %}" class="cta-btn-secondary animate__animated animate__fadeIn">
+                                    <i class="fas fa-eye"></i> View Services
+                                </a>
+                            </div>
+                            <div class="hero-stats">
+                                <div class="stat-item">
+                                    <h3>50+</h3>
+                                    <p>Projects Delivered</p>
+                                </div>
+                                <div class="stat-item">
+                                    <h3>30+</h3>
+                                    <p>Happy Clients</p>
+                                </div>
+                                <div class="stat-item">
+                                    <h3>5+</h3>
+                                    <p>Years Experience</p>
+                                </div>
+                                <div class="stat-item">
+                                    <h3>24/7</h3>
+                                    <p>Support</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Page Header for other pages -->
+        {% if request.path != '/' %}
+        <section class="page-header">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/">Home</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>{% block breadcrumb_title %}{% endblock %}</span>
+                </div>
+                <h1>{% block page_title %}{% endblock %}</h1>
+                <p>{% block page_subtitle %}{% endblock %}</p>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Content Block -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- POPUP MODALS -->
+    {% include 'includes/proposal_popup.html' %}
+    {% include 'includes/service_inquiry_popup.html' %}
+    {% include 'includes/logo_popup.html' %}
+
+
+    <!-- CHATBOT -->
+    <div id="chatbot-container" class="chatbot-container">
+        <div id="chatbot-toggle" class="chatbot-toggle" onclick="toggleChatbot()">
+            <img src="{% static 'images/chatbot/sharsh-icon.png' %}" alt="Sharsh" class="chatbot-icon">
+            <div class="chatbot-pulse"></div>
+        </div>
+        <div id="chatbot-window" class="chatbot-window">
+            <div class="chatbot-header">
+                <div class="chatbot-avatar">
+                    <img src="{% static 'images/chatbot/sharsh-icon.png' %}" alt="Sharsh">
+                </div>
+                <div class="chatbot-info">
+                    <h4>Sharsh</h4>
+                    <p>Your AI Assistant</p>
+                    <div class="chatbot-status">
+                        <span class="status-dot"></span> Online
+                    </div>
+                </div>
+                <button class="chatbot-close" onclick="toggleChatbot()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chatbot-messages" class="chatbot-messages">
+                <div class="chatbot-welcome">
+                    <p>Hello! I'm Sharsh, your AI assistant. How can I help you today?</p>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Type your message..." autocomplete="off">
+                <button id="chatbot-send" onclick="sendChatbotMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="chatbot-quick-actions">
+                <button class="quick-action" onclick="quickChatbotAction('services')">Our Services</button>
+                <button class="quick-action" onclick="quickChatbotAction('pricing')">Pricing</button>
+                <button class="quick-action" onclick="quickChatbotAction('contact')">Contact Us</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" onclick="scrollToTop()" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- WHATSAPP FLOAT -->
+    <a href="https://wa.me/918091401208?text=Hi%20BunShai%20Team,%20I%20need%20assistance" 
+       class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-col">
+                    <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB" class="footer-logo">
+                    <p>Your Global Technology Partner. We deliver innovative solutions that drive digital transformation and business growth.</p>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:team.bunshailogicloop@gmail.com">team.bunshailogicloop@gmail.com</a></p>
+                        <p><i class="fas fa-phone"></i> <a href="tel:+918091401208">+91 8091401208</a></p>
+                        <p><i class="fas fa-map-marker-alt"></i> Global Remote Operations</p>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'services' %}">Services</a></li>
+                        <li><a href="{% url 'career' %}">Careers</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                        <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Our Services</h4>
+                    <ul>
+                        <li><a href="{% url 'service_detail' 'it-consulting' %}">IT Consulting</a></li>
+                        <li><a href="{% url 'service_detail' 'digital-marketing' %}">Digital Marketing</a></li>
+                        <li><a href="{% url 'service_detail' 'cloud-solutions' %}">Cloud Solutions</a></li>
+                        <li><a href="{% url 'service_detail' 'software-development' %}">Software Development</a></li>
+                        <li><a href="{% url 'service_detail' 'cybersecurity' %}">Cybersecurity</a></li>
+                        <li><a href="{% url 'service_detail' 'data-analytics' %}">Data Analytics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Connect With Us</h4>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/share/1DFuBTBXN2/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Bun_Shai" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/bunshai-technohub" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/918091401208" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="newsletter">
+                        <h5>Subscribe to Newsletter</h5>
+                        <form id="footer-subscribe-form" class="subscribe-form">
+                            {% csrf_token %}
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit">→</button>
+                        </form>
+                        <p id="subscribe-message"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-links">
+                    <a href="{% url 'privacy' %}">Privacy Policy</a>
+                    <a href="{% url 'terms' %}">Terms & Conditions</a>
+                    <a href="{% url 'sitemap' %}">Sitemap</a>
+                    <a href="{% url 'support' %}">Support</a>
+                </div>
+                <div class="footer-copy">
+                    © {% now "Y" %} BunShai TECHNOHUB®. All rights reserved. | Made with <i class="fas fa-heart"></i> for innovation
+                </div>
+            </div>
+        </div>
+        
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/chatbot.js' %}"></script>
+    <script src="{% static 'js/security.js' %}"></script>
+    <script src="{% static 'js/form-validation.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+    
+    <!-- reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+</body>
+</html>

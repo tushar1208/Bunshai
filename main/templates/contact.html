@@ -1,0 +1,471 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %}Contact Us{% endblock %}
+{% block page_subtitle %}Get in touch with our team{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/conatct.css' %}">
+<section class="contact-section">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h2>Get In Touch</h2>
+                <p>Have a project in mind or need technical consultation? Reach out to us and we'll get back to you within 24 hours.</p>
+
+                <div class="contact-method">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h3>Email</h3>
+                        <p><a href="mailto:team.bunshailogicloop@gmail.com">team.bunshailogicloop@gmail.com</a></p>
+                        <p class="contact-note">Response time: Within 24 hours</p>
+                    </div>
+                </div>
+
+                <div class="contact-method">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h3>Phone & WhatsApp</h3>
+                        <p><a href="tel:+918091401208">+91 8091401208</a></p>
+                        <p class="contact-note">Available: Mon-Sun, 9 AM - 9 PM IST</p>
+                    </div>
+                </div>
+
+                <div class="contact-method">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h3>Location</h3>
+                        <p>Global / Remote-first Company</p>
+                        <p class="contact-note">Serving clients worldwide</p>
+                    </div>
+                </div>
+
+                <div class="business-hours">
+                    <h3>Business Hours</h3>
+                    <div class="hours-grid">
+                        <div class="day">
+                            <span>Monday - Friday</span>
+                            <span>9:00 AM - 6:00 PM</span>
+                        </div>
+                        <div class="day">
+                            <span>Saturday</span>
+                            <span>10:00 AM - 4:00 PM</span>
+                        </div>
+                        <div class="day">
+                            <span>Sunday</span>
+                            <span>Emergency Support Only</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <h3>Follow Us</h3>
+                    <p>Stay updated with our latest projects and insights</p>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/share/1DFuBTBXN2/" target="_blank" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Bun_Shai" target="_blank" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/bunshai-technohub" target="_blank" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form-container">
+                <h2>Send us a Message</h2>
+                <p class="form-subtitle">Fill out the form below and we'll respond promptly</p>
+                
+                <form class="contact-form" id="contactForm" method="POST" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required placeholder="Your full name">
+                            <!-- <div class="error-message"></div> -->
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                            <!-- <div class="error-message"></div> -->
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+91 1234567890">
+                            <div class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company Name</label>
+                            <input type="text" id="company" name="company" placeholder="Your company (optional)">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <input type="text" id="subject" name="subject" required placeholder="What is this regarding?">
+                        <div class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="service">Service Interested In</label>
+                        <select id="service" name="service">
+                            <option value="">Select a service</option>
+                            <option value="IT Consulting">IT Consulting</option>
+                            <option value="Digital Marketing">Digital Marketing</option>
+                            <option value="Cloud Solutions">Cloud Solutions</option>
+                            <option value="Software Development">Software Development</option>
+                            <option value="Cybersecurity">Cybersecurity</option>
+                            <option value="Data & Analytics">Data & Analytics</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" rows="6" required placeholder="Tell us about your project or inquiry..."></textarea>
+                        <div class="error-message"></div>
+                        <div class="char-counter">
+                            <span id="charCount">0</span>/5000 characters
+                        </div>
+                    </div>
+
+                    <!-- CAPTCHA Section -->
+                    <div class="captcha-section">
+                        <div class="captcha-container">
+                            <div class="captcha-display" id="captchaDisplay">
+                                <span id="captchaText"></span>
+                                <button type="button" id="refreshCaptcha" aria-label="Refresh CAPTCHA">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                            </div>
+                            <input type="text" id="captchaInput" name="captcha" placeholder="Enter CAPTCHA code" required>
+                            <div class="error-message" id="captchaError"></div>
+                        </div>
+                        <p class="captcha-note">Please enter the characters shown above</p>
+                    </div>
+
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="contactPrivacyCheck" required>
+                        <label for="contactPrivacyCheck">I agree to the <a href="{% url 'privacy' %}" class="privacy-link">Privacy Policy</a> and consent to being contacted.</label>
+                    </div>
+
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="marketingConsent">
+                        <label for="marketingConsent">I would like to receive updates, offers, and newsletters from BunShai TECHNOHUB.</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                    
+                    <div class="form-success" id="successMessage" style="display: none;">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Thank you for your message! We'll get back to you within 24 hours.</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="map-section">
+            <h2>Our Location</h2>
+            <p>While we operate globally, our headquarters coordinate operations across multiple time zones.</p>
+            <div class="map-container">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d27159.344467248935!2d76.51853075!3d31.690807950000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3904d44c8c5639a5%3A0x2315ba2666cfba94!2sHamirpur%2C%20Himachal%20Pradesh!5e0!3m2!1sen!2sin!4v1755340952762!5m2!1sen!2sin"
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade" title="BunShai TECHNOHUB Location">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="emergency-contact">
+            <div class="emergency-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <h3>Emergency Technical Support</h3>
+                    <p>For urgent technical issues requiring immediate attention</p>
+                </div>
+                <a href="tel:+918091401208" class="emergency-btn">
+                    <i class="fas fa-phone-alt"></i> Call Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- In the JavaScript section of contact.html -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    const messageTextarea = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
+    const captchaText = document.getElementById('captchaText');
+    const refreshCaptchaBtn = document.getElementById('refreshCaptcha');
+    const captchaInput = document.getElementById('captchaInput');
+    const captchaHidden = document.getElementById('captchaHidden');
+    const captchaError = document.getElementById('captchaError');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMessage = document.getElementById('successMessage');
+
+    // Character counter for message
+    messageTextarea.addEventListener('input', function() {
+        const length = this.value.length;
+        charCount.textContent = length;
+        
+        if (length > 4500) {
+            charCount.parentElement.classList.add('error');
+            charCount.parentElement.classList.remove('warning');
+        } else if (length > 4000) {
+            charCount.parentElement.classList.add('warning');
+            charCount.parentElement.classList.remove('error');
+        } else {
+            charCount.parentElement.classList.remove('warning', 'error');
+        }
+    });
+
+    // Generate CAPTCHA - Get from server session
+    function generateCaptcha() {
+        // Fetch new CAPTCHA from server
+        fetch('/get-captcha/?type=contact')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    captchaText.textContent = data.captcha_text;
+                    captchaInput.value = '';
+                    captchaError.classList.remove('show');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching CAPTCHA:', error);
+                // Fallback to client-side generation
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                let captcha = '';
+                for (let i = 0; i < 6; i++) {
+                    captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                captchaText.textContent = captcha;
+            });
+    }
+
+    // Initialize with current CAPTCHA from server
+    captchaText.textContent = '{{ captcha_text|default:"ABCD12" }}';
+
+    // Refresh CAPTCHA
+    refreshCaptchaBtn.addEventListener('click', function() {
+        generateCaptcha();
+    });
+
+    // CAPTCHA validation
+    function validateCaptcha() {
+        const userInput = captchaInput.value.trim().toUpperCase();
+        if (userInput === '') {
+            captchaError.textContent = 'Please enter the CAPTCHA code';
+            captchaError.classList.add('show');
+            return false;
+        }
+        
+        // Set the CAPTCHA value in hidden field for form submission
+        if (captchaHidden) {
+            captchaHidden.value = userInput;
+        }
+        
+        captchaError.classList.remove('show');
+        return true;
+    }
+
+    // Form validation
+    function validateForm() {
+        let isValid = true;
+        
+        // Clear previous errors
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.classList.remove('show');
+        });
+        
+        // Validate name
+        const name = document.getElementById('name').value.trim();
+        if (!name || name.length < 2) {
+            document.querySelector('#name + .error-message').textContent = 'Please enter a valid name (minimum 2 characters)';
+            document.querySelector('#name + .error-message').classList.add('show');
+            isValid = false;
+        }
+        
+        // Validate email
+        const email = document.getElementById('email').value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailPattern.test(email)) {
+            document.querySelector('#email + .error-message').textContent = 'Please enter a valid email address';
+            document.querySelector('#email + .error-message').classList.add('show');
+            isValid = false;
+        }
+        
+        // Validate phone (optional but must be valid if provided)
+        const phone = document.getElementById('phone').value.trim();
+        if (phone) {
+            const phonePattern = /^[\d\s\-\+\(\)]{10,20}$/;
+            const phoneDigits = phone.replace(/\D/g, '');
+            if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+                document.querySelector('#phone + .error-message').textContent = 'Please enter a valid phone number (10-15 digits)';
+                document.querySelector('#phone + .error-message').classList.add('show');
+                isValid = false;
+            }
+        }
+        
+        // Validate subject
+        const subject = document.getElementById('subject').value.trim();
+        if (!subject || subject.length < 5) {
+            document.querySelector('#subject + .error-message').textContent = 'Please enter a subject (minimum 5 characters)';
+            document.querySelector('#subject + .error-message').classList.add('show');
+            isValid = false;
+        }
+        
+        // Validate message
+        const message = messageTextarea.value.trim();
+        if (!message || message.length < 10) {
+            document.querySelector('#message + .error-message').textContent = 'Please enter a message (minimum 10 characters)';
+            document.querySelector('#message + .error-message').classList.add('show');
+            isValid = false;
+        }
+        
+        // Validate CAPTCHA
+        if (!validateCaptcha()) {
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+
+    // Form submission
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (!validateForm()) {
+            return;
+        }
+        
+        // Disable submit button
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        
+        // Collect form data
+        const formData = new FormData(this);
+        
+        try {
+            // Send form data to server
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Show success message
+                successMessage.style.display = 'flex';
+                contactForm.reset();
+                generateCaptcha(); // Get new CAPTCHA
+                charCount.textContent = '0';
+                
+                // Show success message from server
+                messages.success(data.message);
+            } else {
+                // Show errors
+                if (data.errors) {
+                    Object.keys(data.errors).forEach(field => {
+                        const errorElement = document.querySelector(`#${field} + .error-message`);
+                        if (errorElement) {
+                            errorElement.textContent = data.errors[field][0];
+                            errorElement.classList.add('show');
+                        }
+                        
+                        // Handle CAPTCHA error specially
+                        if (field === 'captcha') {
+                            captchaError.textContent = data.errors[field][0];
+                            captchaError.classList.add('show');
+                            generateCaptcha(); // Refresh CAPTCHA on error
+                        }
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Form submission error:', error);
+            // Fallback to traditional form submission
+            this.submit();
+        } finally {
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+        }
+    });
+
+    // Real-time validation
+    const inputs = contactForm.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('input', function() {
+            clearError(this);
+        });
+    });
+    
+    function validateField(field) {
+        const errorEl = field.nextElementSibling;
+        if (!errorEl || !errorEl.classList.contains('error-message')) return;
+        
+        const value = field.value.trim();
+        
+        if (field.required && !value) {
+            errorEl.textContent = 'This field is required';
+            errorEl.classList.add('show');
+            return false;
+        }
+        
+        if (field.type === 'email' && value) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(value)) {
+                errorEl.textContent = 'Please enter a valid email address';
+                errorEl.classList.add('show');
+                return false;
+            }
+        }
+        
+        if (field.id === 'phone' && value) {
+            const phoneDigits = value.replace(/\D/g, '');
+            if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+                errorEl.textContent = 'Please enter a valid phone number (10-15 digits)';
+                errorEl.classList.add('show');
+                return false;
+            }
+        }
+        
+        errorEl.classList.remove('show');
+        return true;
+    }
+    
+    function clearError(field) {
+        const errorEl = field.nextElementSibling;
+        if (errorEl && errorEl.classList.contains('error-message')) {
+            errorEl.classList.remove('show');
+        }
+    }
+});
+</script>
+{% endblock %}

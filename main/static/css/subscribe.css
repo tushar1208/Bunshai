@@ -1,0 +1,352 @@
+.subscribe-hero {
+        background: linear-gradient(135deg, var(--dark), var(--dark-light));
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+        border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .subscribe-hero:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100"><path fill="rgba(255,255,255,0.05)" d="M0,0V100H1000V0C900,50,800,75,700,75S500,50,400,50,200,75,100,75,100,50,0,0Z"/></svg>');
+        background-repeat: repeat-x;
+        background-position: bottom;
+        opacity: 0.3;
+    }
+
+    .subscribe-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        background: linear-gradient(to right, #fff, var(--primary-light));
+        background-clip: text;   
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+    }
+
+    .subscribe-hero p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto 40px;
+        opacity: 0.9;
+        position: relative;
+    }
+
+    .main-subscribe-form {
+        max-width: 500px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .main-subscribe-form input {
+        width: 100%;
+        padding: 18px 20px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        transition: var(--transition);
+    }
+
+    .main-subscribe-form input:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(125, 0, 34, 0.3);
+    }
+
+    .main-subscribe-form input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .main-subscribe-form button {
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .main-subscribe-form button:hover {
+        background: var(--primary-dark);
+        transform: translateX(5px);
+        padding-right: 35px;
+    }
+
+    .main-subscribe-form button:active {
+        transform: translateX(5px) scale(0.95);
+    }
+
+    .subscribe-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        margin: 80px 0;
+    }
+
+    .benefit-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: var(--border-radius-lg);
+        text-align: center;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid transparent;
+    }
+
+    .benefit-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+    }
+
+    .benefit-card:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    }
+
+    .benefit-card i {
+        font-size: 3rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+        background: rgba(125, 0, 34, 0.1);
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 50%;
+        display: inline-block;
+        transition: var(--transition);
+    }
+
+    .benefit-card:hover i {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .benefit-card h3 {
+        color: var(--dark);
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+    }
+
+    .benefit-card p {
+        color: var(--dark-light);
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .newsletter-section {
+        background: var(--light-dark);
+        padding: 80px 0;
+        border-radius: var(--border-radius-lg);
+        margin: 80px 0;
+    }
+
+    .newsletter-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .newsletter-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 40px;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-item h4 {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 5px;
+    }
+
+    .stat-item p {
+        color: var(--dark-light);
+        font-size: 0.9rem;
+    }
+
+    .email-categories {
+        background: white;
+        padding: 50px;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
+        max-width: 800px;
+        margin: 0 auto 80px;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .category-item {
+        background: var(--light);
+        padding: 25px;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        border-left: 4px solid transparent;
+    }
+
+    .category-item:hover {
+        transform: translateY(-5px);
+        border-left-color: var(--primary);
+        background: white;
+        box-shadow: var(--shadow);
+    }
+
+    .category-item h4 {
+        color: var(--dark);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .category-item h4 i {
+        color: var(--primary);
+    }
+
+    .category-item p {
+        color: var(--dark-light);
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .final-subscribe {
+        text-align: center;
+        margin: 60px auto;
+        max-width: 600px;
+    }
+
+    .final-subscribe h2 {
+        color: var(--dark);
+        margin-bottom: 20px;
+        font-size: 2.2rem;
+    }
+
+    .final-subscribe p {
+        color: var(--dark-light);
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .subscribe-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .subscribe-hero p {
+            font-size: 1.1rem;
+            padding: 0 20px;
+        }
+
+        .main-subscribe-form input {
+            padding: 15px;
+            font-size: 1rem;
+        }
+
+        .main-subscribe-form button {
+            position: relative;
+            right: auto;
+            top: auto;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .subscribe-grid {
+            gap: 30px;
+        }
+
+        .benefit-card {
+            padding: 30px 20px;
+        }
+
+        .email-categories {
+            padding: 30px 20px;
+        }
+
+        .newsletter-stats {
+            gap: 20px;
+        }
+    }
+    /* Add animations */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .main-subscribe-form button:hover {
+        animation: pulse 0.5s ease;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+        .subscribe-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .subscribe-hero p {
+            font-size: 1rem;
+        }
+        
+        .benefit-card {
+            padding: 25px 15px;
+        }
+        
+        .category-item {
+            padding: 20px 15px;
+        }
+    }
+
+    /* Print styles */
+    @media print {
+        .subscribe-hero,
+        .main-subscribe-form,
+        .newsletter-section,
+        button,
+        form {
+            display: none !important;
+        }
+        
+        .benefit-card {
+            break-inside: avoid;
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+    }

@@ -1,0 +1,264 @@
+.careers-hero {
+        background: linear-gradient(135deg, var(--dark), var(--dark-light));
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+        border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+    }
+
+    .careers-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        background: linear-gradient(to right, #fff, var(--primary-light));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .careers-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin: 60px 0;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 30px;
+        border-radius: var(--border-radius-lg);
+        text-align: center;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid #e5e7eb;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-light);
+    }
+
+    .stat-card i {
+        font-size: 3rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+    }
+
+    .stat-card h3 {
+        font-size: 2.5rem;
+        color: var(--dark);
+        margin-bottom: 10px;
+    }
+
+    .job-openings {
+        margin: 80px 0;
+    }
+
+    .job-filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .filter-btn {
+        padding: 10px 25px;
+        background: var(--light);
+        border: 2px solid #e5e7eb;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        color: var(--dark);
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .job-list {
+        display: grid;
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .job-card {
+        background: white;
+        padding: 30px;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-light);
+    }
+
+    .job-info h3 {
+        color: var(--dark);
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+    }
+
+    .job-tags {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    .job-tag {
+        padding: 5px 15px;
+        background: var(--light);
+        border-radius: 15px;
+        font-size: 0.9rem;
+        color: var(--dark-light);
+        font-weight: 500;
+    }
+
+    .apply-btn {
+        background: var(--primary);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        border: 2px solid var(--primary);
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .apply-btn:hover {
+        background: transparent;
+        color: var(--primary);
+        transform: translateY(-3px);
+    }
+
+    .benefits-section {
+        background: var(--light-dark);
+        padding: 80px 0;
+        border-radius: var(--border-radius-lg);
+        margin: 80px 0;
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .benefit-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: var(--border-radius-lg);
+        text-align: center;
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+    }
+
+    .benefit-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .benefit-card i {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+        background: rgba(125, 0, 34, 0.1);
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .benefit-card h3 {
+        color: var(--dark);
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+    }
+
+    .benefit-card p {
+        color: var(--dark-light);
+        line-height: 1.6;
+    }
+
+    .application-form-container {
+        max-width: 800px;
+        margin: 0 auto 80px;
+        padding: 50px;
+        background: white;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .application-form-container h2 {
+        text-align: center;
+        margin-bottom: 40px;
+        color: var(--dark);
+        font-size: 2.2rem;
+    }
+
+    @media (max-width: 768px) {
+        .job-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .apply-btn {
+            align-self: stretch;
+            text-align: center;
+        }
+
+        .careers-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .application-form-container {
+            padding: 30px 20px;
+        }
+
+        .benefit-card {
+            padding: 30px 20px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .careers-hero h1 {
+            font-size: 2rem;
+        }
+
+        .careers-hero p {
+            font-size: 1.1rem;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .job-filters {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .filter-btn {
+            width: 100%;
+            max-width: 300px;
+        }
+    }

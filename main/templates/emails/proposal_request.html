@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #7d0022; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; background: #f8f9fa; }
+        .footer { background: #f1f1f1; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+        .info-box { background: white; padding: 20px; border-left: 4px solid #7d0022; margin: 15px 0; }
+        .budget-high { background: #d4edda; border-left: 4px solid #28a745; }
+        .budget-medium { background: #fff3cd; border-left: 4px solid #ffc107; }
+        .budget-low { background: #f8d7da; border-left: 4px solid #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 New Proposal Request</h1>
+            <p>Sales Opportunity</p>
+        </div>
+        
+        <div class="content">
+            <h2>Potential Project Opportunity</h2>
+            
+            {% if proposal.budget == '50k+' or proposal.budget == 'custom' %}
+            <div class="info-box budget-high">
+                <h3>🏆 HIGH VALUE OPPORTUNITY</h3>
+                <p>Budget: {{ proposal.get_budget_display }}</p>
+            </div>
+            {% elif proposal.budget == '25k-50k' or proposal.budget == '10k-25k' %}
+            <div class="info-box budget-medium">
+                <h3>📈 Medium Value Opportunity</h3>
+                <p>Budget: {{ proposal.get_budget_display }}</p>
+            </div>
+            {% else %}
+            <div class="info-box budget-low">
+                <h3>📋 Standard Opportunity</h3>
+                <p>Budget: {{ proposal.get_budget_display }}</p>
+            </div>
+            {% endif %}
+            
+            <div class="info-box">
+                <h3>Client Information</h3>
+                <p><strong>Name:</strong> {{ proposal.name }}</p>
+                <p><strong>Email:</strong> {{ proposal.email }}</p>
+                <p><strong>Phone:</strong> {{ proposal.phone }}</p>
+                <p><strong>Service:</strong> {{ proposal.get_service_display }}</p>
+                <p><strong>Submitted:</strong> {{ proposal.created_at|date:"F d, Y H:i" }}</p>
+            </div>
+            
+            <div class="info-box">
+                <h3>Project Requirements</h3>
+                <p>{{ proposal.requirements|linebreaks }}</p>
+            </div>
+            
+            <h3>Sales Actions Required:</h3>
+            <ol>
+                <li><strong>Immediate (Within 1 hour):</strong> Send acknowledgment email</li>
+                <li><strong>Today:</strong> Schedule discovery call</li>
+                <li><strong>Within 24 hours:</strong> Share preliminary proposal outline</li>
+                <li><strong>Within 48 hours:</strong> Send formal proposal</li>
+            </ol>
+            
+            <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <h4>💡 Sales Notes:</h4>
+                <ul>
+                    <li>Client is interested in: {{ proposal.get_service_display }}</li>
+                    <li>Budget indicates: {{ proposal.get_budget_display }}</li>
+                    <li>Follow up priority: {% if proposal.budget == '50k+' or proposal.budget == 'custom' %}HIGH{% else %}STANDARD{% endif %}</li>
+                </ul>
+            </div>
+            
+            <p style="text-align: center;">
+                <a href="mailto:{{ proposal.email }}?subject=Your%20Proposal%20Request&body=Dear%20{{ proposal.name|urlencode }}%2C%0A%0AThank%20you%20for%20your%20interest%20in%20our%20{{ proposal.get_service_display|urlencode }}%20services."
+                   style="background: #28a745; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                    ✉️ Send Acknowledgment
+                </a>
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>© {% now "Y" %} {{ site_name }}. Sales Department Notification</p>
+            <p>This request was submitted through the proposal request form.</p>
+        </div>
+    </div>
+</body>
+</html>

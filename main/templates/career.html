@@ -1,0 +1,505 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Careers{% endblock %}
+{% block page_subtitle %}Join Our Team of Innovators{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/career.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="careers-hero">
+    <div class="container">
+        <h1>Build Your Future With Us</h1>
+        <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; opacity: 0.9;">
+            Join a team that values innovation, creativity, and making a real impact in the tech world.
+        </p>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="page-content">
+    <div class="container">
+        <div class="careers-stats">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>50+</h3>
+                <p style="color: var(--dark-light);">Team Members</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-globe"></i>
+                <h3>15+</h3>
+                <p style="color: var(--dark-light);">Countries</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-project-diagram"></i>
+                <h3>100+</h3>
+                <p style="color: var(--dark-light);">Projects</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>40%</h3>
+                <p style="color: var(--dark-light);">Annual Growth</p>
+            </div>
+        </div>
+
+        <!-- Job Openings -->
+        <div class="job-openings">
+            <h2 style="text-align: center; margin-bottom: 40px; color: var(--dark); font-size: 2.5rem;">
+                Current Openings
+            </h2>
+
+            <div class="job-filters">
+                <button class="filter-btn active" data-filter="all">All Positions</button>
+                <button class="filter-btn" data-filter="engineering">Engineering</button>
+                <button class="filter-btn" data-filter="design">Design</button>
+                <button class="filter-btn" data-filter="marketing">Marketing</button>
+                <button class="filter-btn" data-filter="operations">Operations</button>
+                <button class="filter-btn" data-filter="intern">Internship</button>
+            </div>
+
+            <div class="job-list">
+                <!-- Job 1 -->
+                <div class="job-card" data-category="engineering">
+                    <div class="job-info">
+                        <h3>Senior Full Stack Developer</h3>
+                        <p style="color: var(--dark-light); margin-bottom: 10px;">
+                            <i class="fas fa-map-marker-alt"></i> Remote • 
+                            <i class="fas fa-briefcase"></i> Full-time • 
+                            <i class="fas fa-money-bill-wave"></i> Competitive Salary
+                        </p>
+                        <p style="color: var(--dark); margin-bottom: 15px;">
+                            Build scalable web applications using modern technologies and best practices.
+                        </p>
+                        <div class="job-tags">
+                            <span class="job-tag">Node.js</span>
+                            <span class="job-tag">React</span>
+                            <span class="job-tag">AWS</span>
+                            <span class="job-tag">5+ years</span>
+                        </div>
+                    </div>
+                    <button class="apply-btn" onclick="scrollToApplication('Senior Full Stack Developer')">
+                        Apply Now
+                    </button>
+                </div>
+
+                <!-- Job 2 -->
+                <div class="job-card" data-category="design">
+                    <div class="job-info">
+                        <h3>UI/UX Designer</h3>
+                        <p style="color: var(--dark-light); margin-bottom: 10px;">
+                            <i class="fas fa-map-marker-alt"></i> Remote • 
+                            <i class="fas fa-briefcase"></i> Full-time • 
+                            <i class="fas fa-money-bill-wave"></i> Competitive Salary
+                        </p>
+                        <p style="color: var(--dark); margin-bottom: 15px;">
+                            Design beautiful, intuitive interfaces that solve real user problems.
+                        </p>
+                        <div class="job-tags">
+                            <span class="job-tag">Figma</span>
+                            <span class="job-tag">Adobe XD</span>
+                            <span class="job-tag">Prototyping</span>
+                            <span class="job-tag">3+ years</span>
+                        </div>
+                    </div>
+                    <button class="apply-btn" onclick="scrollToApplication('UI/UX Designer')">
+                        Apply Now
+                    </button>
+                </div>
+
+                <!-- Job 3 -->
+                <div class="job-card" data-category="marketing">
+                    <div class="job-info">
+                        <h3>Digital Marketing Manager</h3>
+                        <p style="color: var(--dark-light); margin-bottom: 10px;">
+                            <i class="fas fa-map-marker-alt"></i> Remote • 
+                            <i class="fas fa-briefcase"></i> Full-time • 
+                            <i class="fas fa-money-bill-wave"></i> Competitive Salary
+                        </p>
+                        <p style="color: var(--dark); margin-bottom: 15px;">
+                            Drive brand growth through innovative digital marketing strategies.
+                        </p>
+                        <div class="job-tags">
+                            <span class="job-tag">SEO</span>
+                            <span class="job-tag">Social Media</span>
+                            <span class="job-tag">Analytics</span>
+                            <span class="job-tag">4+ years</span>
+                        </div>
+                    </div>
+                    <button class="apply-btn" onclick="scrollToApplication('Digital Marketing Manager')">
+                        Apply Now
+                    </button>
+                </div>
+
+                <!-- Job 4 -->
+                <div class="job-card" data-category="engineering">
+                    <div class="job-info">
+                        <h3>DevOps Engineer</h3>
+                        <p style="color: var(--dark-light); margin-bottom: 10px;">
+                            <i class="fas fa-map-marker-alt"></i> Remote • 
+                            <i class="fas fa-briefcase"></i> Full-time • 
+                            <i class="fas fa-money-bill-wave"></i> Competitive Salary
+                        </p>
+                        <p style="color: var(--dark); margin-bottom: 15px;">
+                            Build and maintain our cloud infrastructure and CI/CD pipelines.
+                        </p>
+                        <div class="job-tags">
+                            <span class="job-tag">Docker</span>
+                            <span class="job-tag">Kubernetes</span>
+                            <span class="job-tag">CI/CD</span>
+                            <span class="job-tag">3+ years</span>
+                        </div>
+                    </div>
+                    <button class="apply-btn" onclick="scrollToApplication('DevOps Engineer')">
+                        Apply Now
+                    </button>
+                </div>
+
+                <!-- Job 5 -->
+                <div class="job-card" data-category="operations">
+                    <div class="job-info">
+                        <h3>Project Manager</h3>
+                        <p style="color: var(--dark-light); margin-bottom: 10px;">
+                            <i class="fas fa-map-marker-alt"></i> Remote • 
+                            <i class="fas fa-briefcase"></i> Full-time • 
+                            <i class="fas fa-money-bill-wave"></i> Competitive Salary
+                        </p>
+                        <p style="color: var(--dark); margin-bottom: 15px;">
+                            Lead cross-functional teams to deliver projects on time and within budget.
+                        </p>
+                        <div class="job-tags">
+                            <span class="job-tag">Agile</span>
+                            <span class="job-tag">Scrum</span>
+                            <span class="job-tag">Jira</span>
+                            <span class="job-tag">5+ years</span>
+                        </div>
+                    </div>
+                    <button class="apply-btn" onclick="scrollToApplication('Project Manager')">
+                        Apply Now
+                    </button>
+                </div>
+
+                <!-- Job 6 -->
+                <div class="job-card" data-category="intern">
+                    <div class="job-info">
+                        <h3>Software Development Intern</h3>
+                        <p style="color: var(--dark-light); margin-bottom: 10px;">
+                            <i class="fas fa-map-marker-alt"></i> Remote • 
+                            <i class="fas fa-briefcase"></i> Internship • 
+                            <i class="fas fa-graduation-cap"></i> Stipend Available
+                        </p>
+                        <p style="color: var(--dark); margin-bottom: 15px;">
+                            Learn from experts while contributing to real-world projects.
+                        </p>
+                        <div class="job-tags">
+                            <span class="job-tag">Python</span>
+                            <span class="job-tag">JavaScript</span>
+                            <span class="job-tag">Learning</span>
+                            <span class="job-tag">Intern</span>
+                        </div>
+                    </div>
+                    <button class="apply-btn" onclick="scrollToApplication('Software Development Intern')">
+                        Apply Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="benefits-section">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--dark); font-size: 2.5rem; margin-bottom: 20px;">
+                    Why You'll Love Working Here
+                </h2>
+                <p style="text-align: center; color: var(--dark-light); max-width: 600px; margin: 0 auto 40px; font-size: 1.1rem;">
+                    We invest in our team's growth and well-being with industry-leading benefits
+                </p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <i class="fas fa-heartbeat"></i>
+                        <h3>Health & Wellness</h3>
+                        <p>Comprehensive medical insurance and wellness programs for you and your family</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>Learning Budget</h3>
+                        <p>$2000 annual budget for courses, conferences, and professional development</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <i class="fas fa-home"></i>
+                        <h3>Remote Flexibility</h3>
+                        <p>Work from anywhere with flexible hours and results-oriented culture</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <i class="fas fa-trophy"></i>
+                        <h3>Career Growth</h3>
+                        <p>Clear promotion paths, mentorship programs, and leadership opportunities</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <i class="fas fa-umbrella-beach"></i>
+                        <h3>Paid Time Off</h3>
+                        <p>Generous vacation policy plus mental health days and flexible holidays</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <i class="fas fa-baby"></i>
+                        <h3>Parental Leave</h3>
+                        <p>16 weeks paid parental leave for all new parents regardless of gender</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="application-form-container" id="application-form">
+            <h2>Apply for Position</h2>
+            
+            <form method="POST" action="{% url 'career' %}" class="contact-form" enctype="multipart/form-data" id="careerApplicationForm">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" name="name" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" name="email" required placeholder="your.email@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" name="phone" required placeholder="+91 1234567890">
+                    </div>
+                    <div class="form-group">
+                        <label>Position Applying For *</label>
+                        <select name="position" required id="positionSelect">
+                            <option value="">Select a position</option>
+                            <option value="Senior Full Stack Developer">Senior Full Stack Developer</option>
+                            <option value="UI/UX Designer">UI/UX Designer</option>
+                            <option value="Digital Marketing Manager">Digital Marketing Manager</option>
+                            <option value="DevOps Engineer">DevOps Engineer</option>
+                            <option value="Project Manager">Project Manager</option>
+                            <option value="Software Development Intern">Software Development Intern</option>
+                            <option value="Other">Other (Specify in cover letter)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>LinkedIn Profile URL</label>
+                    <input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+
+                <div class="form-group">
+                    <label>Portfolio/Website URL</label>
+                    <input type="url" name="portfolio_url" placeholder="https://yourportfolio.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Cover Letter *</label>
+                    <textarea name="cover_letter" rows="6" required 
+                              placeholder="Tell us why you're interested in this position and what makes you a great candidate..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Resume/CV Upload *</label>
+                    <div style="position: relative;">
+                        <input type="file" name="resume" id="resumeUpload" accept=".pdf,.doc,.docx" required 
+                               style="padding: 15px; border: 2px dashed #ddd; border-radius: var(--border-radius); width: 100%;">
+                        <div style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary);">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                    </div>
+                    <small style="color: var(--dark-light); display: block; margin-top: 8px;">
+                        Accepted formats: PDF, DOC, DOCX (Max file size: 5MB)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Files (Portfolio, Certificates, etc.)</label>
+                    <input type="file" name="additional_files" multiple 
+                           accept=".pdf,.jpg,.png,.doc,.docx" style="padding: 15px; border: 1px solid #ddd; border-radius: var(--border-radius); width: 100%;">
+                    <small style="color: var(--dark-light); display: block; margin-top: 8px;">
+                        You can upload multiple files (Max total size: 10MB)
+                    </small>
+                </div>
+
+                <div class="form-checkbox" style="margin: 20px 0;">
+                    <input type="checkbox" id="consentCheck" required>
+                    <label for="consentCheck">
+                        I consent to having my data processed in accordance with the 
+                        <a href="/privacy" style="color: var(--primary); text-decoration: none; font-weight: 500;">Privacy Policy</a> 
+                        and stored for future job opportunities.
+                    </label>
+                </div>
+
+                <div class="form-checkbox" style="margin-bottom: 30px;">
+                    <input type="checkbox" id="availabilityCheck" required>
+                    <label for="availabilityCheck">
+                        I confirm that I'm legally eligible to work in the locations specified for this position.
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" style="width: 100%; padding: 18px; font-size: 1.2rem;">
+                    <i class="fas fa-paper-plane"></i> Submit Application
+                </button>
+            </form>
+        </div>
+
+        <!-- Application Tips -->
+        <div style="max-width: 800px; margin: 0 auto 60px; padding: 30px; background: var(--light); border-radius: var(--border-radius-lg);">
+            <h3 style="color: var(--dark); margin-bottom: 20px; text-align: center;">
+                <i class="fas fa-lightbulb" style="color: var(--primary);"></i>
+                Application Tips
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: var(--border-radius);">
+                    <h4 style="color: var(--dark); margin-bottom: 10px; font-size: 1.1rem;">
+                        <i class="fas fa-file-alt" style="color: var(--primary);"></i> Tailor Your Resume
+                    </h4>
+                    <p style="color: var(--dark-light); font-size: 0.95rem;">
+                        Customize your resume to highlight relevant skills and experiences for this specific role.
+                    </p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: var(--border-radius);">
+                    <h4 style="color: var(--dark); margin-bottom: 10px; font-size: 1.1rem;">
+                        <i class="fas fa-comment-alt" style="color: var(--primary);"></i> Write a Strong Cover Letter
+                    </h4>
+                    <p style="color: var(--dark-light); font-size: 0.95rem;">
+                        Explain why you're interested in BunShai TECHNOHUB and how you can contribute to our mission.
+                    </p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: var(--border-radius);">
+                    <h4 style="color: var(--dark); margin-bottom: 10px; font-size: 1.1rem;">
+                        <i class="fas fa-portrait" style="color: var(--primary);"></i> Portfolio Matters
+                    </h4>
+                    <p style="color: var(--dark-light); font-size: 0.95rem;">
+                        Include links to your portfolio, GitHub, or any relevant work samples.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<!-- <script>
+    // Job filtering
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = this.dataset.filter;
+            const jobCards = document.querySelectorAll('.job-card');
+
+            jobCards.forEach(card => {
+                if (filter === 'all' || card.dataset.category === filter) {
+                    card.style.display = 'flex';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+
+    // Scroll to application form with position pre-selected
+    function scrollToApplication(position) {
+        const positionSelect = document.getElementById('positionSelect');
+        if (positionSelect) {
+            positionSelect.value = position;
+        }
+        
+        window.scrollTo({
+            top: document.getElementById('application-form').offsetTop - 100,
+            behavior: 'smooth'
+        });
+        
+        // Focus on name field
+        setTimeout(() => {
+            document.querySelector('input[name="name"]').focus();
+        }, 500);
+    }
+
+    // Form validation
+    document.getElementById('careerApplicationForm')?.addEventListener('submit', function(e) {
+        const resumeInput = document.getElementById('resumeUpload');
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        
+        if (resumeInput.files.length > 0) {
+            const fileSize = resumeInput.files[0].size;
+            if (fileSize > maxSize) {
+                e.preventDefault();
+                alert('Resume file size must be less than 5MB');
+                return false;
+            }
+            
+            // Check file extension
+            const allowedExtensions = ['.pdf', '.doc', '.docx'];
+            const fileName = resumeInput.files[0].name.toLowerCase();
+            const isValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+            
+            if (!isValidExtension) {
+                e.preventDefault();
+                alert('Only PDF, DOC, and DOCX files are allowed for resume');
+                return false;
+            }
+        }
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        submitBtn.disabled = true;
+        
+        // Reset button after 5 seconds (in case submission fails)
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }, 5000);
+        
+        return true;
+    });
+
+    // File upload preview
+    document.getElementById('resumeUpload')?.addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+            const fileName = this.files[0].name;
+            const fileSize = (this.files[0].size / 1024 / 1024).toFixed(2); // MB
+            console.log(`File selected: ${fileName} (${fileSize} MB)`);
+        }
+    });
+
+    // Add event listeners to all apply buttons
+    document.querySelectorAll('.apply-btn').forEach(btn => {
+        if (!btn.onclick) {
+            btn.addEventListener('click', function() {
+                const position = this.closest('.job-card').querySelector('h3').textContent;
+                scrollToApplication(position);
+            });
+        }
+    });
+</script> -->
+{% endblock %}

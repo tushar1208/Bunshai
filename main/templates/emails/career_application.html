@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #7d0022; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; background: #f8f9fa; }
+        .footer { background: #f1f1f1; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+        .info-box { background: white; padding: 20px; border-left: 4px solid #7d0022; margin: 15px 0; }
+        .resume-link { background: #e9ecef; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .priority { background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 New Career Application</h1>
+            <p>HR Department - Action Required</p>
+        </div>
+        
+        <div class="content">
+            <h2>New Job Application Received</h2>
+            
+            <div class="priority">
+                <h3>📋 Position: {{ application.get_position_display }}</h3>
+                <p><strong>Application ID:</strong> #{{ application.id|slice:":8" }}</p>
+                <p><strong>Submitted:</strong> {{ application.applied_at|date:"F d, Y H:i" }}</p>
+            </div>
+            
+            <div class="info-box">
+                <h3>Candidate Information</h3>
+                <p><strong>Name:</strong> {{ application.name }}</p>
+                <p><strong>Email:</strong> {{ application.email }}</p>
+                <p><strong>Phone:</strong> {{ application.phone }}</p>
+                {% if application.linkedin_url %}
+                <p><strong>LinkedIn:</strong> <a href="{{ application.linkedin_url }}">{{ application.linkedin_url }}</a></p>
+                {% endif %}
+                <p><strong>IP Address:</strong> {{ application.ip_address }}</p>
+            </div>
+            
+            <div class="info-box">
+                <h3>Cover Letter</h3>
+                <p>{{ application.cover_letter|linebreaks|truncatewords:100 }}</p>
+                {% if application.cover_letter|wordcount > 100 %}
+                <p><em>... (truncated, view full in admin)</em></p>
+                {% endif %}
+            </div>
+            
+            <div class="resume-link">
+                <h4>📎 Resume/CV</h4>
+                <p>Resume has been uploaded to the system.</p>
+                <p><a href="/media/{{ application.resume }}">Download Resume</a> (View in admin for full access)</p>
+            </div>
+            
+            <h3>HR Review Process:</h3>
+            <ol>
+                <li><strong>Step 1 (Within 24 hours):</strong> Send acknowledgment email</li>
+                <li><strong>Step 2 (Within 48 hours):</strong> Initial resume screening</li>
+                <li><strong>Step 3 (Within 3 days):</strong> Schedule interview if qualified</li>
+                <li><strong>Step 4 (Within 5 days):</strong> Send follow-up/rejection email</li>
+            </ol>
+            
+            <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <h4>🎯 Screening Checklist:</h4>
+                <ul>
+                    <li>✓ Resume format and completeness</li>
+                    <li>✓ Relevant experience for position</li>
+                    <li>✓ Cover letter quality</li>
+                    <li>✓ LinkedIn profile (if provided)</li>
+                    <li>✓ Contact information verification</li>
+                </ul>
+            </div>
+            
+            <p style="text-align: center;">
+                <a href="mailto:{{ application.email }}?subject=Application%20Received%20-%20{{ application.get_position_display|urlencode }}"
+                   style="background: #7d0022; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                    📧 Send Acknowledgment
+                </a>
+                <a href="/admin/main/careerapplication/{{ application.id }}/change/"
+                   style="background: #6c757d; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; margin-left: 10px;">
+                    👁️ View in Admin
+                </a>
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>© {% now "Y" %} {{ site_name }}. Human Resources Department</p>
+            <p>This application was submitted through the careers page.</p>
+        </div>
+    </div>
+</body>
+</html>

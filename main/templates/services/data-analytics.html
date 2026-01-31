@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Data & Analytics Services{% endblock %}
+{% block page_subtitle %}Transform data into actionable insights{% endblock %}
+
+{% block content %}
+<section class="page-content">
+    <div class="container">
+        <div class="service-hero">
+            <div class="service-hero-content">
+                <h1>Data & Analytics Solutions</h1>
+                <p class="lead">Unlock the power of your data with advanced analytics and insights</p>
+            </div>
+            <div class="service-hero-image">
+                <img src="{% static 'images/services/data-tools.jpg' %}" alt="Data Analytics">
+            </div>
+        </div>
+
+        <div class="service-details">
+            <h2>Our Data Analytics Services</h2>
+            <p>We help businesses harness the power of data to drive informed decisions and growth.</p>
+
+            <div class="analytics-services">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Data Engineering</h3>
+                    <ul>
+                        <li>Data pipeline development</li>
+                        <li>ETL/ELT processes</li>
+                        <li>Data warehousing</li>
+                        <li>Data lake implementation</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Business Intelligence</h3>
+                    <ul>
+                        <li>Dashboard development</li>
+                        <li>KPI tracking & reporting</li>
+                        <li>Data visualization</li>
+                        <li>Self-service analytics</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI & Machine Learning</h3>
+                    <ul>
+                        <li>Predictive analytics</li>
+                        <li>Machine learning models</li>
+                        <li>Natural language processing</li>
+                        <li>Recommendation systems</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Data Strategy</h3>
+                    <ul>
+                        <li>Data governance</li>
+                        <li>Compliance & security</li>
+                        <li>Data quality management</li>
+                        <li>Analytics roadmap</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tools-technologies">
+                <h3>Tools & Technologies</h3>
+                <div class="tools-grid">
+                    <div class="tool-category">
+                        <h4>BI Tools</h4>
+                        <div class="tool-list">
+                            <span>Tableau</span>
+                            <span>Power BI</span>
+                            <span>Looker</span>
+                            <span>Qlik</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>Data Platforms</h4>
+                        <div class="tool-list">
+                            <span>Snowflake</span>
+                            <span>BigQuery</span>
+                            <span>Redshift</span>
+                            <span>Databricks</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>Processing</h4>
+                        <div class="tool-list">
+                            <span>Apache Spark</span>
+                            <span>Apache Kafka</span>
+                            <span>Airflow</span>
+                            <span>dbt</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-study">
+                <h3>Success Story</h3>
+                <div class="case-content">
+                    <div class="case-image">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Analytics Dashboard">
+                    </div>
+                    <div class="case-text">
+                        <h4>Retail Analytics Transformation</h4>
+                        <p>Helped a retail chain increase sales by 35% through predictive analytics and inventory optimization.</p>
+                        <ul>
+                            <li>Implemented real-time sales dashboard</li>
+                            <li>Developed demand forecasting models</li>
+                            <li>Reduced inventory costs by 20%</li>
+                            <li>Improved customer segmentation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3>Transform Your Data into Insights</h3>
+                <p>Get a free data assessment and discover hidden opportunities</p>
+                <button class="cta-btn" onclick="showProposalPopup()">
+                    Request Data Consultation
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.analytics-services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.service-card {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+    transition: var(--transition);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.service-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.service-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: 20px;
+}
+
+.service-card ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.service-card ul li {
+    margin-bottom: 10px;
+    color: var(--dark-light);
+    position: relative;
+    padding-left: 25px;
+}
+
+.service-card ul li:before {
+    content: '📊';
+    position: absolute;
+    left: 0;
+    font-size: 0.9rem;
+}
+
+.tools-technologies {
+    background: var(--light);
+    padding: 60px 40px;
+    border-radius: var(--border-radius-lg);
+    margin: 60px 0;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.tool-category {
+    background: white;
+    padding: 25px;
+    border-radius: var(--border-radius-lg);
+}
+
+.tool-category h4 {
+    color: var(--dark);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.tool-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.tool-list span {
+    padding: 8px 15px;
+    background: var(--light-dark);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+.case-study {
+    margin: 60px 0;
+}
+
+.case-content {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.case-image {
+    flex: 1;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.case-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.case-text {
+    flex: 1;
+}
+
+.case-text h4 {
+    font-size: 1.8rem;
+    color: var(--dark);
+    margin-bottom: 20px;
+}
+
+.case-text p {
+    color: var(--dark-light);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.case-text ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.case-text ul li {
+    margin-bottom: 10px;
+    color: var(--dark-light);
+    position: relative;
+    padding-left: 25px;
+}
+
+.case-text ul li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: bold;
+}
+
+@media (max-width: 992px) {
+    .case-content {
+        flex-direction: column;
+    }
+    
+    .case-image,
+    .case-text {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .analytics-services {
+        grid-template-columns: 1fr;
+    }
+    
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .case-content {
+        gap: 20px;
+    }
+}
+</style>
+{% endblock %}

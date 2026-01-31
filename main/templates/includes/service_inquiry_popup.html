@@ -1,0 +1,28 @@
+<!-- templates/includes/service_inquiry_popup.html -->
+<div class="modal" id="serviceInquiryModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Service Inquiry</h2>
+            <button class="modal-close" onclick="hideServiceInquiryPopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Get more information about our services</p>
+            <form id="serviceInquiryForm">
+                {% csrf_token %}
+                <!-- Add your form fields here -->
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function showServiceInquiryPopup() {
+    document.getElementById('serviceInquiryModal').style.display = 'flex';
+}
+
+function hideServiceInquiryPopup() {
+    document.getElementById('serviceInquiryModal').style.display = 'none';
+}
+</script>

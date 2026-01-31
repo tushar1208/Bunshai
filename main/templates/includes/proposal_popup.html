@@ -1,0 +1,92 @@
+<!-- PROPOSAL POPUP -->
+<div id="proposalModal" class="modal proposal-popup">
+    
+    <!-- Overlay (outside click works automatically via JS) -->
+    <div class="popup-overlay"></div>
+
+    <div class="popup-container modal-content">
+
+        <!-- LEFT SIDE -->
+        <div class="popup-left">
+            <img src="/static/images/Logo1.png" alt="BunShai TECHNOHUB" class="popup-image">
+
+            <div class="popup-image-overlay">
+                <h3>Let's Build Something Amazing</h3>
+                <p>Share your project details and we'll prepare a customized solution just for you.</p>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> Free consultation</li>
+                    <li><i class="fas fa-check-circle"></i> No obligation quote</li>
+                    <li><i class="fas fa-check-circle"></i> 24/7 support</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="popup-right modal-body">
+
+            <!-- CLOSE BUTTON (JS WORKS) -->
+            <span class="popup-close modal-close">&times;</span>
+
+            <h2>Get Your Customized Proposal Today</h2>
+
+            <form method="POST" action="/proposal/" class="proposal-form" id="proposalForm" >
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Name" required class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="phone" placeholder="Phone Number" required class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email Address" required class="form-input">
+                </div>
+
+                <div class="dropdown">
+                    <div class="form-group">
+                        <select name="service" required class="form-input">
+                            <option value="">Interested Service</option>
+                            <option value="IT Consulting">IT Consulting</option>
+                            <option value="Digital Marketing">Digital Marketing</option>
+                            <option value="Cloud Solutions">Cloud Solutions</option>
+                            <option value="Software Development">Software Development</option>
+                            <option value="Cybersecurity">Cybersecurity</option>
+                            <option value="Data & Analytics">Data & Analytics</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select name="budget" required class="form-input">
+                            <option value="">Project Budget</option>
+                            <option value="Less than ₹50,000">Less than ₹50,000</option>
+                            <option value="₹50,000 - ₹1,00,000">₹50,000 - ₹1,00,000</option>
+                            <option value="Above ₹1,00,000">Above ₹1,00,000</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <textarea name="requirements" placeholder="Please describe your project requirements*" 
+                        class="form-input textarea-input"></textarea>
+                </div>
+
+                <div class="form-checkbox">
+                    <input type="checkbox" id="privacyCheck" required>
+                    <label for="privacyCheck">
+                        I have read and understood the
+                        <a href="/privacy" class="privacy-link">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span>Inquire Now</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>

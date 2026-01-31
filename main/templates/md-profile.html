@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Managing Director Profile - BunShai TECHNOHUB{% endblock %}
+{% block page_subtitle %}Leadership, Vision, and Innovation{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/md-profile.css' %}">
+<section class="md-profile">
+    <div class="container">
+        <div class="profile-header">
+            <h1>Managing Director</h1>
+            <p class="subtitle">Leadership that drives innovation and growth</p>
+        </div>
+
+        <div class="profile-content">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="md-photo">
+                    <img src="{% static 'images/team/md-photo.jpg' %}" alt="Managing Director" 
+                         onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    <div class="photo-badge">
+                        <i class="fas fa-award"></i>
+                        <span>Founder & Managing Director</span>
+                    </div>
+                </div>
+                <div class="md-intro">
+                    <h2>Meet Our Visionary Leader</h2>
+                    <p class="name">Mr. BunShai</p>
+                    <p class="title">Managing Director & Chief Innovation Officer</p>
+                    
+                    <div class="quick-stats">
+                        <div class="stat">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <h4>15+ Years</h4>
+                                <p>Industry Experience</p>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <h4>4 Degrees</h4>
+                                <p>Technology & Business</p>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-globe"></i>
+                            <div>
+                                <h4>Global</h4>
+                                <p>Business Perspective</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com" target="_blank" rel="noopener">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://github.com" target="_blank" rel="noopener">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="mailto:md@bunshai.com" target="_blank">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biography -->
+            <div class="section-card">
+                <h2><i class="fas fa-book-open"></i> Professional Biography</h2>
+                <div class="bio-content">
+                    <p>With over 15 years of experience in the technology industry, Mr. BunShai has established himself as a visionary leader and innovator in the digital transformation space. His journey began as a software developer, where he quickly recognized the potential of technology to transform businesses.</p>
+                    
+                    <p>Under his leadership, BunShai TECHNOHUB has grown from a startup to a global technology solutions provider serving clients across multiple continents. His hands-on approach and deep technical expertise combined with strategic business acumen have been instrumental in the company's success.</p>
+                    
+                    <div class="achievement-highlights">
+                        <h3>Key Achievements</h3>
+                        <ul>
+                            <li>Successfully led the company through rapid growth phases, expanding from 5 to 50+ team members</li>
+                            <li>Pioneered innovative solutions that have helped 30+ clients achieve digital transformation</li>
+                            <li>Established strategic partnerships with leading technology providers including AWS, Microsoft, and Google Cloud</li>
+                            <li>Developed proprietary methodologies that have reduced client project delivery times by 40%</li>
+                            <li>Recognized as "Technology Innovator of the Year" by Global Tech Awards 2023</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education & Certifications -->
+            <div class="section-card">
+                <h2><i class="fas fa-graduation-cap"></i> Education & Credentials</h2>
+                <div class="education-grid">
+                    <div class="education-card">
+                        <div class="edu-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3>Master of Business Administration</h3>
+                        <p class="institution">Harvard Business School</p>
+                        <p class="year">2015 - 2017</p>
+                    </div>
+                    <div class="education-card">
+                        <div class="edu-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>Master of Computer Science</h3>
+                        <p class="institution">Stanford University</p>
+                        <p class="year">2010 - 2012</p>
+                    </div>
+                    <div class="education-card">
+                        <div class="edu-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3>Professional Certifications</h3>
+                        <div class="cert-list">
+                            <span>AWS Solutions Architect</span>
+                            <span>PMP Certified</span>
+                            <span>Google Cloud Architect</span>
+                            <span>Scrum Master</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leadership Philosophy -->
+            <div class="section-card">
+                <h2><i class="fas fa-brain"></i> Leadership Philosophy</h2>
+                <div class="philosophy-content">
+                    <div class="philosophy-item">
+                        <div class="phi-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h3>People-First Leadership</h3>
+                            <p>"Our greatest asset is our team. I believe in creating an environment where talented individuals can thrive, innovate, and grow both professionally and personally."</p>
+                        </div>
+                    </div>
+                    <div class="philosophy-item">
+                        <div class="phi-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <h3>Innovation-Driven Growth</h3>
+                            <p>"Continuous innovation isn't just a strategy—it's our culture. We embrace change, experiment fearlessly, and learn from every outcome to drive sustainable growth."</p>
+                        </div>
+                    </div>
+                    <div class="philosophy-item">
+                        <div class="phi-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div>
+                            <h3>Client Partnership Approach</h3>
+                            <p>"We don't just deliver projects; we build partnerships. Success is measured by our clients' success, and we're committed to being their trusted technology partner."</p>
+                        </div>
+                    </div>
+                    <div class="philosophy-item">
+                        <div class="phi-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div>
+                            <h3>Sustainable Excellence</h3>
+                            <p>"Quality isn't an act, it's a habit. We're committed to delivering excellence consistently while building a sustainable, ethical, and responsible business."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Speaking & Publications -->
+            <div class="section-card">
+                <h2><i class="fas fa-microphone"></i> Speaking & Publications</h2>
+                <div class="speaking-grid">
+                    <div class="speaking-card">
+                        <div class="speaking-thumb">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="speaking-content">
+                            <h3>TEDx Talk: "The Future of Digital Transformation"</h3>
+                            <p>Exploring how AI and cloud technologies are reshaping businesses globally.</p>
+                            <a href="#" class="watch-link">Watch Now →</a>
+                        </div>
+                    </div>
+                    <div class="speaking-card">
+                        <div class="speaking-thumb">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <div class="speaking-content">
+                            <h3>Forbes Article: "Building Tech Teams for Tomorrow"</h3>
+                            <p>Insights on creating agile, innovative technology teams in the modern era.</p>
+                            <a href="#" class="watch-link">Read Article →</a>
+                        </div>
+                    </div>
+                    <div class="speaking-card">
+                        <div class="speaking-thumb">
+                            <i class="fas fa-podcast"></i>
+                        </div>
+                        <div class="speaking-content">
+                            <h3>Tech Leaders Podcast Interview</h3>
+                            <p>Discussing leadership strategies in the rapidly evolving tech landscape.</p>
+                            <a href="#" class="watch-link">Listen Now →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Routine -->
+            <div class="section-card">
+                <h2><i class="fas fa-clock"></i> A Day in the Life</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="time">6:00 AM</div>
+                        <div class="activity">
+                            <h4>Morning Strategy Session</h4>
+                            <p>Reviewing global team updates and setting strategic priorities for the day.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">9:00 AM</div>
+                        <div class="activity">
+                            <h4>Client Meetings</h4>
+                            <p>Engaging with key clients to understand their challenges and explore solutions.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">1:00 PM</div>
+                        <div class="activity">
+                            <h4>Innovation Workshop</h4>
+                            <p>Collaborating with the R&D team on emerging technologies and new solutions.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">4:00 PM</div>
+                        <div class="activity">
+                            <h4>Team Development</h4>
+                            <p>Mentoring sessions with team leads and reviewing project progress.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">7:00 PM</div>
+                        <div class="activity">
+                            <h4>Industry Networking</h4>
+                            <p>Participating in tech community events and knowledge sharing sessions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connect Section -->
+            <div class="connect-section">
+                <div class="connect-card">
+                    <h2>Connect with Our Leadership</h2>
+                    <p>Interested in discussing technology, innovation, or potential collaborations?</p>
+                    
+                    <div class="connect-options">
+                        <a href="mailto:md@bunshai.com" class="connect-btn email">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email Directly</span>
+                        </a>
+                        <a href="https://calendly.com" target="_blank" class="connect-btn calendar">
+                            <i class="fas fa-calendar"></i>
+                            <span>Schedule Meeting</span>
+                        </a>
+                        <button onclick="showProposalPopup()" class="connect-btn proposal">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Request Strategic Consultation</span>
+                        </button>
+                    </div>
+                    
+                    <div class="disclaimer">
+                        <p><i class="fas fa-info-circle"></i> Response time: Within 24 hours for direct inquiries</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Software Development{% endblock %}
+{% block page_subtitle %}Custom software solutions for your business needs{% endblock %}
+
+{% block content %}
+<section class="page-content">
+    <div class="container">
+        <div class="service-hero">
+            <div class="service-hero-content">
+                <h1>Software Development</h1>
+                <p class="lead">Build scalable, secure, and high-performance software solutions</p>
+            </div>
+            <div class="service-hero-image">
+                <img src="{% static 'images/services/web-dev-tools.jpg' %}" alt="Software Development">
+            </div>
+        </div>
+
+        <div class="service-details">
+            <h2>Our Development Expertise</h2>
+            <p>We create custom software solutions using modern technologies and best practices.</p>
+
+            <div class="tech-stack">
+                <h3>Technology Stack</h3>
+                <div class="tech-grid">
+                    <div class="tech-category">
+                        <h4>Frontend</h4>
+                        <div class="tech-icons">
+                            <span class="tech-icon">React</span>
+                            <span class="tech-icon">Vue.js</span>
+                            <span class="tech-icon">Angular</span>
+                            <span class="tech-icon">Next.js</span>
+                        </div>
+                    </div>
+
+                    <div class="tech-category">
+                        <h4>Backend</h4>
+                        <div class="tech-icons">
+                            <span class="tech-icon">Node.js</span>
+                            <span class="tech-icon">Python</span>
+                            <span class="tech-icon">Java</span>
+                            <span class="tech-icon">.NET</span>
+                        </div>
+                    </div>
+
+                    <div class="tech-category">
+                        <h4>Mobile</h4>
+                        <div class="tech-icons">
+                            <span class="tech-icon">React Native</span>
+                            <span class="tech-icon">Flutter</span>
+                            <span class="tech-icon">iOS Swift</span>
+                            <span class="tech-icon">Android Kotlin</span>
+                        </div>
+                    </div>
+
+                    <div class="tech-category">
+                        <h4>Database</h4>
+                        <div class="tech-icons">
+                            <span class="tech-icon">PostgreSQL</span>
+                            <span class="tech-icon">MongoDB</span>
+                            <span class="tech-icon">MySQL</span>
+                            <span class="tech-icon">Redis</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="development-process">
+                <h3>Our Development Process</h3>
+                <div class="process-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h4>Discovery & Planning</h4>
+                        <p>Requirements gathering and project planning</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h4>Design & Prototyping</h4>
+                        <p>UI/UX design and prototype development</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h4>Development</h4>
+                        <p>Agile development with regular sprints</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h4>Testing & QA</h4>
+                        <p>Comprehensive testing and quality assurance</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <h4>Deployment</h4>
+                        <p>Production deployment and launch</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <h4>Support & Maintenance</h4>
+                        <p>Ongoing support and updates</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="projects-showcase">
+                <h3>Types of Software We Build</h3>
+                <div class="project-types">
+                    <div class="project-type">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h4>E-commerce Platforms</h4>
+                        <p>Custom online stores with payment integration</p>
+                    </div>
+                    <div class="project-type">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Business Management</h4>
+                        <p>ERP, CRM, and custom business applications</p>
+                    </div>
+                    <div class="project-type">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h4>Mobile Applications</h4>
+                        <p>iOS and Android apps for business needs</p>
+                    </div>
+                    <div class="project-type">
+                        <i class="fas fa-cogs"></i>
+                        <h4>Automation Tools</h4>
+                        <p>Workflow automation and process optimization</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3>Start Your Software Project</h3>
+                <p>Get a free consultation and project estimate</p>
+                <button class="cta-btn" onclick="showProposalPopup()">
+                    Discuss Your Project
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.tech-stack {
+    margin: 60px 0;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.tech-category {
+    background: white;
+    padding: 25px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.tech-category h4 {
+    color: var(--dark);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.tech-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.tech-icon {
+    padding: 8px 15px;
+    background: var(--light);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--dark);
+    border: 1px solid #e5e7eb;
+}
+
+.development-process {
+    background: var(--light);
+    padding: 60px 40px;
+    border-radius: var(--border-radius-lg);
+    margin: 60px 0;
+}
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.step {
+    text-align: center;
+    position: relative;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 20px;
+}
+
+.step h4 {
+    color: var(--dark);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.step p {
+    color: var(--dark-light);
+    font-size: 0.9rem;
+}
+
+.projects-showcase {
+    margin: 60px 0;
+}
+
+.project-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.project-type {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.project-type:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.project-type i {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.project-type h4 {
+    color: var(--dark);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.project-type p {
+    color: var(--dark-light);
+    line-height: 1.6;
+}
+
+@media (max-width: 992px) {
+    .process-steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .tech-grid,
+    .process-steps,
+    .project-types {
+        grid-template-columns: 1fr;
+    }
+    
+    .development-process {
+        padding: 40px 20px;
+    }
+}
+</style>
+{% endblock %}

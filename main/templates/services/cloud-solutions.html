@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Cloud Solutions{% endblock %}
+{% block page_subtitle %}Scalable, secure, and efficient cloud infrastructure{% endblock %}
+
+{% block content %}
+<section class="page-content">
+    <div class="container">
+        <div class="service-hero">
+            <div class="service-hero-content">
+                <h1>Cloud Solutions & Services</h1>
+                <p class="lead">Transform your business with scalable cloud infrastructure and managed services</p>
+            </div>
+            <div class="service-hero-image">
+                <img src="{% static 'images/services/cloud-tools.jpg' %}" alt="Cloud Solutions">
+            </div>
+        </div>
+
+        <div class="service-details">
+            <h2>Our Cloud Expertise</h2>
+            <p>We provide end-to-end cloud solutions across AWS, Azure, and Google Cloud Platform</p>
+
+            <div class="cloud-platforms">
+                <div class="platform-card">
+                    <div class="platform-icon aws">
+                        <i class="fab fa-aws"></i>
+                    </div>
+                    <h3>AWS Solutions</h3>
+                    <p>Full-stack AWS implementation and management</p>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-icon azure">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                    <h3>Azure Services</h3>
+                    <p>Microsoft Azure cloud implementation</p>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-icon gcp">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <h3>Google Cloud</h3>
+                    <p>GCP infrastructure and services</p>
+                </div>
+            </div>
+
+            <div class="service-offerings">
+                <h3>Our Cloud Services</h3>
+                
+                <div class="offering-grid">
+                    <div class="offering-card">
+                        <h4>Cloud Migration</h4>
+                        <ul>
+                            <li>Application assessment</li>
+                            <li>Migration planning</li>
+                            <li>Data migration</li>
+                            <li>Post-migration support</li>
+                        </ul>
+                    </div>
+
+                    <div class="offering-card">
+                        <h4>Cloud Architecture</h4>
+                        <ul>
+                            <li>Solution design</li>
+                            <li>Infrastructure as Code</li>
+                            <li>Security architecture</li>
+                            <li>Cost optimization</li>
+                        </ul>
+                    </div>
+
+                    <div class="offering-card">
+                        <h4>DevOps & CI/CD</h4>
+                        <ul>
+                            <li>Containerization (Docker)</li>
+                            <li>Kubernetes orchestration</li>
+                            <li>CI/CD pipeline setup</li>
+                            <li>Automated deployment</li>
+                        </ul>
+                    </div>
+
+                    <div class="offering-card">
+                        <h4>Cloud Security</h4>
+                        <ul>
+                            <li>Security assessment</li>
+                            <li>Compliance management</li>
+                            <li>Identity & access management</li>
+                            <li>Threat detection</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="benefits-section">
+                <h3>Benefits of Our Cloud Solutions</h3>
+                <div class="benefits-grid">
+                    <div class="benefit">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Cost Efficiency</h4>
+                        <p>Reduce IT costs with pay-as-you-go models</p>
+                    </div>
+                    <div class="benefit">
+                        <i class="fas fa-expand"></i>
+                        <h4>Scalability</h4>
+                        <p>Scale resources up or down based on demand</p>
+                    </div>
+                    <div class="benefit">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Security</h4>
+                        <p>Enterprise-grade security and compliance</p>
+                    </div>
+                    <div class="benefit">
+                        <i class="fas fa-bolt"></i>
+                        <h4>Performance</h4>
+                        <p>High-performance infrastructure</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3>Start Your Cloud Journey</h3>
+                <p>Get a free cloud assessment and migration strategy</p>
+                <button class="cta-btn" onclick="showProposalPopup()">
+                    Get Free Cloud Consultation
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.cloud-platforms {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+.platform-card {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    min-width: 200px;
+}
+
+.platform-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.platform-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2.5rem;
+    color: white;
+}
+
+.platform-icon.aws {
+    background: linear-gradient(135deg, #FF9900, #FF6600);
+}
+
+.platform-icon.azure {
+    background: linear-gradient(135deg, #0078D4, #005A9E);
+}
+
+.platform-icon.gcp {
+    background: linear-gradient(135deg, #4285F4, #0F9D58);
+}
+
+.service-offerings {
+    margin: 60px 0;
+}
+
+.offering-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.offering-card {
+    background: white;
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+}
+
+.offering-card h4 {
+    color: var(--dark);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.offering-card ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.offering-card ul li {
+    margin-bottom: 8px;
+    color: var(--dark-light);
+    position: relative;
+    padding-left: 25px;
+}
+
+.offering-card ul li:before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.benefits-section {
+    background: var(--light);
+    padding: 60px 40px;
+    border-radius: var(--border-radius-lg);
+    margin: 60px 0;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.benefit {
+    text-align: center;
+    padding: 30px 20px;
+    background: white;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.benefit:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.benefit i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.benefit h4 {
+    color: var(--dark);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.benefit p {
+    color: var(--dark-light);
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .cloud-platforms {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .platform-card {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .offering-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

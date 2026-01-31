@@ -1,0 +1,566 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Subscribe{% endblock %}
+{% block page_subtitle %}Stay Updated with Our Latest News & Offers{% endblock %}
+
+
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/subscribe.css'%}">
+<!-- Hero Section -->
+<section class="subscribe-hero">
+    <div class="container">
+        <h1>Join Our Community</h1>
+        <p>Subscribe to our newsletter and be the first to know about our latest projects, technology insights, and exclusive offers.</p>
+        
+        <div class="main-subscribe-form">
+            <form id="heroSubscribeForm">
+                {% csrf_token %}
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit">
+                    <i class="fas fa-paper-plane"></i> Subscribe
+                </button>
+            </form>
+            <p id="heroMessage" style="margin-top: 15px; display: none; font-size: 0.95rem; position: relative;"></p>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Grid -->
+<section class="page-content">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 20px; color: var(--dark); font-size: 2.5rem;">
+            What You'll Receive
+        </h2>
+        <p style="text-align: center; color: var(--dark-light); max-width: 600px; margin: 0 auto 60px; font-size: 1.1rem;">
+            By subscribing, you'll get access to exclusive content and updates
+        </p>
+        
+        <div class="subscribe-grid">
+            <div class="benefit-card">
+                <i class="fas fa-newspaper"></i>
+                <h3>Monthly Newsletter</h3>
+                <p>Curated tech insights, industry trends, and company updates delivered monthly to your inbox.</p>
+                <ul style="text-align: left; margin-top: 15px; padding-left: 20px; color: var(--dark-light);">
+                    <li>Industry analysis reports</li>
+                    <li>Technology deep dives</li>
+                    <li>Market trends</li>
+                </ul>
+            </div>
+            
+            <div class="benefit-card">
+                <i class="fas fa-bullhorn"></i>
+                <h3>Product Announcements</h3>
+                <p>Be the first to know about new services, features, and product launches before anyone else.</p>
+                <ul style="text-align: left; margin-top: 15px; padding-left: 20px; color: var(--dark-light);">
+                    <li>Early access to beta features</li>
+                    <li>Exclusive previews</li>
+                    <li>Launch event invitations</li>
+                </ul>
+            </div>
+            
+            <div class="benefit-card">
+                <i class="fas fa-gift"></i>
+                <h3>Exclusive Offers</h3>
+                <p>Special discounts, promotional offers, and free resources available only to our subscribers.</p>
+                <ul style="text-align: left; margin-top: 15px; padding-left: 20px; color: var(--dark-light);">
+                    <li>Subscriber-only discounts</li>
+                    <li>Free template downloads</li>
+                    <li>Bonus content</li>
+                </ul>
+            </div>
+            
+            <div class="benefit-card">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>Educational Content</h3>
+                <p>Access to guides, tutorials, whitepapers, and resources to help you grow your business.</p>
+                <ul style="text-align: left; margin-top: 15px; padding-left: 20px; color: var(--dark-light);">
+                    <li>How-to guides</li>
+                    <li>Case studies</li>
+                    <li>Expert interviews</li>
+                </ul>
+            </div>
+            
+            <div class="benefit-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Market Insights</h3>
+                <p>Get data-driven insights, analytics, and reports on technology market trends and opportunities.</p>
+                <ul style="text-align: left; margin-top: 15px; padding-left: 20px; color: var(--dark-light);">
+                    <li>Quarterly market reports</li>
+                    <li>Investment insights</li>
+                    <li>Growth opportunities</li>
+                </ul>
+            </div>
+            
+            <div class="benefit-card">
+                <i class="fas fa-users"></i>
+                <h3>Community Access</h3>
+                <p>Join our network of technology professionals, entrepreneurs, and industry experts.</p>
+                <ul style="text-align: left; margin-top: 15px; padding-left: 20px; color: var(--dark-light);">
+                    <li>Networking events</li>
+                    <li>Expert Q&A sessions</li>
+                    <li>Community forums</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Newsletter Stats -->
+        <div class="newsletter-section">
+            <div class="newsletter-content">
+                <h2 style="color: var(--dark); margin-bottom: 20px; font-size: 2.5rem;">
+                    Join Thousands of Subscribers
+                </h2>
+                <p style="color: var(--dark-light); margin-bottom: 30px; font-size: 1.1rem;">
+                    Our newsletter is trusted by professionals and businesses worldwide
+                </p>
+                
+                <div class="newsletter-stats">
+                    <div class="stat-item">
+                        <h4>10K+</h4>
+                        <p>Subscribers</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>98%</h4>
+                        <p>Open Rate</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>95%</h4>
+                        <p>Satisfaction</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>50+</h4>
+                        <p>Countries</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 40px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                    <form id="statsSubscribeForm" style="display: flex; gap: 10px;">
+                        <input type="email" placeholder="Your email" required 
+                               style="flex: 1; padding: 15px; border: none; border-radius: var(--border-radius);">
+                        <button type="submit" 
+                                style="background: var(--primary); color: white; border: none; padding: 15px 25px; border-radius: var(--border-radius); cursor: pointer; font-weight: bold;">
+                            Join
+                        </button>
+                    </form>
+                    <p id="statsMessage" style="margin-top: 10px; font-size: 0.9rem; display: none;"></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Email Categories -->
+        <div class="email-categories">
+            <h2 style="text-align: center; color: var(--dark); margin-bottom: 20px; font-size: 2.2rem;">
+                Customize Your Preferences
+            </h2>
+            <p style="text-align: center; color: var(--dark-light); margin-bottom: 30px;">
+                Choose the types of emails you want to receive
+            </p>
+            
+            <div class="category-grid">
+                <div class="category-item">
+                    <h4><i class="fas fa-laptop-code"></i> Technology Updates</h4>
+                    <p>Latest tech news, product releases, and industry innovations</p>
+                </div>
+                
+                <div class="category-item">
+                    <h4><i class="fas fa-chart-bar"></i> Business Insights</h4>
+                    <p>Market trends, business strategies, and growth opportunities</p>
+                </div>
+                
+                <div class="category-item">
+                    <h4><i class="fas fa-tools"></i> Tutorials & Guides</h4>
+                    <p>Step-by-step guides, tutorials, and how-to articles</p>
+                </div>
+                
+                <div class="category-item">
+                    <h4><i class="fas fa-calendar-alt"></i> Events & Webinars</h4>
+                    <p>Invitations to online events, webinars, and workshops</p>
+                </div>
+                
+                <div class="category-item">
+                    <h4><i class="fas fa-tags"></i> Promotions & Offers</h4>
+                    <p>Special discounts, promotions, and limited-time offers</p>
+                </div>
+                
+                <div class="category-item">
+                    <h4><i class="fas fa-briefcase"></i> Career Opportunities</h4>
+                    <p>Job openings, career advice, and professional development</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 40px; text-align: center;">
+                <button onclick="showPreferencesForm()" 
+                        style="background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 1.1rem;">
+                    <i class="fas fa-sliders-h"></i> Customize Preferences
+                </button>
+            </div>
+        </div>
+        
+        <!-- Final Call to Action -->
+        <div class="final-subscribe">
+            <h2>Ready to Stay Updated?</h2>
+            <p>Don't miss out on valuable insights and opportunities. Join our community of forward-thinking professionals.</p>
+            
+            <form id="finalSubscribeForm" style="max-width: 400px; margin: 30px auto;">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <input type="text" placeholder="Your Name" required 
+                           style="flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: var(--border-radius);">
+                    <input type="email" placeholder="Email Address" required 
+                           style="flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: var(--border-radius);">
+                </div>
+                
+                <div style="text-align: left; margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 10px; color: var(--dark); font-weight: 500;">
+                        <input type="checkbox" required style="margin-right: 10px;">
+                        I agree to receive emails from BunShai TECHNOHUB
+                    </label>
+                    <small style="color: var(--dark-light); display: block; margin-top: 5px;">
+                        You can unsubscribe at any time. We respect your privacy.
+                    </small>
+                </div>
+                
+                <button type="submit" 
+                        style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 18px 40px; border-radius: 30px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1rem;">
+                    <i class="fas fa-envelope"></i> Subscribe Now
+                </button>
+            </form>
+            <p id="finalMessage" style="margin-top: 15px; display: none;"></p>
+            
+            <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--light-dark);">
+                <p style="color: var(--dark-light); font-size: 0.9rem; margin-bottom: 20px;">
+                    <i class="fas fa-lock" style="color: var(--primary);"></i>
+                    We respect your privacy. Unsubscribe at any time. Read our 
+                    <a href="/privacy" style="color: var(--primary); text-decoration: none; font-weight: 500;">Privacy Policy</a>
+                </p>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <a href="mailto:support@bunshai.com?subject=Subscription%20Help" 
+                       style="color: var(--dark-light); text-decoration: none; font-size: 0.9rem;">
+                        <i class="fas fa-question-circle"></i> Need Help?
+                    </a>
+                    <a href="mailto:unsubscribe@bunshai.com?subject=Unsubscribe" 
+                       style="color: var(--dark-light); text-decoration: none; font-size: 0.9rem;">
+                        <i class="fas fa-user-minus"></i> Unsubscribe
+                    </a>
+                    <a href="/privacy" 
+                       style="color: var(--dark-light); text-decoration: none; font-size: 0.9rem;">
+                        <i class="fas fa-shield-alt"></i> Privacy Policy
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Email validation
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // Show message
+    function showMessage(elementId, message, type) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.style.color = type === 'success' ? '#10b981' : '#ef4444';
+        element.style.display = 'block';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, 5000);
+    }
+
+    // Hero subscribe form
+    document.getElementById('heroSubscribeForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = this.querySelector('input[type="email"]').value;
+        
+        if (validateEmail(email)) {
+            // Store in localStorage for demo
+            const subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers') || '[]');
+            subscribers.push({
+                email: email,
+                date: new Date().toISOString(),
+                source: 'hero'
+            });
+            localStorage.setItem('newsletterSubscribers', JSON.stringify(subscribers));
+            
+            showMessage('heroMessage', 'Thank you for subscribing! Check your email for confirmation.', 'success');
+            this.reset();
+            
+            // Update subscriber count
+            updateSubscriberCount();
+        } else {
+            showMessage('heroMessage', 'Please enter a valid email address.', 'error');
+        }
+    });
+
+    // Stats subscribe form
+    document.getElementById('statsSubscribeForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = this.querySelector('input[type="email"]').value;
+        
+        if (validateEmail(email)) {
+            // Store in localStorage for demo
+            const subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers') || '[]');
+            subscribers.push({
+                email: email,
+                date: new Date().toISOString(),
+                source: 'stats'
+            });
+            localStorage.setItem('newsletterSubscribers', JSON.stringify(subscribers));
+            
+            showMessage('statsMessage', 'Welcome to our community!', 'success');
+            this.reset();
+            
+            // Update subscriber count
+            updateSubscriberCount();
+        } else {
+            showMessage('statsMessage', 'Please enter a valid email address.', 'error');
+        }
+    });
+
+    // Final subscribe form
+    document.getElementById('finalSubscribeForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = this.querySelector('input[type="text"]').value;
+        const email = this.querySelector('input[type="email"]').value;
+        
+        if (name && validateEmail(email)) {
+            // Store in localStorage for demo
+            const subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers') || '[]');
+            subscribers.push({
+                name: name,
+                email: email,
+                date: new Date().toISOString(),
+                source: 'final'
+            });
+            localStorage.setItem('newsletterSubscribers', JSON.stringify(subscribers));
+            
+            // Show success animation
+            const button = this.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i> Subscribed!';
+            button.style.background = '#10b981';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(135deg, var(--primary), var(--primary-light))';
+                button.disabled = false;
+                this.reset();
+            }, 2000);
+            
+            showMessage('finalMessage', `Thank you, ${name}! You're now subscribed.`, 'success');
+            
+            // Update subscriber count
+            updateSubscriberCount();
+        } else {
+            showMessage('finalMessage', 'Please enter valid name and email address.', 'error');
+        }
+    });
+
+    // Update subscriber count display
+    function updateSubscriberCount() {
+        const subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers') || '[]');
+        const countElement = document.querySelector('.stat-item:nth-child(1) h4');
+        if (countElement && subscribers.length > 0) {
+            // Format number with commas
+            const formattedCount = (10000 + subscribers.length).toLocaleString();
+            countElement.textContent = formattedCount + '+';
+        }
+    }
+
+    // Show preferences form
+    function showPreferencesForm() {
+        const formHtml = `
+            <div id="preferencesModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+                <div style="background: white; padding: 40px; border-radius: var(--border-radius-lg); max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                        <h3 style="color: var(--dark); margin: 0;">Email Preferences</h3>
+                        <button onclick="closePreferences()" style="background: none; border: none; font-size: 1.5rem; color: var(--dark-light); cursor: pointer;">×</button>
+                    </div>
+                    
+                    <p style="color: var(--dark-light); margin-bottom: 25px;">
+                        Choose which types of emails you want to receive from us:
+                    </p>
+                    
+                    <form id="preferencesForm">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; padding: 15px; background: var(--light); border-radius: var(--border-radius);">
+                                <input type="checkbox" checked style="margin-top: 3px;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--dark); margin-bottom: 5px;">Technology Updates</div>
+                                    <div style="font-size: 0.9rem; color: var(--dark-light);">Latest tech news and product releases</div>
+                                </div>
+                            </label>
+                            
+                            <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; padding: 15px; background: var(--light); border-radius: var(--border-radius);">
+                                <input type="checkbox" checked style="margin-top: 3px;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--dark); margin-bottom: 5px;">Business Insights</div>
+                                    <div style="font-size: 0.9rem; color: var(--dark-light);">Market trends and business strategies</div>
+                                </div>
+                            </label>
+                            
+                            <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; padding: 15px; background: var(--light); border-radius: var(--border-radius);">
+                                <input type="checkbox" checked style="margin-top: 3px;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--dark); margin-bottom: 5px;">Tutorials & Guides</div>
+                                    <div style="font-size: 0.9rem; color: var(--dark-light);">Step-by-step guides and tutorials</div>
+                                </div>
+                            </label>
+                            
+                            <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; padding: 15px; background: var(--light); border-radius: var(--border-radius);">
+                                <input type="checkbox" checked style="margin-top: 3px;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--dark); margin-bottom: 5px;">Events & Webinars</div>
+                                    <div style="font-size: 0.9rem; color: var(--dark-light);">Invitations to online events and webinars</div>
+                                </div>
+                            </label>
+                            
+                            <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; padding: 15px; background: var(--light); border-radius: var(--border-radius);">
+                                <input type="checkbox" checked style="margin-top: 3px;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--dark); margin-bottom: 5px;">Promotions & Offers</div>
+                                    <div style="font-size: 0.9rem; color: var(--dark-light);">Special discounts and promotions</div>
+                                </div>
+                            </label>
+                            
+                            <label style="display: flex; align-items: flex-start; gap: 10px; padding: 15px; background: var(--light); border-radius: var(--border-radius);">
+                                <input type="checkbox" checked style="margin-top: 3px;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--dark); margin-bottom: 5px;">Career Opportunities</div>
+                                    <div style="font-size: 0.9rem; color: var(--dark-light);">Job openings and career advice</div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <label style="display: block; margin-bottom: 10px; color: var(--dark); font-weight: 500;">
+                                Email Frequency
+                            </label>
+                            <select style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: var(--border-radius);">
+                                <option value="weekly">Weekly Digest</option>
+                                <option value="biweekly">Bi-weekly</option>
+                                <option value="monthly" selected>Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" 
+                                style="background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: var(--border-radius); cursor: pointer; font-weight: bold; width: 100%;">
+                            Save Preferences
+                        </button>
+                    </form>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', formHtml);
+        
+        // Handle form submission
+        document.getElementById('preferencesForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Preferences saved successfully!');
+            closePreferences();
+        });
+    }
+
+    function closePreferences() {
+        const modal = document.getElementById('preferencesModal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+
+    // Unsubscribe function
+    function unsubscribe() {
+        const email = prompt('Please enter your email address to unsubscribe:');
+        if (email && validateEmail(email)) {
+            // In a real app, you would send this to your server
+            const subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers') || '[]');
+            const filtered = subscribers.filter(sub => sub.email !== email);
+            localStorage.setItem('newsletterSubscribers', JSON.stringify(filtered));
+            
+            alert(`You have been unsubscribed. We're sorry to see you go!`);
+            updateSubscriberCount();
+        }
+    }
+
+    // Update stats on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateSubscriberCount();
+        
+        // Animate numbers
+        const stats = document.querySelectorAll('.stat-item h4');
+        stats.forEach(stat => {
+            const originalText = stat.textContent;
+            if (originalText.includes('+')) {
+                const number = parseInt(originalText);
+                if (!isNaN(number)) {
+                    let count = 0;
+                    const target = number;
+                    const increment = target / 50;
+                    
+                    const timer = setInterval(() => {
+                        count += increment;
+                        if (count >= target) {
+                            count = target;
+                            clearInterval(timer);
+                        }
+                        stat.textContent = Math.floor(count).toLocaleString() + '+';
+                    }, 50);
+                }
+            }
+        });
+    });
+
+    // Add floating subscribe button
+    document.addEventListener('DOMContentLoaded', function() {
+        const floatingBtn = document.createElement('button');
+        floatingBtn.innerHTML = '<i class="fas fa-envelope"></i> Subscribe';
+        floatingBtn.style.cssText = `
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            transition: var(--transition);
+        `;
+        
+        floatingBtn.onclick = function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
+        
+        document.body.appendChild(floatingBtn);
+        
+        // Show/hide based on scroll
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+                floatingBtn.style.display = 'flex';
+            } else {
+                floatingBtn.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

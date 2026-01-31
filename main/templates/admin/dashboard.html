@@ -1,0 +1,412 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+.dashboard {
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+.dashboard-header p {
+    color: #666;
+    font-size: 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e5e5e5;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.stat-card h3 {
+    margin: 0 0 15px 0;
+    color: #666;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-card .stat-number {
+    font-size: 36px;
+    font-weight: bold;
+    color: #7d0022;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-card .stat-icon {
+    font-size: 24px;
+    color: #a73356;
+}
+
+.stat-card .stat-change {
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.stat-card .positive {
+    color: #10b981;
+}
+
+.stat-card .negative {
+    color: #ef4444;
+}
+
+.charts-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.chart-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e5e5e5;
+}
+
+.chart-card h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.chart-placeholder {
+    height: 200px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.recent-activity {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e5e5e5;
+    margin-bottom: 40px;
+}
+
+.recent-activity h2 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+}
+
+.activity-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7d0022;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-text {
+    margin: 0;
+    color: #333;
+    font-size: 14px;
+}
+
+.activity-time {
+    color: #999;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.action-button {
+    padding: 15px;
+    background: #7d0022;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.3s ease;
+}
+
+.action-button:hover {
+    background: #5a0018;
+}
+
+.action-button.secondary {
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.action-button.secondary:hover {
+    background: #e9ecef;
+}
+
+@media (max-width: 768px) {
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1>Welcome to BunShai TECHNOHUB Admin</h1>
+        <p>Real-time insights and analytics dashboard</p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Contact Messages</h3>
+            <div class="stat-number">
+                <i class="fas fa-envelope stat-icon"></i>
+                {{ total_contacts }}
+            </div>
+            <div class="stat-change">
+                <span class="positive">+{{ recent_contacts }}</span> last 30 days
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Active Subscribers</h3>
+            <div class="stat-number">
+                <i class="fas fa-users stat-icon"></i>
+                {{ total_subscribers }}
+            </div>
+            <div class="stat-change">
+                <span class="positive">+{{ new_subscribers }}</span> last 30 days
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Service Inquiries</h3>
+            <div class="stat-number">
+                <i class="fas fa-question-circle stat-icon"></i>
+                {{ total_inquiries }}
+            </div>
+            <div class="stat-change">
+                <span class="positive">+{{ recent_inquiries }}</span> last 30 days
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Chatbot Sessions</h3>
+            <div class="stat-number">
+                <i class="fas fa-robot stat-icon"></i>
+                {{ total_chatbot_sessions }}
+            </div>
+            <div class="stat-change">
+                <span class="positive">+{{ recent_chatbot_sessions }}</span> active
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Today's Page Views</h3>
+            <div class="stat-number">
+                <i class="fas fa-eye stat-icon"></i>
+                {{ page_views_today }}
+            </div>
+            <div class="stat-change">
+                Real-time monitoring
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Security Events</h3>
+            <div class="stat-number">
+                <i class="fas fa-shield-alt stat-icon"></i>
+                {{ security_events_today }}
+            </div>
+            <div class="stat-change">
+                Today's security alerts
+            </div>
+        </div>
+    </div>
+    
+    <div class="charts-section">
+        <div class="chart-card">
+            <h3>Form Submissions Trend</h3>
+            <div class="chart-placeholder">
+                Chart: Form submissions over time
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <h3>Service Inquiries Breakdown</h3>
+            <div class="chart-placeholder">
+                Chart: Service categories distribution
+            </div>
+        </div>
+    </div>
+    
+    <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="activity-content">
+                    <p class="activity-text">New subscriber registered: john@example.com</p>
+                    <div class="activity-time">2 minutes ago</div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <div class="activity-content">
+                    <p class="activity-text">New contact message from Sarah Johnson</p>
+                    <div class="activity-time">15 minutes ago</div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="activity-content">
+                    <p class="activity-text">Career application submitted for Software Developer</p>
+                    <div class="activity-time">1 hour ago</div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="activity-content">
+                    <p class="activity-text">Security event detected: Multiple failed login attempts</p>
+                    <div class="activity-time">3 hours ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="quick-actions">
+        <a href="/admin/main/contactmessage/" class="action-button">
+            <i class="fas fa-envelope"></i> View Messages
+        </a>
+        <a href="/admin/main/serviceinquiry/" class="action-button">
+            <i class="fas fa-question-circle"></i> Service Inquiries
+        </a>
+        <a href="/admin/main/careerapplication/" class="action-button">
+            <i class="fas fa-briefcase"></i> Career Applications
+        </a>
+        <a href="/admin/main/securitylog/" class="action-button secondary">
+            <i class="fas fa-shield-alt"></i> Security Logs
+        </a>
+        <a href="/admin/export-data/" class="action-button secondary">
+            <i class="fas fa-download"></i> Export Data
+        </a>
+        <a href="/admin/analytics/" class="action-button secondary">
+            <i class="fas fa-chart-bar"></i> Analytics
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+// Real-time updates
+function updateStats() {
+    fetch('/admin/dashboard-stats/')
+        .then(response => response.json())
+        .then(data => {
+            // Update stats here
+            console.log('Updated stats:', data);
+        })
+        .catch(error => console.error('Error updating stats:', error));
+}
+
+// Update every 60 seconds
+setInterval(updateStats, 60000);
+
+// Initialize charts
+document.addEventListener('DOMContentLoaded', function() {
+    // Chart initialization code would go here
+    // Using Chart.js or similar library
+});
+</script>
+{% endblock %}

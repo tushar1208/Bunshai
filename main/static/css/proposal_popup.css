@@ -1,0 +1,363 @@
+/* ==============================
+   PROPOSAL POPUP STYLES
+============================== */
+
+.proposal-popup {
+  display: none; /* controlled by JS */
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9); /* white overlay */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  /* animation */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* When JS sets display:flex */
+.proposal-popup[style*="flex"] {
+  opacity: 1;
+}
+
+/* Overlay */
+.popup-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* ==============================
+   MAIN CONTAINER
+============================== */
+
+.popup-container {
+  position: relative;
+  width: 850px; /* custom width for proposal */
+  max-width: 90%;
+  max-height: 90vh;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  display: flex;
+  overflow: hidden;
+  z-index: 2;
+
+  /* animation */
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+/* Animate container when modal is visible */
+.proposal-popup[style*="flex"] .popup-container {
+  transform: scale(1);
+}
+
+/* ==============================
+   LEFT SECTION
+============================== */
+
+.popup-left {
+  width: 40%;
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.popup-image {
+  width: 180px;
+  opacity: 0.2;
+}
+
+.popup-image-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 40px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.popup-image-overlay h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.popup-image-overlay p {
+  font-size: 14px;
+  margin-bottom: 25px;
+  opacity: 0.9;
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.benefits-list li {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.benefits-list i {
+  color: var(--success);
+}
+
+/* ==============================
+   RIGHT SECTION
+============================== */
+
+.popup-right {
+  width: 60%;
+  padding: 40px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.popup-right h2 {
+  font-size: 24px;
+  margin-bottom: 25px;
+  text-align: center;
+  color: var(--dark);
+}
+
+/* ==============================
+   CLOSE BUTTON
+============================== */
+
+.popup-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 26px;
+  cursor: pointer;
+  color: #777;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.popup-close:hover {
+  color: #333;
+  transform: scale(1.1);
+}
+
+/* ==============================
+   FORM
+============================== */
+
+.proposal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0px !important;
+}
+
+.form-group {
+  position: relative;
+  flex-direction: column;
+  display: flex;
+}
+
+.form-input {
+  width: 100% !important;
+  padding: 14px 15px 14px 45px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(125, 0, 34, 0.12);
+}
+
+.dropdown{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.dropdown select{
+    width: 90% !important;
+    margin: 0px 15px !important;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 16px;
+}
+
+/* TEXTAREA */
+.textarea-input {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.textarea-icon {
+  top: 18px;
+  transform: none;
+}
+
+/* CHECKBOX */
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.form-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.privacy-link {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.privacy-link:hover {
+  text-decoration: underline;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media (max-width: 992px) {
+  .popup-container {
+    flex-direction: column;
+  }
+
+  .popup-left,
+  .popup-right {
+    width: 100%;
+  }
+
+  .popup-left {
+    height: 220px;
+  }
+
+  .popup-right {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .popup-right {
+    padding: 20px;
+  }
+
+  .popup-right h2 {
+    font-size: 20px;
+  }
+
+  .popup-left {
+    display: none; /* mobile clean look */
+  }
+}
+
+/* ==============================
+   LOGO POPUP (DARK MODAL)
+============================== */
+
+.modal {
+  display: none; /* JS controls this */
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Dark overlay for logo popup */
+.modal-dark {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/* Modal content for logo popup */
+.modal-dark .modal-content {
+  background: #111;
+  color: #fff;
+  width: 500px;       /* smaller width for logo */
+  max-width: 90%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  animation: zoomIn 0.3s ease;
+}
+
+/* HEADER */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+/* CLOSE BUTTON */
+.modal-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.modal-close:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* BODY */
+.modal-body {
+  padding: 20px;
+  text-align: center;
+}
+
+/* IMAGE */
+.modal-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* ANIMATION */
+@keyframes zoomIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

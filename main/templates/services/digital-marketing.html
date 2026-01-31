@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Digital Marketing Services{% endblock %}
+{% block page_subtitle %}Grow your online presence and reach{% endblock %}
+
+{% block content %}
+<section class="page-content">
+    <div class="container">
+        <div class="service-hero">
+            <div class="service-hero-content">
+                <h1>Digital Marketing Solutions</h1>
+                <p class="lead">Drive growth with data-driven marketing strategies that deliver measurable results</p>
+            </div>
+            <div class="service-hero-image">
+                <img src="{% static 'images/services/digital-marketing.jpg' %}" alt="Digital Marketing">
+            </div>
+        </div>
+
+        <div class="service-details">
+            <h2>Our Digital Marketing Services</h2>
+            <p>We create comprehensive marketing strategies that connect you with your target audience and drive business growth.</p>
+
+            <div class="service-features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>SEO Optimization</h3>
+                    <p>Improve search rankings with on-page and off-page SEO strategies</p>
+                    <ul>
+                        <li>Keyword research & analysis</li>
+                        <li>Technical SEO audit</li>
+                        <li>Content optimization</li>
+                        <li>Link building strategies</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3>Social Media Marketing</h3>
+                    <p>Engage your audience across all major social platforms</p>
+                    <ul>
+                        <li>Social media strategy</li>
+                        <li>Content creation</li>
+                        <li>Community management</li>
+                        <li>Paid social advertising</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-ad"></i>
+                    </div>
+                    <h3>PPC Advertising</h3>
+                    <p>Drive immediate traffic with targeted pay-per-click campaigns</p>
+                    <ul>
+                        <li>Google Ads management</li>
+                        <li>Facebook/Instagram ads</li>
+                        <li>Display advertising</li>
+                        <li>Remarketing campaigns</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Marketing</h3>
+                    <p>Nurture leads and retain customers with automated email campaigns</p>
+                    <ul>
+                        <li>Email campaign strategy</li>
+                        <li>Automation workflows</li>
+                        <li>Newsletter design</li>
+                        <li>Performance analytics</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3>Ready to Grow Your Business?</h3>
+                <p>Let's discuss how our digital marketing services can help you achieve your goals</p>
+                <button class="cta-btn" onclick="showProposalPopup()">
+                    Get Free Marketing Audit
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.service-hero {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 60px;
+}
+
+.service-hero-content {
+    flex: 1;
+}
+
+.service-hero-content h1 {
+    font-size: 3rem;
+    color: var(--dark);
+    margin-bottom: 20px;
+}
+
+.service-hero-content .lead {
+    font-size: 1.3rem;
+    color: var(--dark-light);
+    line-height: 1.6;
+}
+
+.service-hero-image {
+    flex: 1;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.service-hero-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.service-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border: 1px solid #e5e7eb;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.feature-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    color: var(--dark-light);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.feature-card ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.feature-card ul li {
+    margin-bottom: 8px;
+    color: var(--dark-light);
+    position: relative;
+    padding-left: 25px;
+}
+
+.feature-card ul li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: bold;
+}
+
+.cta-section {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, var(--dark), var(--dark-light));
+    color: white;
+    border-radius: var(--border-radius-lg);
+    margin-top: 60px;
+}
+
+.cta-section h3 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.cta-section p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+@media (max-width: 992px) {
+    .service-hero {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .service-hero-content h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .service-hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .service-features {
+        grid-template-columns: 1fr;
+    }
+    
+    .cta-section {
+        padding: 40px 20px;
+    }
+}
+</style>
+{% endblock %}
