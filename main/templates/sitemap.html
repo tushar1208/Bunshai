@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Website Sitemap - BunShai TECHNOHUB{% endblock %}
+{% block breadcrumb_title %}Sitemap{% endblock %}
+{% block page_title %}Website Sitemap{% endblock %}
+{% block page_subtitle %}Complete directory of all pages, IT services, mentorship courses, support, and legal resources{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/sitemap.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="sitemap-section">
+    <div class="container">
+        <div class="sitemap-toolbar">
+            <div class="sitemap-tabs" id="sitemapTabs">
+                <button type="button" class="sitemap-tab-btn active" data-section="all">
+                    <i class="fas fa-th-large"></i> All Sections
+                </button>
+                <button type="button" class="sitemap-tab-btn" data-section="main">
+                    <i class="fas fa-building"></i> Main Pages
+                </button>
+                <button type="button" class="sitemap-tab-btn" data-section="services">
+                    <i class="fas fa-cogs"></i> IT Services
+                </button>
+                <button type="button" class="sitemap-tab-btn" data-section="courses">
+                    <i class="fas fa-graduation-cap"></i> Courses &amp; Mentorship
+                </button>
+                <button type="button" class="sitemap-tab-btn" data-section="legal">
+                    <i class="fas fa-shield-alt"></i> Support &amp; Legal
+                </button>
+            </div>
+
+            <div class="sitemap-search">
+                <i class="fas fa-search"></i>
+                <input type="search" id="sitemapSearchInput" placeholder="Filter sitemap links..." aria-label="Filter sitemap links">
+            </div>
+        </div>
+
+        <div class="sitemap-grid" id="sitemapGrid">
+            <!-- Main & Company Pages -->
+            <div class="sitemap-card" data-section="main">
+                <div class="sitemap-card-head">
+                    <div class="sitemap-card-icon"><i class="fas fa-home"></i></div>
+                    <h2>Main &amp; Company Pages</h2>
+                </div>
+                <ul class="sitemap-list">
+                    <li><a href="{% url 'home' %}"><span>Home</span><span class="sm-meta">/</span></a></li>
+                    <li><a href="{% url 'about' %}"><span>About Us &amp; Team</span><span class="sm-meta">/about/</span></a></li>
+                    <li><a href="{% url 'company_profile' %}"><span>Company Profile</span><span class="sm-meta">/company-profile/</span></a></li>
+                    <li><a href="{% url 'team' %}"><span>Our Team</span><span class="sm-meta">/team/</span></a></li>
+                    <li><a href="{% url 'md_profile' %}"><span>Managing Director Profile</span><span class="sm-meta">/md-profile/</span></a></li>
+                    <li><a href="{% url 'career' %}"><span>Careers &amp; Open Roles</span><span class="sm-meta">/career/</span></a></li>
+                    <li><a href="{% url 'contact' %}"><span>Contact Us</span><span class="sm-meta">/contact/</span></a></li>
+                    <li><a href="{% url 'subscribe_page' %}"><span>Newsletter Subscribe</span><span class="sm-meta">/subscribe/</span></a></li>
+                </ul>
+            </div>
+
+            <!-- IT Services -->
+            <div class="sitemap-card" data-section="services">
+                <div class="sitemap-card-head">
+                    <div class="sitemap-card-icon"><i class="fas fa-cogs"></i></div>
+                    <h2>IT Services</h2>
+                </div>
+                <ul class="sitemap-list">
+                    <li><a href="{% url 'services' %}"><span>All Services Overview</span><span class="sm-meta">/services/</span></a></li>
+                    <li><a href="{% url 'service_detail' 'it-consulting' %}"><span>IT Consulting</span><span class="sm-meta">Strategy</span></a></li>
+                    <li><a href="{% url 'service_detail' 'digital-marketing' %}"><span>Digital Marketing</span><span class="sm-meta">Growth</span></a></li>
+                    <li><a href="{% url 'service_detail' 'cloud-solutions' %}"><span>Cloud Solutions</span><span class="sm-meta">AWS / Azure</span></a></li>
+                    <li><a href="{% url 'service_detail' 'software-development' %}"><span>Software Development</span><span class="sm-meta">Web / Apps</span></a></li>
+                    <li><a href="{% url 'service_detail' 'cybersecurity' %}"><span>Cybersecurity</span><span class="sm-meta">Security</span></a></li>
+                    <li><a href="{% url 'service_detail' 'data-analytics' %}"><span>Data &amp; Analytics</span><span class="sm-meta">BI / AI</span></a></li>
+                </ul>
+            </div>
+
+            <!-- Support & Legal -->
+            <div class="sitemap-card" data-section="legal">
+                <div class="sitemap-card-head">
+                    <div class="sitemap-card-icon"><i class="fas fa-life-ring"></i></div>
+                    <h2>Support &amp; Legal</h2>
+                </div>
+                <ul class="sitemap-list">
+                    <li><a href="{% url 'support' %}"><span>24/7 Support Center</span><span class="sm-meta">/support/</span></a></li>
+                    <li><a href="{% url 'privacy' %}"><span>Privacy Policy</span><span class="sm-meta">/privacy/</span></a></li>
+                    <li><a href="{% url 'privacy_pdf' %}"><span>Download Privacy Policy (PDF)</span><span class="sm-meta">PDF</span></a></li>
+                    <li><a href="{% url 'terms' %}"><span>Terms &amp; Conditions</span><span class="sm-meta">/terms/</span></a></li>
+                    <li><a href="{% url 'terms_pdf' %}"><span>Download Terms &amp; Conditions (PDF)</span><span class="sm-meta">PDF</span></a></li>
+                    <li><a href="/sitemap.xml" target="_blank" rel="noopener"><span>XML Sitemap (Search Engines)</span><span class="sm-meta">XML</span></a></li>
+                </ul>
+            </div>
+
+            <!-- Courses & Mentorship Programs -->
+            <div class="sitemap-card sitemap-card-wide" data-section="courses">
+                <div class="sitemap-card-head">
+                    <div class="sitemap-card-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h2>Courses &amp; Mentorship Programs (6 Domains · 14 Programs)</h2>
+                </div>
+                <div style="margin-bottom:18px;">
+                    <a href="{% url 'courses' %}" class="btn-outline-course" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;">
+                        <i class="fas fa-th-large"></i> Browse All 14 Courses &amp; Syllabi
+                    </a>
+                </div>
+                <div class="sitemap-courses-cols">
+                    {% for group in nav_course_groups %}
+                    <div class="sitemap-cat-box">
+                        <h3><i class="{{ group.icon }}"></i> {{ group.name }}</h3>
+                        <ul class="sitemap-list">
+                            {% for c in group.courses %}
+                            <li>
+                                <a href="{% url 'course_detail' c.slug %}">
+                                    <span>{{ c.title }}</span>
+                                    <span class="sm-meta">{{ c.duration }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('#sitemapTabs .sitemap-tab-btn');
+    const cards = document.querySelectorAll('#sitemapGrid .sitemap-card');
+    const searchInput = document.getElementById('sitemapSearchInput');
+    let activeSection = 'all';
+
+    function filterSitemap() {
+        const q = (searchInput.value || '').trim().toLowerCase();
+        cards.forEach(card => {
+            const secMatch = activeSection === 'all' || card.dataset.section === activeSection;
+            const items = card.querySelectorAll('.sitemap-list li');
+            let visibleItems = 0;
+            items.forEach(li => {
+                const match = !q || li.textContent.toLowerCase().includes(q);
+                li.style.display = match ? '' : 'none';
+                if (match) visibleItems++;
+            });
+            card.style.display = (secMatch && (visibleItems > 0 || !q)) ? '' : 'none';
+        });
+    }
+
+    tabs.forEach(btn => {
+        btn.addEventListener('click', function () {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            activeSection = this.dataset.section;
+            filterSitemap();
+        });
+    });
+
+    searchInput.addEventListener('input', filterSitemap);
+});
+</script>
+{% endblock %}

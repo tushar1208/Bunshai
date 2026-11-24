@@ -1,10 +1,13 @@
+import csv
+from datetime import timedelta
+
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from django.utils.html import format_html
-from django.urls import path
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.urls import path
 from django.utils import timezone
-from datetime import timedelta
+from django.utils.html import format_html
 from .models import *
 
 # Unregister default Group
@@ -94,7 +97,17 @@ class SubscriberAdmin(BaseAdmin):
         }),
     )
     actions = ['activate_subscribers', 'deactivate_subscribers', 'export_emails']
-    
+
+    def activate_subscribers(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f'{updated} subscribers activated.')
+    activate_subscribers.short_description = "Activate selected subscribers"
+
+    def deactivate_subscribers(self, request, queryset):
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f'{updated} subscribers deactivated.')
+    deactivate_subscribers.short_description = "Deactivate selected subscribers"
+
     def export_emails(self, request, queryset):
         emails = '\n'.join([sub.email for sub in queryset])
         response = HttpResponse(emails, content_type='text/plain')
@@ -298,12 +311,22 @@ class CustomAdminSite(admin.AdminSite):
         return render(request, 'admin/dashboard.html', context)
     
     def analytics_view(self, request):
-        # Analytics data
-        return render(request, 'admin/analytics.html', {'title': 'Analytics'})
-    
+        return self.dashboard_view(request)
+
     def export_data_view(self, request):
-        # Data export interface
-        return render(request, 'admin/export_data.html', {'title': 'Export Data'})
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="bunshai_summary.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Metric', 'Total'])
+        writer.writerow(['Contact Messages', ContactMessage.objects.count()])
+        writer.writerow(['Active Subscribers', Subscriber.objects.filter(is_active=True).count()])
+        writer.writerow(['Service Inquiries', ServiceInquiry.objects.count()])
+        writer.writerow(['Proposal Requests', ProposalRequest.objects.count()])
+        writer.writerow(['Career Applications', CareerApplication.objects.count()])
+        writer.writerow(['Support Tickets', SupportTicket.objects.count()])
+        writer.writerow(['Course Enrollments', CourseEnrollment.objects.count()])
+        writer.writerow(['Syllabus Downloads', SyllabusDownload.objects.count()])
+        return response
 
 # Create and register custom admin site
 custom_admin_site = CustomAdminSite(name='customadmin')
@@ -318,3 +341,45 @@ custom_admin_site.register(PageView, PageViewAdmin)
 custom_admin_site.register(SecurityLog, SecurityLogAdmin)
 custom_admin_site.register(ChatbotSession, ChatbotSessionAdmin)
 custom_admin_site.register(ChatbotMessage, ChatbotMessageAdmin)
+
+@admin.register(SupportTicket)
+class SupportTicketAdmin(admin.ModelAdmin):
+    list_display = ('ticket_number', 'name', 'email', 'issue_type', 'priority', 'status', 'created_at')
+    list_filter = ('status', 'priority', 'issue_type')
+    search_fields = ('ticket_number', 'name', 'email', 'subject', 'description')
+    readonly_fields = ('ticket_number', 'created_at', 'ip_address', 'attachments')
+
+
+@admin.register(CourseEnrollment)
+class CourseEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'course_title', 'learning_mode', 'experience_level', 'created_at')
+    list_filter = ('learning_mode', 'experience_level', 'created_at')
+    search_fields = ('name', 'email', 'phone', 'course_title', 'course_slug')
+    readonly_fields = ('created_at', 'ip_address')
+
+
+@admin.register(SyllabusDownload)
+class SyllabusDownloadAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'course_title', 'background', 'synced_to_google', 'created_at')
+    list_filter = ('synced_to_google', 'background', 'created_at')
+    search_fields = ('name', 'email', 'phone', 'course_title', 'course_slug')
+    readonly_fields = ('created_at', 'ip_address')
+
+
+@admin.register(ChatbotUnanswered)
+class ChatbotUnansweredAdmin(admin.ModelAdmin):
+    list_display = ('question', 'name', 'email', 'phone', 'resolved', 'synced_to_google', 'created_at')
+    list_filter = ('resolved', 'synced_to_google', 'created_at')
+    search_fields = ('question', 'name', 'email', 'phone')
+    readonly_fields = ('created_at',)
+    actions = ['mark_resolved']
+
+    def mark_resolved(self, request, queryset):
+        self.message_user(request, f'{queryset.update(resolved=True)} questions marked resolved.')
+    mark_resolved.short_description = "Mark selected as resolved"
+
+
+custom_admin_site.register(ChatbotUnanswered, ChatbotUnansweredAdmin)
+custom_admin_site.register(SupportTicket, SupportTicketAdmin)
+custom_admin_site.register(CourseEnrollment, CourseEnrollmentAdmin)
+custom_admin_site.register(SyllabusDownload, SyllabusDownloadAdmin)

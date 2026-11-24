@@ -33,13 +33,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/proposal_popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
-    <!-- <link rel="stylesheet" href="{% static 'css/company-profile.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/proposal_popup.css' %}">
     {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
     
     <!-- Security Meta Tags -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
@@ -91,7 +91,7 @@
                                 <a href="{% url 'about' %}">About Us</a>
                                 <a href="{% url 'company_profile' %}">Company Profile</a>
                                 <a href="{% url 'md_profile' %}">MD Profile</a>
-                                <a href="{% url 'about' %}#team">Our Team</a>
+                                <a href="{% url 'team' %}">Our Team</a>
                                 <a href="{% url 'about' %}#values">Core Values</a>
                             </div>
                         </div>
@@ -107,6 +107,67 @@
                                 <a href="{% url 'service_detail' 'software-development' %}">Software Development</a>
                                 <a href="{% url 'service_detail' 'cybersecurity' %}">Cybersecurity</a>
                                 <a href="{% url 'service_detail' 'data-analytics' %}">Data & Analytics</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-dropdown nav-dropdown-mega">
+                            <a href="{% url 'courses' %}" class="nav-link {% if '/courses/' in request.path %}active{% endif %}">
+                                <i class="fas fa-graduation-cap"></i> Courses <i class="fas fa-chevron-down"></i>
+                            </a>
+                            <div class="dropdown-content mega-dropdown mega-dropdown-wscube">
+                                <div class="mega-wscube-layout">
+                                    <div class="mega-sidebar" role="tablist" aria-label="Course Categories">
+                                        {% for group in nav_course_groups %}
+                                        <button type="button"
+                                                class="mega-cat-btn {% if forloop.first %}active{% endif %}"
+                                                data-mega-cat="{{ group.slug }}">
+                                            <span class="mega-cat-btn-left">
+                                                <i class="{{ group.icon }}"></i>
+                                                <span>{{ group.name }}</span>
+                                            </span>
+                                            <span class="mega-cat-btn-right">
+                                                {% if group.nav_badge %}
+                                                <span class="mega-new-badge">{{ group.nav_badge }}</span>
+                                                {% endif %}
+                                                <i class="fas fa-chevron-right mega-arrow"></i>
+                                            </span>
+                                        </button>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mega-panels">
+                                        {% for group in nav_course_groups %}
+                                        <div class="mega-panel {% if forloop.first %}active{% endif %}" data-mega-panel="{{ group.slug }}">
+                                            <div class="mega-panel-head">
+                                                <div>
+                                                    <h5>{{ group.name }}</h5>
+                                                    <p>{{ group.description }}</p>
+                                                </div>
+                                                <a href="{% url 'courses' %}?category={{ group.slug }}" class="mega-cat-view">
+                                                    Explore Track <i class="fas fa-arrow-right"></i>
+                                                </a>
+                                            </div>
+                                            <div class="mega-programs-grid">
+                                                {% for c in group.courses %}
+                                                <a href="{% url 'course_detail' c.slug %}" class="mega-program-card">
+                                                    <span class="mega-prog-icon"><i class="{{ c.icon }}"></i></span>
+                                                    <span class="mega-prog-info">
+                                                        <strong>{{ c.title }}</strong>
+                                                        <small>{{ c.duration }} · {{ c.projects }}</small>
+                                                    </span>
+                                                    {% if c.badge %}
+                                                    <span class="mega-prog-badge">{{ c.badge }}</span>
+                                                    {% endif %}
+                                                </a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="mega-dropdown-footer">
+                                    <span>Mentor-led live cohorts (4–8 months) · Real projects · Career support</span>
+                                    <a href="{% url 'courses' %}" class="mega-all-link">View All 14 Mentorship Programs <i class="fas fa-arrow-right"></i></a>
+                                </div>
                             </div>
                         </div>
                         
@@ -132,59 +193,13 @@
 
     <!-- Main Content -->
     <main id="main-content">
+        {% for message in messages %}<span hidden data-flash="{{ message.tags }}">{{ message }}</span>{% endfor %}
         <!-- Header Actions -->
         <div class="header-actions">
             <button class="lets-connect-btn" id="openProposalBtn">
                 <i class="fas fa-rocket"></i> Let's Connect
             </button>
         </div>
-
-        {% if request.path == '/' %}
-        <!-- Hero Section -->
-        <section class="video-hero" id="home">
-            <div class="video-container">
-                <video autoplay muted loop playsinline id="hero-video">
-                    <source src="{% static 'video/3.mp4' %}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                
-                <div class="video-overlay">
-                    <div class="container">
-                        <div class="video-content">
-                            <h1 class="animate__animated animate__fadeInDown">INNOVATION THAT INSPIRES</h1>
-                            <p class="animate__animated animate__fadeInUp">We create digital experiences that transform brands and drive business growth</p>
-                            <div class="hero-buttons">
-                                <button class="cta-btn animate__animated animate__fadeIn" onclick="showProposalPopup()">
-                                    <i class="fas fa-rocket"></i> Get Started
-                                </button>
-                                <a href="{% url 'services' %}" class="cta-btn-secondary animate__animated animate__fadeIn">
-                                    <i class="fas fa-eye"></i> View Services
-                                </a>
-                            </div>
-                            <div class="hero-stats">
-                                <div class="stat-item">
-                                    <h3>50+</h3>
-                                    <p>Projects Delivered</p>
-                                </div>
-                                <div class="stat-item">
-                                    <h3>30+</h3>
-                                    <p>Happy Clients</p>
-                                </div>
-                                <div class="stat-item">
-                                    <h3>5+</h3>
-                                    <p>Years Experience</p>
-                                </div>
-                                <div class="stat-item">
-                                    <h3>24/7</h3>
-                                    <p>Support</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        {% endif %}
 
         <!-- Page Header for other pages -->
         {% if request.path != '/' %}
@@ -208,19 +223,21 @@
     <!-- POPUP MODALS -->
     {% include 'includes/proposal_popup.html' %}
     {% include 'includes/service_inquiry_popup.html' %}
+    {% include 'includes/course_enroll_popup.html' %}
+    {% include 'includes/syllabus_popup.html' %}
     {% include 'includes/logo_popup.html' %}
 
 
     <!-- CHATBOT -->
     <div id="chatbot-container" class="chatbot-container">
-        <div id="chatbot-toggle" class="chatbot-toggle" onclick="toggleChatbot()">
-            <img src="{% static 'images/chatbot/sharsh-icon.png' %}" alt="Sharsh" class="chatbot-icon">
+        <div id="chatbot-toggle" class="chatbot-toggle">
+            <img src="{% static 'images/chatbot/sharsh-icon.jpg' %}" alt="Sharsh" class="chatbot-icon">
             <div class="chatbot-pulse"></div>
         </div>
         <div id="chatbot-window" class="chatbot-window">
             <div class="chatbot-header">
                 <div class="chatbot-avatar">
-                    <img src="{% static 'images/chatbot/sharsh-icon.png' %}" alt="Sharsh">
+                    <img src="{% static 'images/chatbot/sharsh-icon.jpg' %}" alt="Sharsh">
                 </div>
                 <div class="chatbot-info">
                     <h4>Sharsh</h4>
@@ -229,25 +246,26 @@
                         <span class="status-dot"></span> Online
                     </div>
                 </div>
-                <button class="chatbot-close" onclick="toggleChatbot()">
+                <button class="chatbot-close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div id="chatbot-messages" class="chatbot-messages">
                 <div class="chatbot-welcome">
-                    <p>Hello! I'm Sharsh, your AI assistant. How can I help you today?</p>
+                    <p>Hello! I'm Sharsh, your AI assistant. Ask me anything about our courses, services, team or company.</p>
                 </div>
             </div>
             <div class="chatbot-input">
                 <input type="text" id="chatbot-input" placeholder="Type your message..." autocomplete="off">
-                <button id="chatbot-send" onclick="sendChatbotMessage()">
+                <button id="chatbot-send">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
             <div class="chatbot-quick-actions">
-                <button class="quick-action" onclick="quickChatbotAction('services')">Our Services</button>
-                <button class="quick-action" onclick="quickChatbotAction('pricing')">Pricing</button>
-                <button class="quick-action" onclick="quickChatbotAction('contact')">Contact Us</button>
+                <button class="quick-action" onclick="quickChatbotAction('courses')">Courses</button>
+                <button class="quick-action" onclick="quickChatbotAction('services')">Services</button>
+                <button class="quick-action" onclick="quickChatbotAction('team')">Our Team</button>
+                <button class="quick-action" onclick="quickChatbotAction('contact')">Contact</button>
             </div>
         </div>
     </div>
@@ -265,15 +283,19 @@
 
     <!-- FOOTER -->
     <footer>
+        <div class="footer-accent-bar"></div>
         <div class="container">
             <div class="footer-top">
-                <div class="footer-col">
-                    <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB" class="footer-logo">
-                    <p>Your Global Technology Partner. We deliver innovative solutions that drive digital transformation and business growth.</p>
+                <div class="footer-col footer-brand">
+                    <div class="footer-brand-lockup">
+                        <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB" class="footer-logo">
+                        <span>BunShai <strong>TECHNOHUB</strong></span>
+                    </div>
+                    <p class="footer-tagline">Your Global Technology Partner. We deliver innovative, secure solutions that accelerate digital transformation and business growth.</p>
                     <div class="footer-contact">
-                        <p><i class="fas fa-envelope"></i> <a href="mailto:team.bunshailogicloop@gmail.com">team.bunshailogicloop@gmail.com</a></p>
-                        <p><i class="fas fa-phone"></i> <a href="tel:+918091401208">+91 8091401208</a></p>
-                        <p><i class="fas fa-map-marker-alt"></i> Global Remote Operations</p>
+                        <p><span class="footer-icon-pill"><i class="fas fa-envelope"></i></span> <a href="mailto:team.bunshailogicloop@gmail.com">team.bunshailogicloop@gmail.com</a></p>
+                        <p><span class="footer-icon-pill"><i class="fas fa-phone"></i></span> <a href="tel:+918091401208">+91 8091401208</a></p>
+                        <p><span class="footer-icon-pill"><i class="fas fa-map-marker-alt"></i></span> <span>Global Remote Operations</span></p>
                     </div>
                 </div>
                 
@@ -283,9 +305,10 @@
                         <li><a href="/">Home</a></li>
                         <li><a href="{% url 'about' %}">About Us</a></li>
                         <li><a href="{% url 'services' %}">Services</a></li>
+                        <li><a href="{% url 'courses' %}">Courses</a></li>
                         <li><a href="{% url 'career' %}">Careers</a></li>
                         <li><a href="{% url 'contact' %}">Contact</a></li>
-                        <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+                        <li><a href="{% url 'support' %}">Support</a></li>
                     </ul>
                 </div>
                 
@@ -301,9 +324,19 @@
                     </ul>
                 </div>
                 
-                <div class="footer-col">
-                    <h4>Connect With Us</h4>
-                    <div class="social-links">
+                <div class="footer-col footer-connect">
+                    <h4>Stay Connected</h4>
+                    <div class="footer-newsletter-card">
+                        <h5>Subscribe to Newsletter</h5>
+                        <p class="newsletter-hint">Monthly tech insights, zero spam.</p>
+                        <form id="footer-subscribe-form" class="subscribe-form">
+                            {% csrf_token %}
+                            <input type="email" name="email" placeholder="Your email address" required aria-label="Email address for newsletter">
+                            <button type="submit" aria-label="Subscribe"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                        <p id="subscribe-message"></p>
+                    </div>
+                    <div class="social-links footer-social">
                         <a href="https://www.facebook.com/share/1DFuBTBXN2/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
@@ -323,43 +356,27 @@
                             <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>
-                    
-                    <div class="newsletter">
-                        <h5>Subscribe to Newsletter</h5>
-                        <form id="footer-subscribe-form" class="subscribe-form">
-                            {% csrf_token %}
-                            <input type="email" placeholder="Your email address" required>
-                            <button type="submit">→</button>
-                        </form>
-                        <p id="subscribe-message"></p>
-                    </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
+                <div class="footer-copy">
+                    © {% now "Y" %} BunShai TECHNOHUB®. All rights reserved. | Crafted with <i class="fas fa-heart"></i> for innovation
+                </div>
                 <div class="footer-links">
                     <a href="{% url 'privacy' %}">Privacy Policy</a>
                     <a href="{% url 'terms' %}">Terms & Conditions</a>
                     <a href="{% url 'sitemap' %}">Sitemap</a>
                     <a href="{% url 'support' %}">Support</a>
                 </div>
-                <div class="footer-copy">
-                    © {% now "Y" %} BunShai TECHNOHUB®. All rights reserved. | Made with <i class="fas fa-heart"></i> for innovation
-                </div>
             </div>
         </div>
         
     </footer>
     
-    <!-- Scripts -->
-    <script src="{% static 'js/script.js' %}"></script>
-    <script src="{% static 'js/chatbot.js' %}"></script>
-    <script src="{% static 'js/security.js' %}"></script>
-    <script src="{% static 'js/form-validation.js' %}"></script>
     {% block extra_js %}{% endblock %}
-    
-    <!-- reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script src="{% static 'js/site.js' %}"></script>
+    <script src="{% static 'js/chatbot.js' %}"></script>
 </body>
 </html>

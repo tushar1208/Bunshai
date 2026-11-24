@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}IT Consulting{% endblock %}
 {% block page_title %}IT Consulting Services - BunShai TECHNOHUB{% endblock %}
 {% block page_subtitle %}Strategic technology consulting for digital transformation{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
 
 {% block content %}
 <section class="service-detail">
@@ -13,6 +17,9 @@
             </div>
             <h1>IT Consulting Services</h1>
             <p class="service-intro">Expert technology strategy and digital transformation consulting to optimize your business operations and drive growth.</p>
+            <div style="max-width:780px;margin:28px auto 0;border-radius:16px;overflow:hidden;box-shadow:0 18px 40px rgba(11,17,32,0.18);">
+                <img src="{% static 'images/services/it-consulting.png' %}" alt="IT Consulting &amp; Digital Strategy" style="width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;">
+            </div>
         </div>
         
         <div class="service-content">

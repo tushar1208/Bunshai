@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}Cybersecurity{% endblock %}
 {% block page_title %}Cybersecurity Services{% endblock %}
 {% block page_subtitle %}Protect your digital assets with advanced security solutions{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
 
 {% block content %}
 <section class="page-content">
@@ -13,7 +17,7 @@
                 <p class="lead">Comprehensive security services to protect your business from digital threats</p>
             </div>
             <div class="service-hero-image">
-                <img src="{% static 'images/services/security-tools.jpg' %}" alt="Cybersecurity">
+                <img src="{% static 'images/courses/cyber-security.png' %}" alt="Cybersecurity">
             </div>
         </div>
 

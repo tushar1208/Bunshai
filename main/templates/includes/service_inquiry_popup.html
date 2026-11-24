@@ -1,28 +1,28 @@
 <!-- templates/includes/service_inquiry_popup.html -->
 <div class="modal" id="serviceInquiryModal">
-    <div class="modal-content">
-        <div class="modal-header">
+    <div class="modal-content" style="max-width:520px;width:92%;background:#fff;border-radius:14px;padding:24px;max-height:90vh;overflow:auto;">
+        <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;">
             <h2>Service Inquiry</h2>
-            <button class="modal-close" onclick="hideServiceInquiryPopup()">
-                <i class="fas fa-times"></i>
-            </button>
+            <button type="button" class="modal-close" aria-label="Close"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
             <p>Get more information about our services</p>
-            <form id="serviceInquiryForm">
+            <form id="serviceInquiryForm" method="POST" action="{% url 'service_inquiry' %}">
                 {% csrf_token %}
-                <!-- Add your form fields here -->
+                <div class="form-group"><input type="text" name="name" placeholder="Your Name" required class="form-input"></div>
+                <div class="form-group"><input type="email" name="email" placeholder="Your Email" required class="form-input"></div>
+                <div class="form-group"><input type="tel" name="phone" placeholder="Your Phone" required class="form-input"></div>
+                <div class="form-group"><input type="text" name="company" placeholder="Company (optional)" class="form-input"></div>
+                <div class="form-group">
+                    <select name="service" required class="form-input">
+                        <option value="">Select a service</option>
+                        <option>IT Consulting</option><option>Digital Marketing</option><option>Cloud Solutions</option>
+                        <option>Software Development</option><option>Cybersecurity</option><option>Data &amp; Analytics</option>
+                    </select>
+                </div>
+                <div class="form-group"><textarea name="message" rows="4" placeholder="Tell us about your project" required class="form-input"></textarea></div>
+                <button type="submit" class="submit-btn"><span>Send Inquiry</span> <i class="fas fa-paper-plane"></i></button>
             </form>
         </div>
     </div>
 </div>
-
-<script>
-function showServiceInquiryPopup() {
-    document.getElementById('serviceInquiryModal').style.display = 'flex';
-}
-
-function hideServiceInquiryPopup() {
-    document.getElementById('serviceInquiryModal').style.display = 'none';
-}
-</script>

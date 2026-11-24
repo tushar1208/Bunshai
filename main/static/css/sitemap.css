@@ -1,0 +1,185 @@
+/* Sitemap Page Styles */
+.sitemap-section {
+    padding: 56px 0 80px;
+}
+
+.sitemap-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    background: #ffffff;
+    padding: 18px 22px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    margin-bottom: 34px;
+}
+
+.sitemap-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sitemap-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: var(--light);
+    color: var(--dark);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: var(--transition);
+}
+
+.sitemap-tab-btn:hover {
+    border-color: var(--primary-light);
+    color: var(--primary);
+    background: #fff1f2;
+}
+
+.sitemap-tab-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.sitemap-search {
+    position: relative;
+    flex: 0 1 280px;
+    min-width: 220px;
+}
+
+.sitemap-search i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+}
+
+.sitemap-search input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: var(--light);
+    color: var(--text);
+    font-size: 0.92rem;
+}
+
+.sitemap-search input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #ffffff;
+}
+
+.sitemap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 26px;
+}
+
+.sitemap-card {
+    background: #ffffff;
+    border-radius: var(--border-radius-lg);
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    border-top: 4px solid var(--primary);
+}
+
+.sitemap-card-wide {
+    grid-column: 1 / -1;
+}
+
+.sitemap-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sitemap-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.sitemap-card-head h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--dark);
+}
+
+.sitemap-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.sitemap-list li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    background: var(--light);
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.94rem;
+    transition: var(--transition);
+}
+
+.sitemap-list li a:hover {
+    background: #fff1f2;
+    color: var(--primary);
+    transform: translateX(4px);
+}
+
+.sitemap-list li a span.sm-meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.sitemap-courses-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 20px;
+}
+
+.sitemap-cat-box h3 {
+    font-size: 1.02rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .sitemap-search {
+        flex: 1 1 100%;
+    }
+}

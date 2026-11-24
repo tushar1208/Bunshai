@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}MD Profile{% endblock %}
 {% block page_title %}Managing Director Profile - BunShai TECHNOHUB{% endblock %}
 {% block page_subtitle %}Leadership, Vision, and Innovation{% endblock %}
 
-{% block content %}
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/md-profile.css' %}">
+{% endblock %}
+
+{% block content %}
 <section class="md-profile">
     <div class="container">
         <div class="profile-header">
@@ -33,8 +37,8 @@
                         <div class="stat">
                             <i class="fas fa-briefcase"></i>
                             <div>
-                                <h4>15+ Years</h4>
-                                <p>Industry Experience</p>
+                                <h4>4+ Years</h4>
+                                <p>Professional Experience</p>
                             </div>
                         </div>
                         <div class="stat">
@@ -47,8 +51,8 @@
                         <div class="stat">
                             <i class="fas fa-globe"></i>
                             <div>
-                                <h4>Global</h4>
-                                <p>Business Perspective</p>
+                                <h4>Keynote</h4>
+                                <p>International Conference Speaker</p>
                             </div>
                         </div>
                     </div>
@@ -63,7 +67,7 @@
                         <a href="https://github.com" target="_blank" rel="noopener">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="mailto:md@bunshai.com" target="_blank">
+                        <a href="mailto:team.bunshailogicloop@gmail.com" target="_blank">
                             <i class="fas fa-envelope"></i>
                         </a>
                     </div>
@@ -74,18 +78,18 @@
             <div class="section-card">
                 <h2><i class="fas fa-book-open"></i> Professional Biography</h2>
                 <div class="bio-content">
-                    <p>With over 15 years of experience in the technology industry, Mr. BunShai has established himself as a visionary leader and innovator in the digital transformation space. His journey began as a software developer, where he quickly recognized the potential of technology to transform businesses.</p>
-                    
-                    <p>Under his leadership, BunShai TECHNOHUB has grown from a startup to a global technology solutions provider serving clients across multiple continents. His hands-on approach and deep technical expertise combined with strategic business acumen have been instrumental in the company's success.</p>
-                    
+                    <p>With 4+ years of hands-on experience across software, cloud and technology management, our Managing Director combines an engineering foundation (B.Tech) with business strategy (MBA). His journey began as a developer, where he saw first-hand how the right technology can transform a business - and how the right training can transform a career.</p>
+
+                    <p>In 2025 he founded BunShai TECHNOHUB to deliver affordable, high-quality technology services and career-focused mentorship programs. Today he leads a team of directors and engineers, personally guides strategy, client relationships and the mentorship curriculum.</p>
+
                     <div class="achievement-highlights">
                         <h3>Key Achievements</h3>
                         <ul>
-                            <li>Successfully led the company through rapid growth phases, expanding from 5 to 50+ team members</li>
-                            <li>Pioneered innovative solutions that have helped 30+ clients achieve digital transformation</li>
-                            <li>Established strategic partnerships with leading technology providers including AWS, Microsoft, and Google Cloud</li>
-                            <li>Developed proprietary methodologies that have reduced client project delivery times by 40%</li>
-                            <li>Recognized as "Technology Innovator of the Year" by Global Tech Awards 2023</li>
+                            <li>Founded BunShai TECHNOHUB in 2025 and built the leadership team (Technical, Creative and Development heads)</li>
+                            <li>Launched 14 mentorship programs across 6 career tracks - Digital Marketing, Data Science, AI, Full Stack, Cyber Security and Cloud Computing</li>
+                            <li>Led the delivery of 50+ projects for 30+ clients across web, cloud, security and analytics</li>
+                            <li>Keynote Speaker at an International Conference on technology and digital transformation</li>
+                            <li>Holds two degrees (MBA &amp; B.Tech) plus industry certifications in cloud, project management and agile</li>
                         </ul>
                     </div>
                 </div>
@@ -93,23 +97,23 @@
 
             <!-- Education & Certifications -->
             <div class="section-card">
-                <h2><i class="fas fa-graduation-cap"></i> Education & Credentials</h2>
+                <h2><i class="fas fa-graduation-cap"></i> Education &amp; Credentials</h2>
                 <div class="education-grid">
                     <div class="education-card">
                         <div class="edu-icon">
                             <i class="fas fa-university"></i>
                         </div>
-                        <h3>Master of Business Administration</h3>
-                        <p class="institution">Harvard Business School</p>
-                        <p class="year">2015 - 2017</p>
+                        <h3>Master of Business Administration (MBA)</h3>
+                        <p class="institution">Strategy &amp; Technology Management</p>
+                        <p class="year">Postgraduate Degree</p>
                     </div>
                     <div class="education-card">
                         <div class="edu-icon">
                             <i class="fas fa-laptop-code"></i>
                         </div>
-                        <h3>Master of Computer Science</h3>
-                        <p class="institution">Stanford University</p>
-                        <p class="year">2010 - 2012</p>
+                        <h3>Bachelor of Technology (B.Tech)</h3>
+                        <p class="institution">Computer Science &amp; Engineering</p>
+                        <p class="year">Undergraduate Degree</p>
                     </div>
                     <div class="education-card">
                         <div class="edu-icon">
@@ -117,10 +121,10 @@
                         </div>
                         <h3>Professional Certifications</h3>
                         <div class="cert-list">
-                            <span>AWS Solutions Architect</span>
-                            <span>PMP Certified</span>
-                            <span>Google Cloud Architect</span>
-                            <span>Scrum Master</span>
+                            <span>AWS Certified Solutions Architect</span>
+                            <span>Microsoft Azure Fundamentals</span>
+                            <span>Google Project Management</span>
+                            <span>Professional Scrum Master</span>
                         </div>
                     </div>
                 </div>
@@ -171,36 +175,16 @@
 
             <!-- Speaking & Publications -->
             <div class="section-card">
-                <h2><i class="fas fa-microphone"></i> Speaking & Publications</h2>
+                <h2><i class="fas fa-microphone"></i> Speaking &amp; Publications</h2>
                 <div class="speaking-grid">
                     <div class="speaking-card">
                         <div class="speaking-thumb">
-                            <i class="fas fa-video"></i>
+                            <i class="fas fa-microphone-alt"></i>
                         </div>
                         <div class="speaking-content">
-                            <h3>TEDx Talk: "The Future of Digital Transformation"</h3>
-                            <p>Exploring how AI and cloud technologies are reshaping businesses globally.</p>
-                            <a href="#" class="watch-link">Watch Now →</a>
-                        </div>
-                    </div>
-                    <div class="speaking-card">
-                        <div class="speaking-thumb">
-                            <i class="fas fa-newspaper"></i>
-                        </div>
-                        <div class="speaking-content">
-                            <h3>Forbes Article: "Building Tech Teams for Tomorrow"</h3>
-                            <p>Insights on creating agile, innovative technology teams in the modern era.</p>
-                            <a href="#" class="watch-link">Read Article →</a>
-                        </div>
-                    </div>
-                    <div class="speaking-card">
-                        <div class="speaking-thumb">
-                            <i class="fas fa-podcast"></i>
-                        </div>
-                        <div class="speaking-content">
-                            <h3>Tech Leaders Podcast Interview</h3>
-                            <p>Discussing leadership strategies in the rapidly evolving tech landscape.</p>
-                            <a href="#" class="watch-link">Listen Now →</a>
+                            <h3>Keynote Speaker - International Conference</h3>
+                            <p>Delivered a keynote at an International Conference on how AI, cloud and skill-based mentorship are reshaping businesses and careers.</p>
+                            <a href="{% url 'contact' %}" class="watch-link">Invite Him to Speak &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -209,40 +193,69 @@
             <!-- Daily Routine -->
             <div class="section-card">
                 <h2><i class="fas fa-clock"></i> A Day in the Life</h2>
+                <p style="margin-bottom:20px;color:#475569;">A typical working day - from first coffee to the last follow-up.</p>
                 <div class="timeline">
                     <div class="timeline-item">
                         <div class="time">6:00 AM</div>
                         <div class="activity">
-                            <h4>Morning Strategy Session</h4>
-                            <p>Reviewing global team updates and setting strategic priorities for the day.</p>
+                            <h4>Wake-up, Workout &amp; Planning</h4>
+                            <p>An hour of exercise followed by a quiet 20 minutes writing down the three outcomes that must happen today.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
-                        <div class="time">9:00 AM</div>
+                        <div class="time">8:00 AM</div>
                         <div class="activity">
-                            <h4>Client Meetings</h4>
-                            <p>Engaging with key clients to understand their challenges and explore solutions.</p>
+                            <h4>Inbox, Dashboards &amp; Lead Review</h4>
+                            <p>Checks new enquiries from the website and chatbot, support tickets, course enrollments and the overnight project status.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">9:30 AM</div>
+                        <div class="activity">
+                            <h4>Leadership Stand-up</h4>
+                            <p>A 20-minute sync with the Technical Director, Creative Director and Development Team Head - blockers, priorities and deadlines.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">11:00 AM</div>
+                        <div class="activity">
+                            <h4>Client Discovery &amp; Proposal Calls</h4>
+                            <p>Meets prospective clients to understand their problem, scope the solution and approve customised proposals.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="time">1:00 PM</div>
                         <div class="activity">
-                            <h4>Innovation Workshop</h4>
-                            <p>Collaborating with the R&D team on emerging technologies and new solutions.</p>
+                            <h4>Lunch &amp; Student Doubt Session</h4>
+                            <p>Joins the mentorship cohorts for open Q&amp;A - career guidance, project feedback and resume reviews.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
-                        <div class="time">4:00 PM</div>
+                        <div class="time">2:30 PM</div>
                         <div class="activity">
-                            <h4>Team Development</h4>
-                            <p>Mentoring sessions with team leads and reviewing project progress.</p>
+                            <h4>Deep Work - Strategy &amp; Partnerships</h4>
+                            <p>Focused, no-meeting block for budgets, partnerships, hiring plans and the 2027 roadmap.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
-                        <div class="time">7:00 PM</div>
+                        <div class="time">4:30 PM</div>
                         <div class="activity">
-                            <h4>Industry Networking</h4>
-                            <p>Participating in tech community events and knowledge sharing sessions.</p>
+                            <h4>Product &amp; Design Review</h4>
+                            <p>Reviews builds with the Development Head and designs with the Creative Director before anything ships to a client.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">6:30 PM</div>
+                        <div class="activity">
+                            <h4>Team Check-out &amp; Customer Follow-ups</h4>
+                            <p>Closes the loop on tickets and enquiries, and replies to the founders' mailbox personally.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">8:30 PM</div>
+                        <div class="activity">
+                            <h4>Learning Hour</h4>
+                            <p>Reads, practises for the next certification or prepares talks - because a leader who stops learning stops leading.</p>
                         </div>
                     </div>
                 </div>
@@ -255,7 +268,7 @@
                     <p>Interested in discussing technology, innovation, or potential collaborations?</p>
                     
                     <div class="connect-options">
-                        <a href="mailto:md@bunshai.com" class="connect-btn email">
+                        <a href="mailto:team.bunshailogicloop@gmail.com" class="connect-btn email">
                             <i class="fas fa-envelope"></i>
                             <span>Email Directly</span>
                         </a>

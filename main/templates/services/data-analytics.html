@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}Data &amp; Analytics{% endblock %}
 {% block page_title %}Data & Analytics Services{% endblock %}
 {% block page_subtitle %}Transform data into actionable insights{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
 
 {% block content %}
 <section class="page-content">
@@ -13,7 +17,7 @@
                 <p class="lead">Unlock the power of your data with advanced analytics and insights</p>
             </div>
             <div class="service-hero-image">
-                <img src="{% static 'images/services/data-tools.jpg' %}" alt="Data Analytics">
+                <img src="{% static 'images/courses/data-analytics.png' %}" alt="Data Analytics">
             </div>
         </div>
 
@@ -114,7 +118,7 @@
                 <h3>Success Story</h3>
                 <div class="case-content">
                     <div class="case-image">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Analytics Dashboard">
+                        <img src="{% static 'images/courses/data-science-ml.png' %}" alt="Analytics Dashboard" loading="lazy">
                     </div>
                     <div class="case-text">
                         <h4>Retail Analytics Transformation</h4>

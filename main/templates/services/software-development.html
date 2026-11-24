@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}Software Development{% endblock %}
 {% block page_title %}Software Development{% endblock %}
 {% block page_subtitle %}Custom software solutions for your business needs{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
 
 {% block content %}
 <section class="page-content">
@@ -13,7 +17,7 @@
                 <p class="lead">Build scalable, secure, and high-performance software solutions</p>
             </div>
             <div class="service-hero-image">
-                <img src="{% static 'images/services/web-dev-tools.jpg' %}" alt="Software Development">
+                <img src="{% static 'images/courses/full-stack-ai.png' %}" alt="Software Development">
             </div>
         </div>
 

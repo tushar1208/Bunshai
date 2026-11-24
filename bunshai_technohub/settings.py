@@ -9,7 +9,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security Settings
-SECRET_KEY = os.getenv('SECRET_KEY', os.urandom(32))
+SECRET_KEY = os.getenv('SECRET_KEY', 'dev-insecure-key-change-me-in-production')
 # Your existing line
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third party
-    'django_recaptcha',
     'corsheaders',
     
     # Local
@@ -98,8 +97,7 @@ USE_TZ = True
 # Static files
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
 
 # Media files
 MEDIA_URL = '/media/'
@@ -107,6 +105,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Persist form-rate-limit/captcha state across requests
+CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}}
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
 # Security Headers (production only)
 if not DEBUG:
@@ -120,20 +122,19 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
 
-# reCAPTCHA Settings - For django-recaptcha package
-RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY', '6Lf95TUsAAAAAHJ3XDyKOxnWRuKXga5KMMbFlhCt')
-RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY', '6Lf95TUsAAAAAIUjmT_m8AqPjCfty1t4kyn52m-p')
-RECAPTCHA_DOMAIN = 'www.recaptcha.net'
-SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']  # FIXED: Changed 'captcha.' to 'django_recaptcha.'
 
-# Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'team.bunshailogicloop@gmail.com'
-EMAIL_HOST_PASSWORD = 'BunShai@4403'
-DEFAULT_FROM_EMAIL = "noreply@bunshaitechnohub.com"
+# Email settings (credentials come from .env, never hard-code them)
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'team.bunshailogicloop@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+_has_real_smtp = bool(EMAIL_HOST_PASSWORD) and 'your-app-password' not in EMAIL_HOST_PASSWORD
+# Without real SMTP credentials, emails are printed to the console instead of failing.
+EMAIL_BACKEND = ('django.core.mail.backends.smtp.EmailBackend' if _has_real_smtp
+                 else 'django.core.mail.backends.console.EmailBackend')
+EMAIL_TIMEOUT = 10
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
 CONTACT_EMAIL = "contact@bunshaitechnohub.com"
 SUPPORT_EMAIL = "support@bunshaitechnohub.com"
 INFO_EMAIL = "info@bunshaitechnohub.com"
@@ -142,6 +143,8 @@ ADMIN_EMAIL = "admin@bunshaitechnohub.com"
 # Google Sheets Settings
 GOOGLE_SHEETS_CREDENTIALS = BASE_DIR / 'google_credentials.json'
 GOOGLE_SHEET_ID = os.getenv('GOOGLE_SHEET_ID', '')
+# Alternative to the credentials file: paste the service-account JSON into this env var
+GOOGLE_SHEETS_JSON = os.getenv('GOOGLE_SHEETS_JSON', '')
 
 # ===== SITE CUSTOM SETTINGS =====
 SITE_NAME = "BunShai TECHNOHUB"

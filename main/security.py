@@ -8,7 +8,6 @@ import random
 import string
 from datetime import datetime, timedelta
 import logging
-from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 
@@ -57,86 +56,38 @@ def validate_captcha(request, user_input, session_key='captcha'):
         logger.error(f"CAPTCHA validation error: {str(e)}")
         return False, "CAPTCHA validation error. Please refresh the page."
 
-# ===== RATE LIMITING =====
-def check_rate_limit(ip, action, limit=5, period=3600):
-    """
-    Check if IP has exceeded rate limit for specific action
-    limit: maximum attempts allowed
-    period: time window in seconds (default 1 hour)
-    """
-    cache_key = f'rate_limit:{action}:{ip}'
-    attempts = cache.get(cache_key, 0)
-    
-    if attempts >= limit:
-        return False  # Rate limit exceeded
-    
-    cache.set(cache_key, attempts + 1, period)
-    return True  # Within limit
-
-# ===== SECURITY LOGGING =====
-def log_security_event(event_type, ip, user_agent, details=None):
-    """
-    Log security events for monitoring
-    """
+# ===== RATE LIMITING & SECURITY LOGGING =====
+def log_security_event(event_type, ip, user_agent, details=''):
+    """Log security events to logger and database."""
     logger.warning(
         f"SECURITY EVENT - Type: {event_type}, IP: {ip}, "
-        f"User-Agent: {user_agent[:100]}, Details: {details}"
+        f"User-Agent: {(user_agent or '')[:100]}, Details: {details}"
     )
-    
-    # You could also save to database here
-    # from .models import SecurityLog
-    # SecurityLog.objects.create(...)
-
-# ===== FORM VALIDATION =====
-def validate_form_data(form_data, required_fields=None):
-    """
-    Basic form data validation
-    """
-    errors = {}
-    
-    if required_fields:
-        for field in required_fields:
-            if field not in form_data or not form_data.get(field, '').strip():
-                errors[field] = f"{field.replace('_', ' ').title()} is required"
-    
-    # Email validation
-    if 'email' in form_data and form_data['email']:
-        email = form_data['email'].strip()
-        if '@' not in email or '.' not in email:
-            errors['email'] = "Please enter a valid email address"
-    
-    # Phone validation (basic)
-    if 'phone' in form_data and form_data['phone']:
-        phone = form_data['phone'].strip()
-        digits = ''.join(filter(str.isdigit, phone))
-        if len(digits) < 10:
-            errors['phone'] = "Please enter a valid phone number (at least 10 digits)"
-    
-    return errors
-def log_security_event(event_type, ip, user_agent, details):
-    """Log security events to database"""
     try:
+        valid_types = {choice[0] for choice in SecurityLog.EVENT_TYPES}
+        safe_type = event_type if event_type in valid_types else 'other'
         SecurityLog.objects.create(
-            event_type=event_type,
-            ip_address=ip,
-            user_agent=user_agent[:500] if user_agent else '',
-            details=details[:1000]
+            event_type=safe_type,
+            ip_address=ip or '0.0.0.0',
+            user_agent=(user_agent or '')[:500],
+            details=(details or '')[:1000],
         )
-    except Exception as e:
-        # Fallback to console logging if database fails
-        print(f"Security Event - {event_type}: {details}")
+    except Exception:  # noqa: BLE001
+        logger.debug("Fallback security log DB write skipped for %s", event_type)
+
 
 def check_rate_limit(ip, action, limit=5, period=60):
-    """Implement rate limiting for actions"""
+    """Implement rate limiting for actions."""
     cache_key = f"rate_limit:{ip}:{action}"
     attempts = cache.get(cache_key, 0)
-    
+
     if attempts >= limit:
-        log_security_event('rate_limit', ip, '', f'Rate limit exceeded for {action}')
+        log_security_event('bruteforce', ip, '', f'Rate limit exceeded for {action}')
         return False
-    
+
     cache.set(cache_key, attempts + 1, period)
     return True
+
 
 def validate_form_data(form_data):
     """Validate form data for malicious content"""
@@ -250,34 +201,5 @@ def verify_csrf_token(token):
         
         return token_hash == expected_hash
     
-    except:
+    except Exception:
         return False
-
-class SecurityMiddleware:
-    """Custom security middleware"""
-    def __init__(self, get_response):
-        self.get_response = get_response
-    
-    def __call__(self, request):
-        # Add security headers
-        response = self.get_response(request)
-        
-        # Security headers
-        response['X-Content-Type-Options'] = 'nosniff'
-        response['X-Frame-Options'] = 'DENY'
-        response['X-XSS-Protection'] = '1; mode=block'
-        response['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-        
-        # CSP Header (adjust based on your needs)
-        csp = [
-            "default-src 'self'",
-            "script-src 'self' https://www.google.com https://www.gstatic.com",
-            "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
-            "img-src 'self' data: https:",
-            "font-src 'self' https://cdnjs.cloudflare.com",
-            "connect-src 'self'",
-            "frame-ancestors 'none'",
-        ]
-        response['Content-Security-Policy'] = '; '.join(csp)
-        
-        return response

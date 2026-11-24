@@ -1,5 +1,5 @@
-<!-- {% extends "base.html" %} -->
-<!-- {% load static %} -->
+{% extends "base.html" %}
+{% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock %}
@@ -17,9 +17,9 @@
                 <h1 class="animate__animated animate__fadeInDown">INNOVATION THAT INSPIRES</h1>
                 <p class="animate__animated animate__fadeInUp">We create digital experiences that transform brands and drive business growth</p>
                 <div class="hero-buttons">
-                    <button class="cta-btn animate__animated animate__fadeIn" onclick="showProposalPopup()">
+                    <a href="{% url 'services' %}" class="cta-btn animate__animated animate__fadeIn">
                         <i class="fas fa-rocket"></i> Get Started
-                    </button>
+                    </a>
                     <!-- <a href="#services" class="cta-btn-secondary animate__animated animate__fadeIn">
                         <i class="fas fa-play-circle"></i> Watch Demo
                     </a> -->
@@ -193,10 +193,10 @@
         <div class="slider-container">
             <div class="slider" id="image-slider">
                 <div class="slide">
-                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="E-commerce Platform">
+                    <img src="{% static 'images/courses/full-stack-ai.png' %}"
+                        alt="E-commerce &amp; SaaS Web Platform" loading="lazy">
                     <div class="slide-content">
-                        <h3>E-commerce Platform</h3>
+                        <h3>E-commerce &amp; AI SaaS Platform</h3>
                         <p>Fully responsive online store with payment integration and inventory management</p>
                         <span class="tech-tag">React</span>
                         <span class="tech-tag">Node.js</span>
@@ -204,58 +204,58 @@
                     </div>
                 </div>
                 <div class="slide">
-                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="Fitness Mobile App">
+                    <img src="{% static 'images/courses/digital-marketing.png' %}"
+                        alt="Growth &amp; Performance Marketing Suite" loading="lazy">
                     <div class="slide-content">
-                        <h3>Fitness Mobile App</h3>
-                        <p>Workout tracking application with personalized plans and progress analytics</p>
-                        <span class="tech-tag">React Native</span>
-                        <span class="tech-tag">Firebase</span>
-                        <span class="tech-tag">Redux</span>
+                        <h3>D2C Performance &amp; SEO Engine</h3>
+                        <p>Multi-channel conversion funnel with automated GA4 attribution and AEO optimization</p>
+                        <span class="tech-tag">SEO &amp; AEO</span>
+                        <span class="tech-tag">GA4</span>
+                        <span class="tech-tag">Automation</span>
                     </div>
                 </div>
                 <div class="slide">
-                    <img src="https://images.unsplash.com/photo-1534723328310-e82dad3ee43f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="AI Chatbot System">
+                    <img src="{% static 'images/courses/ai-genai.png' %}"
+                        alt="AI Chatbot System" loading="lazy">
                     <div class="slide-content">
-                        <h3>AI Chatbot System</h3>
-                        <p>Intelligent customer service automation with natural language processing</p>
+                        <h3>AI Chatbot &amp; RAG System</h3>
+                        <p>Intelligent customer service automation with natural language processing and RAG pipelines</p>
                         <span class="tech-tag">Python</span>
-                        <span class="tech-tag">TensorFlow</span>
-                        <span class="tech-tag">NLP</span>
+                        <span class="tech-tag">LLMs</span>
+                        <span class="tech-tag">RAG</span>
                     </div>
                 </div>
                 <div class="slide">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="Analytics Dashboard">
+                    <img src="{% static 'images/courses/data-analytics.png' %}"
+                        alt="Analytics Dashboard" loading="lazy">
                     <div class="slide-content">
                         <h3>Analytics Dashboard</h3>
                         <p>Real-time business intelligence and data visualization platform</p>
-                        <span class="tech-tag">Vue.js</span>
-                        <span class="tech-tag">D3.js</span>
+                        <span class="tech-tag">Power BI</span>
+                        <span class="tech-tag">SQL</span>
                         <span class="tech-tag">PostgreSQL</span>
                     </div>
                 </div>
                 <div class="slide">
-                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="IoT Smart Home">
+                    <img src="{% static 'images/courses/cloud-computing.png' %}"
+                        alt="Multi-Cloud DevOps Infrastructure" loading="lazy">
                     <div class="slide-content">
-                        <h3>Smart Home System</h3>
-                        <p>IoT-based home automation and control system with mobile integration</p>
-                        <span class="tech-tag">IoT</span>
-                        <span class="tech-tag">Node.js</span>
-                        <span class="tech-tag">MongoDB</span>
+                        <h3>Multi-Cloud DevOps Platform</h3>
+                        <p>Fault-tolerant Kubernetes and Terraform cloud automation for enterprise scale</p>
+                        <span class="tech-tag">AWS &amp; Azure</span>
+                        <span class="tech-tag">Terraform</span>
+                        <span class="tech-tag">Kubernetes</span>
                     </div>
                 </div>
                 <div class="slide">
-                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                        alt="Banking App UI">
+                    <img src="{% static 'images/courses/cyber-security.png' %}"
+                        alt="Cybersecurity SOC Monitoring" loading="lazy">
                     <div class="slide-content">
-                        <h3>Banking App UI</h3>
-                        <p>Modern financial application with intuitive user experience and security</p>
-                        <span class="tech-tag">React</span>
-                        <span class="tech-tag">TypeScript</span>
-                        <span class="tech-tag">Material UI</span>
+                        <h3>Enterprise SOC &amp; VAPT Portal</h3>
+                        <p>Continuous security monitoring, penetration testing, and zero-trust hardening</p>
+                        <span class="tech-tag">VAPT</span>
+                        <span class="tech-tag">SIEM</span>
+                        <span class="tech-tag">Zero Trust</span>
                     </div>
                 </div>
             </div>
@@ -272,7 +272,7 @@
         </div>
         
         <div class="portfolio-cta">
-            <a id="openProposalBtn"  class="btn-secondary" >
+            <a href="{% url 'contact' %}" class="btn-secondary">
                 <i class="fas fa-briefcase"></i> Start Your Project
             </a>
         </div>
@@ -384,12 +384,12 @@
                 </div>
             </div>
             <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                    alt="Our Team at Work" loading="lazy">
+                <img src="{% static 'images/site/tech-studio.png' %}"
+                    alt="Our Team at Work in the BunShai TECHNOHUB Studio" loading="lazy">
                 <div class="image-overlay">
                     <div class="overlay-content">
                         <h4>Expert Team</h4>
-                        <p>50+ Technology Experts</p>
+                        <p>Innovation &amp; Live Mentorship Studio</p>
                     </div>
                 </div>
             </div>
@@ -570,7 +570,7 @@
         </div>
         
         <div class="testimonials-cta">
-            <a href="#" class="btn-secondary" onclick="showProposalPopup()">
+            <a href="{% url 'contact' %}" class="btn-secondary">
                 <i class="fas fa-comment"></i> Share Your Experience
             </a>
         </div>
@@ -652,6 +652,60 @@
     </div>
 </section>
 
+<!-- Featured Career Mentorship Programs -->
+<section class="blog-preview" style="background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Featured Mentorship Programs</h2>
+            <p class="subtitle">Live small-cohort training with real capstones, AI workflows, and downloadable syllabi</p>
+        </div>
+
+        <div class="blog-grid">
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="{% static 'images/courses/digital-marketing.png' %}" alt="Digital Marketing Mentorship with AI" loading="lazy">
+                    <div class="blog-category">24 Weeks</div>
+                </div>
+                <div class="blog-content">
+                    <h3>Digital Marketing with AI</h3>
+                    <p>Master WordPress, SEO &amp; AEO, Meta/Google Ads, GA4 tracking, and n8n automation.</p>
+                    <a href="{% url 'course_detail' 'digital-marketing-mentorship' %}" class="read-more">Explore Program <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="{% static 'images/courses/data-science-ml.png' %}" alt="Data Science &amp; Machine Learning" loading="lazy">
+                    <div class="blog-category">32 Weeks</div>
+                </div>
+                <div class="blog-content">
+                    <h3>Data Science &amp; ML</h3>
+                    <p>Build SQL, Python, Power BI, predictive ML models, and GenAI analytics copilots.</p>
+                    <a href="{% url 'course_detail' 'data-science-ml' %}" class="read-more">Explore Program <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="{% static 'images/courses/full-stack-ai.png' %}" alt="Full Stack Web with AI Engineering" loading="lazy">
+                    <div class="blog-category">32 Weeks</div>
+                </div>
+                <div class="blog-content">
+                    <h3>Full Stack with AI Engineering</h3>
+                    <p>Ship production React, Node.js, System Design, DSA, and LLM-powered web apps.</p>
+                    <a href="{% url 'course_detail' 'full-stack-web-development' %}" class="read-more">Explore Program <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;margin-top:34px;">
+            <a href="{% url 'courses' %}" class="btn-primary">
+                <i class="fas fa-graduation-cap"></i> Explore All 14 Programs
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- Blog Preview -->
 <section class="blog-preview">
     <div class="container">
@@ -663,37 +717,37 @@
         <div class="blog-grid">
             <div class="blog-card">
                 <div class="blog-image">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="AI Trends">
+                    <img src="{% static 'images/courses/ai-genai.png' %}" alt="AI Trends" loading="lazy">
                     <div class="blog-category">AI/ML</div>
                 </div>
                 <div class="blog-content">
-                    <h3>AI Revolution in 2024</h3>
-                    <p>Discover how artificial intelligence is transforming businesses across industries.</p>
-                    <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    <h3>AI &amp; Agentic Workflows in 2026</h3>
+                    <p>Discover how Generative AI and RAG pipelines are transforming businesses across industries.</p>
+                    <a href="{% url 'course_detail' 'ai-genai-certification' %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
             
             <div class="blog-card">
                 <div class="blog-image">
-                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cloud Computing">
+                    <img src="{% static 'images/courses/cloud-computing.png' %}" alt="Cloud Computing" loading="lazy">
                     <div class="blog-category">Cloud</div>
                 </div>
                 <div class="blog-content">
-                    <h3>Cloud Migration Strategies</h3>
-                    <p>Best practices for successful cloud migration and optimization.</p>
-                    <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    <h3>Multi-Cloud Migration Strategies</h3>
+                    <p>Best practices for AWS, Azure, Terraform, and Kubernetes cost optimization.</p>
+                    <a href="{% url 'course_detail' 'cloud-computing-aws-azure' %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
             
             <div class="blog-card">
                 <div class="blog-image">
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cybersecurity">
+                    <img src="{% static 'images/courses/cyber-security.png' %}" alt="Cybersecurity" loading="lazy">
                     <div class="blog-category">Security</div>
                 </div>
                 <div class="blog-content">
-                    <h3>Cybersecurity Trends 2024</h3>
-                    <p>Essential security measures every business should implement.</p>
-                    <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    <h3>Modern Cybersecurity &amp; VAPT Defense</h3>
+                    <p>Essential offensive and SOC security practices every engineering team needs.</p>
+                    <a href="{% url 'course_detail' 'ethical-hacking-bootcamp' %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>

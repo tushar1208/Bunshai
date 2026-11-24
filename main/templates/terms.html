@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block page_title %}Terms & Conditions{% endblock %}
+{% block breadcrumb_title %}Terms &amp; Conditions{% endblock %}
+{% block page_title %}Terms &amp; Conditions{% endblock %}
 {% block page_subtitle %}Legal Agreement for Using Our Services{% endblock %}
 
-{% block content %}
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/terms.css' %}">
+{% endblock %}
+
+{% block content %}
 <!-- Hero Section -->
 <section class="terms-hero">
     <div class="container">
@@ -20,7 +24,7 @@
 <section class="page-content">
     <div class="container">
         <div class="last-updated">
-            <p><strong>Last Updated:</strong> December 15, 2024</p>
+            <p><strong>Last Updated:</strong> {% now "F j, Y" %}</p>
             <p style="margin-top: 10px; color: var(--dark-light);">
                 <i class="fas fa-info-circle"></i> 
                 These terms constitute a legally binding agreement between you and BunShai TECHNOHUB.
@@ -286,8 +290,8 @@
                                 Email
                             </h4>
                             <p style="color: var(--dark-light);">
-                                <a href="mailto:legal@bunshai.com" style="color: var(--primary); text-decoration: none;">
-                                    legal@bunshai.com
+                                <a href="mailto:team.bunshailogicloop@gmail.com" style="color: var(--primary); text-decoration: none;">
+                                    team.bunshailogicloop@gmail.com
                                 </a>
                             </p>
                         </div>
@@ -298,8 +302,8 @@
                                 Phone
                             </h4>
                             <p style="color: var(--dark-light);">
-                                <a href="tel:+918091700280" style="color: var(--primary); text-decoration: none;">
-                                    +91 8091700280
+                                <a href="tel:+918091401208" style="color: var(--primary); text-decoration: none;">
+                                    +91 8091401208
                                 </a>
                             </p>
                         </div>
@@ -323,18 +327,25 @@
                 <h3 style="color: white; margin-bottom: 15px; font-size: 1.5rem;">
                     <i class="fas fa-file-contract"></i> Acceptance of Terms
                 </h3>
-                <p style="margin-bottom: 25px; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    By using our Services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
+                <p style="margin-bottom: 20px; opacity: 0.92; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    By using our Services and Mentorship Courses, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
                 </p>
+                <p id="termsAcceptedStatus" style="display:none;margin:0 0 18px;font-weight:600;color:#6ee7b7;"></p>
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="acceptTerms()" class="accept-btn" style="background: white; color: var(--primary); border: none; padding: 12px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: var(--transition);">
+                    <button type="button" onclick="acceptTerms()" class="accept-btn" style="background: white; color: var(--primary); border: none; padding: 12px 26px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: var(--transition);">
                         <i class="fas fa-check-circle"></i> I Accept Terms
                     </button>
-                    <button onclick="declineTerms()" class="decline-btn" style="background: transparent; color: white; border: 2px solid white; padding: 12px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: var(--transition);">
+                    <button type="button" onclick="declineTerms()" class="decline-btn" style="background: transparent; color: white; border: 2px solid white; padding: 12px 26px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: var(--transition);">
                         <i class="fas fa-times-circle"></i> I Decline
                     </button>
+                    <button type="button" onclick="window.print()" style="background: rgba(255,255,255,0.14); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 12px 24px; border-radius: 30px; font-weight: bold; cursor: pointer;">
+                        <i class="fas fa-print"></i> Print Terms
+                    </button>
+                    <a href="{% url 'terms_pdf' %}" style="background: rgba(255,255,255,0.14); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 12px 24px; border-radius: 30px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-file-pdf"></i> Download PDF
+                    </a>
                 </div>
-                <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.8;">
+                <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.85;">
                     You must accept these Terms to use our Services
                 </p>
             </div>
@@ -386,85 +397,35 @@
     });
 
     function acceptTerms() {
+        const now = new Date().toLocaleDateString();
         localStorage.setItem('termsAccepted', 'true');
-        localStorage.setItem('termsAcceptedDate', new Date().toISOString());
-        
-        // Show success message
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #10b981;
-            color: white;
-            padding: 15px 25px;
-            border-radius: var(--border-radius);
-            z-index: 9999;
-            box-shadow: var(--shadow-lg);
-            animation: slideIn 0.3s ease;
-        `;
-        toast.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-check-circle" style="font-size: 1.2rem;"></i>
-                <div>
-                    <strong>Terms Accepted!</strong>
-                    <div style="font-size: 0.9rem; opacity: 0.9;">Thank you for accepting our Terms & Conditions</div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 5000);
+        localStorage.setItem('termsAcceptedDate', now);
+        const status = document.getElementById('termsAcceptedStatus');
+        if (status) {
+            status.textContent = 'Accepted on ' + now;
+            status.style.display = 'block';
+        }
+        if (window.showAlert) {
+            window.showAlert('success', 'Terms & Conditions accepted. Thank you!');
+        }
     }
 
     function declineTerms() {
-        if (confirm('You must accept our Terms & Conditions to use our services. Do you want to continue browsing?')) {
-            // User wants to continue browsing
-            return;
-        } else {
-            // Redirect to home page
-            window.location.href = '/';
+        if (window.showAlert) {
+            window.showAlert('info', 'Returning to home page. Acceptance is required for service requests.');
         }
+        setTimeout(() => { window.location.href = '/'; }, 800);
     }
 
-    // Check if terms are already accepted
     document.addEventListener('DOMContentLoaded', function() {
         if (localStorage.getItem('termsAccepted') === 'true') {
+            const status = document.getElementById('termsAcceptedStatus');
             const acceptedDate = localStorage.getItem('termsAcceptedDate');
-            console.log(`Terms accepted on: ${acceptedDate}`);
+            if (status) {
+                status.textContent = 'Terms accepted' + (acceptedDate ? ' on ' + acceptedDate : '');
+                status.style.display = 'block';
+            }
         }
-    });
-
-    // Print terms function
-    function printTerms() {
-        window.print();
-    }
-
-    // Add print button dynamically
-    document.addEventListener('DOMContentLoaded', function() {
-        const printBtn = document.createElement('button');
-        printBtn.innerHTML = '<i class="fas fa-print"></i> Print Terms';
-        printBtn.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        `;
-        printBtn.onclick = printTerms;
-        document.body.appendChild(printBtn);
     });
 </script>
 

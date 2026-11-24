@@ -1,0 +1,50 @@
+<!-- templates/includes/course_enroll_popup.html -->
+<div class="modal" id="courseEnrollModal">
+    <div class="modal-content" style="max-width:540px;width:92%;background:#fff;border-radius:14px;padding:26px;max-height:90vh;overflow:auto;">
+        <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e2e8f0;padding:0 0 14px;margin-bottom:16px;">
+            <div>
+                <h2 style="margin:0;color:#0b1120;font-size:1.35rem;">Enroll / Request Syllabus</h2>
+                <p id="modalCourseTitle" style="margin:4px 0 0;color:#8b0a2e;font-weight:600;font-size:0.92rem;">Career Mentorship Program</p>
+            </div>
+            <button type="button" class="modal-close" aria-label="Close" style="color:#64748b;"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" style="padding:0;text-align:left;">
+            <form id="courseEnrollModalForm" method="POST" action="{% url 'course_enroll' %}">
+                {% csrf_token %}
+                <input type="hidden" name="course_slug" value="data-analytics-mentorship">
+                <input type="hidden" name="course_title" value="Data Analytics Mentorship Program with GenAI">
+                <div style="display:none;"><input type="text" name="honeypot" tabindex="-1" autocomplete="off"></div>
+
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Your Full Name *" required class="form-input" style="padding-left:14px;">
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email Address *" required class="form-input" style="padding-left:14px;">
+                </div>
+                <div class="form-group">
+                    <input type="tel" name="phone" placeholder="Phone / WhatsApp Number *" required class="form-input" style="padding-left:14px;">
+                </div>
+                <div class="form-group">
+                    <select name="learning_mode" required class="form-input" style="padding-left:14px;">
+                        <option value="Live Online">Preferred Mode: Live Online Cohort</option>
+                        <option value="Hybrid Mentorship">Preferred Mode: Hybrid Mentorship</option>
+                        <option value="Weekend Batch">Preferred Mode: Weekend Working-Pro Batch</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select name="experience_level" class="form-input" style="padding-left:14px;">
+                        <option value="Student / Fresher">Current Background: Student / Fresher</option>
+                        <option value="Working Professional">Current Background: Working Professional</option>
+                        <option value="Career Switcher">Current Background: Career Switcher</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" rows="3" placeholder="Any questions or preferred batch timing? (Optional)" class="form-input" style="padding-left:14px;"></textarea>
+                </div>
+                <button type="submit" class="submit-btn" style="width:100%;justify-content:center;margin-top:8px;">
+                    <span>Confirm Enrollment Request</span> <i class="fas fa-graduation-cap"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

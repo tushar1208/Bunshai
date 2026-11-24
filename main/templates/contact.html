@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
+{% block breadcrumb_title %}Contact{% endblock %}
 {% block page_title %}Contact Us{% endblock %}
 {% block page_subtitle %}Get in touch with our team{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/conatct.css' %}">
 <section class="contact-section">
     <div class="container">
         <div class="contact-grid">
@@ -91,12 +95,12 @@
                         <div class="form-group">
                             <label for="name">Full Name *</label>
                             <input type="text" id="name" name="name" required placeholder="Your full name">
-                            <!-- <div class="error-message"></div> -->
+                            <div class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <label for="email">Email Address *</label>
                             <input type="email" id="email" name="email" required placeholder="your.email@example.com">
-                            <!-- <div class="error-message"></div> -->
+                            <div class="error-message"></div>
                         </div>
                     </div>
 
@@ -145,7 +149,7 @@
                     <div class="captcha-section">
                         <div class="captcha-container">
                             <div class="captcha-display" id="captchaDisplay">
-                                <span id="captchaText"></span>
+                                <span id="captchaText">{{ captcha_text }}</span>
                                 <button type="button" id="refreshCaptcha" aria-label="Refresh CAPTCHA">
                                     <i class="fas fa-redo"></i>
                                 </button>
@@ -178,7 +182,7 @@
             </div>
         </div>
 
-        <div class="map-section">
+        <div class="map-section" id="location-map">
             <h2>Our Location</h2>
             <p>While we operate globally, our headquarters coordinate operations across multiple time zones.</p>
             <div class="map-container">
@@ -208,6 +212,27 @@
 <!-- In the JavaScript section of contact.html -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Pre-fill the form when redirected from the Sharsh chatbot
+    (function prefillFromChatbot() {
+        const params = new URLSearchParams(window.location.search);
+        ['name', 'email', 'phone', 'subject', 'message'].forEach(function(key) {
+            const el = document.getElementById(key);
+            if (el && params.get(key) && !el.value) el.value = params.get(key);
+        });
+        if (params.get('source') === 'chatbot') {
+            const form = document.getElementById('contactForm');
+            if (form) {
+                const note = document.createElement('div');
+                note.setAttribute('role', 'status');
+                note.style.cssText = 'background:#fff7ed;border:1px solid #f59e0b;color:#7c2d12;padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:0.95rem;';
+                note.innerHTML = '<i class="fas fa-robot"></i> Sharsh couldn\'t answer this one - our team will personally reply within 24 hours. Please confirm your details below.';
+                form.insertBefore(note, form.firstChild);
+                const target = document.getElementById(params.get('name') ? (params.get('email') ? 'captchaInput' : 'email') : 'name');
+                if (target) setTimeout(function() { target.focus(); }, 400);
+            }
+        }
+    })();
+
     const contactForm = document.getElementById('contactForm');
     const messageTextarea = document.getElementById('message');
     const charCount = document.getElementById('charCount');
@@ -238,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Generate CAPTCHA - Get from server session
     function generateCaptcha() {
         // Fetch new CAPTCHA from server
-        fetch('/get-captcha/?type=contact')
+        fetch('/get-captcha/?type=contact', { credentials: 'same-origin' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -260,7 +285,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize with current CAPTCHA from server
-    captchaText.textContent = '{{ captcha_text|default:"ABCD12" }}';
+    if (!captchaText.textContent.trim()) {
+        const initialCaptcha = '{{ captcha_text|default:"" }}'.trim();
+        if (initialCaptcha) {
+            captchaText.textContent = initialCaptcha;
+        } else {
+            generateCaptcha();
+        }
+    }
 
     // Refresh CAPTCHA
     refreshCaptchaBtn.addEventListener('click', function() {
@@ -367,6 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(this.action, {
                 method: 'POST',
                 body: formData,
+                credentials: 'same-origin',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
@@ -374,16 +407,19 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const data = await response.json();
+            if (data.new_captcha) {
+                captchaText.textContent = data.new_captcha;
+                captchaInput.value = '';
+            }
             
             if (data.success) {
                 // Show success message
                 successMessage.style.display = 'flex';
                 contactForm.reset();
-                generateCaptcha(); // Get new CAPTCHA
                 charCount.textContent = '0';
                 
                 // Show success message from server
-                messages.success(data.message);
+                showAlert('success', data.message);
             } else {
                 // Show errors
                 if (data.errors) {
@@ -398,15 +434,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (field === 'captcha') {
                             captchaError.textContent = data.errors[field][0];
                             captchaError.classList.add('show');
-                            generateCaptcha(); // Refresh CAPTCHA on error
                         }
                     });
                 }
             }
         } catch (error) {
             console.error('Form submission error:', error);
-            // Fallback to traditional form submission
-            this.submit();
+            showAlert('error', 'Network error. Please try again.');
         } finally {
             // Reset button
             submitBtn.disabled = false;

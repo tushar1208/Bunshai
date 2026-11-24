@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}Company Profile{% endblock %}
 {% block page_title %}Company Profile - BunShai TECHNOHUB{% endblock %}
 {% block page_subtitle %}Learn about our journey, mission, and values{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/company-profile.css' %}">
+{% endblock %}
 
 {% block content %}
 <section class="company-profile">
@@ -12,7 +17,7 @@
                 <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB">
             </div>
             <h1>Company Profile</h1>
-            <p class="company-tagline">Your Trusted Technology Partner Since 2024</p>
+            <p class="company-tagline">Your Trusted Technology Partner Since 2025</p>
         </div>
 
         <div class="profile-content">
@@ -24,6 +29,9 @@
                         <h3>Our Story</h3>
                         <p>BunShai TECHNOHUB was founded with a vision to revolutionize digital transformation for businesses worldwide. Starting as a small team of passionate developers, we've grown into a global technology solutions provider serving clients across 15+ countries.</p>
                         <p>Our journey began with a simple mission: to make cutting-edge technology accessible and affordable for businesses of all sizes. Today, we stand as a testament to innovation, quality, and customer-centric service.</p>
+                        <div style="margin-top:20px;border-radius:14px;overflow:hidden;box-shadow:0 14px 30px rgba(11,17,32,0.12);">
+                            <img src="{% static 'images/site/tech-studio.png' %}" alt="BunShai TECHNOHUB Collaborative Studio" loading="lazy" style="width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;">
+                        </div>
                     </div>
                     <div class="overview-item">
                         <h3>Mission & Vision</h3>

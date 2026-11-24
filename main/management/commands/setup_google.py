@@ -1,181 +1,71 @@
-from django.core.management.base import BaseCommand
-from django.conf import settings
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import json
 import os
 
+from django.conf import settings
+from django.core.management.base import BaseCommand
+
+from ...google_sheets import (
+    OWNER_EMAIL, SHEET_SPEC, credentials_available, get_gspread_client, initialize_google_sheets,
+)
+
+
 class Command(BaseCommand):
-    help = 'Setup Google Sheets integration by creating required sheets'
-    
+    help = ('Link the website to Google Sheets: creates (or opens) the spreadsheet, adds one worksheet per '
+            'form/chatbot table with headers, and shares it with the team Gmail account.')
+
     def add_arguments(self, parser):
-        parser.add_argument(
-            '--sheet-id',
-            type=str,
-            help='Google Sheet ID (optional, will use from settings if not provided)'
-        )
-    
+        parser.add_argument('--sheet-id', type=str, help='Existing Google Sheet ID (defaults to GOOGLE_SHEET_ID)')
+        parser.add_argument('--share-with', type=str, default=OWNER_EMAIL,
+                            help=f'Gmail account to share with (default {OWNER_EMAIL})')
+        parser.add_argument('--title', type=str, default='BunShai TECHNOHUB - Leads & Chatbot Data',
+                            help='Title when creating a new spreadsheet')
+
     def handle(self, *args, **options):
-        self.stdout.write(self.style.SUCCESS('Setting up Google Sheets integration...'))
-        
-        sheet_id = options.get('sheet_id') or settings.GOOGLE_SHEET_ID
-        if not sheet_id:
+        if not credentials_available():
             self.stderr.write(self.style.ERROR(
-                'Google Sheet ID not found. Please provide --sheet-id or set GOOGLE_SHEET_ID in settings.'
-            ))
+                'No Google credentials found.\n'
+                f'  1. Create a Google Cloud service account and download its JSON key.\n'
+                f'  2. Save it as {settings.GOOGLE_SHEETS_CREDENTIALS}\n'
+                '     (or put the JSON text in the GOOGLE_SHEETS_JSON environment variable).\n'
+                '  3. Enable the Google Sheets API + Google Drive API for the project.\n'
+                '  4. Re-run: python manage.py setup_google'))
             return
-        
+
+        client = get_gspread_client()
+        if client is None:
+            self.stderr.write(self.style.ERROR('Could not authorise with Google - check the credentials file.'))
+            return
+
+        sheet_id = options.get('sheet_id') or settings.GOOGLE_SHEET_ID
+        share_with = options['share_with']
         try:
-            # Initialize Google Sheets client
-            scope = ['https://spreadsheets.google.com/feeds',
-                    'https://www.googleapis.com/auth/drive']
-            
-            creds_path = settings.GOOGLE_SHEETS_CREDENTIALS
-            if hasattr(settings, 'GOOGLE_SHEETS_JSON'):
-                creds_info = json.loads(settings.GOOGLE_SHEETS_JSON)
-                credentials = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, scope)
+            if sheet_id:
+                spreadsheet = client.open_by_key(sheet_id)
+                self.stdout.write(self.style.SUCCESS(f'Opened spreadsheet: {spreadsheet.title}'))
             else:
-                credentials = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
-            
-            client = gspread.authorize(credentials)
-            
-            # Open the spreadsheet
-            spreadsheet = client.open_by_key(sheet_id)
-            self.stdout.write(self.style.SUCCESS(f'Connected to spreadsheet: {spreadsheet.title}'))
-            
-            # Define sheets to create
-            sheets_config = {
-                'Contact Messages': [
-                    ['Timestamp', 'Name', 'Email', 'Phone', 'Company', 'Subject', 'Service', 'Message', 'IP Address', 'Date', 'Status']
-                ],
-                'Subscribers': [
-                    ['Timestamp', 'Email', 'Name', 'IP Address', 'Subscription Date', 'Status', 'Verified']
-                ],
-                'Service Inquiries': [
-                    ['Timestamp', 'Name', 'Email', 'Phone', 'Company', 'Service', 'Message', 'IP Address', 'Date', 'Status']
-                ],
-                'Proposal Requests': [
-                    ['Timestamp', 'Name', 'Email', 'Phone', 'Service', 'Budget', 'Requirements', 'IP Address', 'Date', 'Status']
-                ],
-                'Career Applications': [
-                    ['Timestamp', 'Name', 'Email', 'Phone', 'LinkedIn', 'Position', 'Cover Letter', 'Resume', 'IP Address', 'Date', 'Status']
-                ],
-                'Chatbot Sessions': [
-                    ['Timestamp', 'Session ID', 'Name', 'Email', 'Phone', 'IP Address', 'Messages Count', 'Last Active', 'Status']
-                ]
-            }
-            
-            # Create or update sheets
-            for sheet_name, headers in sheets_config.items():
-                try:
-                    worksheet = spreadsheet.worksheet(sheet_name)
-                    self.stdout.write(self.style.WARNING(f'Sheet "{sheet_name}" already exists'))
-                    
-                    # Check if headers match
-                    existing_headers = worksheet.row_values(1)
-                    if existing_headers != headers[0]:
-                        self.stdout.write(self.style.WARNING(
-                            f'Headers mismatch for "{sheet_name}". Expected: {headers[0]}, Found: {existing_headers}'
-                        ))
-                        
-                        # Ask for confirmation to update headers
-                        if input(f'Update headers for "{sheet_name}"? (y/n): ').lower() == 'y':
-                            worksheet.clear()
-                            worksheet.append_row(headers[0])
-                            self.stdout.write(self.style.SUCCESS(f'Updated headers for "{sheet_name}"'))
-                    
-                except gspread.exceptions.WorksheetNotFound:
-                    # Create new worksheet
-                    worksheet = spreadsheet.add_worksheet(title=sheet_name, rows=1000, cols=20)
-                    worksheet.append_row(headers[0])
-                    self.stdout.write(self.style.SUCCESS(f'Created sheet: {sheet_name}'))
-            
-            # Format the sheets
-            self.format_spreadsheet(spreadsheet)
-            
-            self.stdout.write(self.style.SUCCESS('Google Sheets setup completed successfully!'))
-            
-            # Print sharing instructions
-            self.stdout.write('\n' + '='*50)
-            self.stdout.write(self.style.SUCCESS('Next steps:'))
-            self.stdout.write('1. Share the spreadsheet with team.bunshailogicloop@gmail.com')
-            self.stdout.write('2. Grant "Editor" access')
-            self.stdout.write('3. Test form submissions to verify data sync')
-            self.stdout.write('='*50)
-            
-        except Exception as e:
-            self.stderr.write(self.style.ERROR(f'Error setting up Google Sheets: {str(e)}'))
-    
-    def format_spreadsheet(self, spreadsheet):
-        """Apply basic formatting to the spreadsheet"""
-        try:
-            # Format each worksheet
-            for worksheet in spreadsheet.worksheets():
-                # Freeze header row
-                worksheet.freeze(rows=1)
-                
-                # Format header row
-                header_format = {
-                    "backgroundColor": {
-                        "red": 0.2,
-                        "green": 0.2,
-                        "blue": 0.2
-                    },
-                    "textFormat": {
-                        "foregroundColor": {
-                            "red": 1.0,
-                            "green": 1.0,
-                            "blue": 1.0
-                        },
-                        "bold": True,
-                        "fontSize": 11
-                    },
-                    "horizontalAlignment": "CENTER",
-                    "verticalAlignment": "MIDDLE"
-                }
-                
-                worksheet.format('A1:Z1', header_format)
-                
-                # Auto-resize columns
-                self.resize_columns(worksheet)
-                
-                # Add filters
-                worksheet.set_basic_filter()
-            
-            self.stdout.write(self.style.SUCCESS('Applied formatting to spreadsheet'))
-            
-        except Exception as e:
-            self.stderr.write(self.style.WARNING(f'Could not format spreadsheet: {str(e)}'))
-    
-    def resize_columns(self, worksheet):
-        """Auto-resize columns based on content"""
-        try:
-            # Get all values
-            all_values = worksheet.get_all_values()
-            
-            if not all_values:
-                return
-            
-            # Calculate max width for each column
-            col_widths = []
-            for col_idx in range(len(all_values[0])):
-                max_len = 0
-                for row_idx, row in enumerate(all_values):
-                    if row_idx == 0:  # Header row
-                        cell_len = len(str(row[col_idx])) + 5
-                    else:
-                        cell_len = len(str(row[col_idx])) + 2
-                    max_len = max(max_len, cell_len)
-                
-                # Limit max width
-                max_len = min(max_len, 50)
-                col_widths.append(max_len)
-            
-            # Apply column widths
-            for i, width in enumerate(col_widths):
-                col_letter = chr(65 + i)  # A, B, C, etc.
-                worksheet.update_column_width(i + 1, width)
-                
-        except Exception as e:
-            # Some versions of gspread don't support update_column_width
-            self.stderr.write(self.style.WARNING(f'Could not resize columns: {str(e)}'))
+                spreadsheet = client.create(options['title'])
+                self.stdout.write(self.style.SUCCESS(f'Created spreadsheet: {spreadsheet.title}'))
+                self.stdout.write(self.style.WARNING(
+                    f'ADD THIS TO YOUR .env FILE ->  GOOGLE_SHEET_ID={spreadsheet.id}'))
+
+            try:
+                spreadsheet.share(share_with, perm_type='user', role='writer', notify=True)
+                self.stdout.write(self.style.SUCCESS(f'Shared spreadsheet with {share_with} (editor).'))
+            except Exception as e:  # noqa: BLE001
+                self.stderr.write(self.style.WARNING(f'Could not share automatically ({e}). '
+                                                     f'Share it manually with {share_with}.'))
+
+            initialize_google_sheets(spreadsheet)
+            for ws_name in SHEET_SPEC:
+                self.stdout.write(f'  ✔ worksheet ready: {ws_name}')
+            try:
+                default = spreadsheet.sheet1
+                if default.title in ('Sheet1', 'Sheet 1') and len(spreadsheet.worksheets()) > 1:
+                    spreadsheet.del_worksheet(default)
+            except Exception:  # noqa: BLE001
+                pass
+
+            self.stdout.write(self.style.SUCCESS('Google Sheets integration is ready.'))
+            self.stdout.write(f'Open: https://docs.google.com/spreadsheets/d/{spreadsheet.id}')
+        except Exception as e:  # noqa: BLE001
+            self.stderr.write(self.style.ERROR(f'Error setting up Google Sheets: {e}'))

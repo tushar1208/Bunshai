@@ -1,190 +1,191 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.contrib import messages
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
-from django.core.mail import send_mail, EmailMessage
-from django.conf import settings
-from django.utils import timezone
-from django.template.loader import render_to_string
-from ipware import get_client_ip
-import uuid
 import json
 import logging
+import os
+import threading
+import uuid
 from datetime import datetime
-from .security import generate_captcha_text, validate_captcha  # Make sure these exist in security.py
-from .forms import *
-from .models import *
-from .google_sheets import save_to_google_sheet
-from .security import log_security_event, check_rate_limit, validate_form_data
-# main/views.py
-from django.http import JsonResponse
-import json
-# main/views.py
+
 from django.conf import settings
+from django.contrib import messages
+from django.core.files.storage import default_storage
+from django.core.mail import send_mail
+from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from django.views.decorators.http import require_GET, require_POST
+from ipware import get_client_ip
 
-def home(request):
-    # If you're accessing settings directly
-    support_email = getattr(settings, 'SUPPORT_EMAIL', 'support@example.com')
-    contact_email = getattr(settings, 'CONTACT_EMAIL', 'contact@example.com')
-    
-    # Or pass them in context
-    context = {
-        'support_email': getattr(settings, 'SUPPORT_EMAIL', 'support@example.com'),
-        'contact_email': getattr(settings, 'CONTACT_EMAIL', 'contact@example.com'),
-    }
-    return render(request, 'home.html', context)
+from .courses_data import COURSE_CATEGORIES, COURSES, COURSES_BY_SLUG
+from .forms import (
+    CareerApplicationForm, ContactForm, CourseEnrollmentForm, ProposalRequestForm,
+    ServiceInquiryForm, SubscribeForm, SupportTicketForm, SyllabusDownloadForm,
+)
+from .google_sheets import save_to_google_sheet
+from .models import (
+    ChatbotMessage, ChatbotSession, ChatbotUnanswered, ContactMessage, PageView, Subscriber,
+    SupportTicket, SyllabusDownload,
+)
+from .syllabus_pdf import (
+    generate_course_syllabus_pdf, generate_privacy_policy_pdf, generate_terms_pdf,
+)
+from .security import (
+    check_rate_limit, generate_captcha_text, log_security_event,
+    validate_captcha,
+)
 
-@csrf_exempt
-def get_captcha(request):
-    """Generate and return new CAPTCHA via AJAX"""
-    captcha_type = request.GET.get('type', 'contact')
-    session_key = f'{captcha_type}_captcha'
-    
-    captcha_text = generate_captcha_text()
-    request.session[session_key] = f"{captcha_text}|{datetime.now().isoformat()}"
-    
-    return JsonResponse({
-        'success': True,
-        'captcha_text': captcha_text
-    })
-
-@csrf_exempt
-def verify_captcha(request):
-    """Verify CAPTCHA via AJAX (for real-time validation)"""
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        captcha_input = data.get('captcha', '')
-        captcha_type = data.get('type', 'contact')
-        
-        is_valid, message = validate_captcha(request, captcha_input, f'{captcha_type}_captcha')
-        
-        return JsonResponse({
-            'valid': is_valid,
-            'message': message
-        })
 logger = logging.getLogger(__name__)
 
+SKIP_FIELDS = {'csrfmiddlewaretoken', 'captcha', 'honeypot', 'g-recaptcha-response'}
+
+
+# ---------------------------------------------------------------- helpers
 def get_client_info(request):
-    ip, is_routable = get_client_ip(request)
-    user_agent = request.META.get('HTTP_USER_AGENT', '')
-    return ip, user_agent
+    ip, _ = get_client_ip(request)
+    return ip or request.META.get('REMOTE_ADDR') or '0.0.0.0', request.META.get('HTTP_USER_AGENT', '')
 
-def log_page_view(request, page_url):
-    ip, user_agent = get_client_info(request)
-    referrer = request.META.get('HTTP_REFERER', '')
-    
-    PageView.objects.create(
-        page_url=page_url,
-        ip_address=ip,
-        user_agent=user_agent,
-        referrer=referrer
-    )
 
-def send_form_email(form_type, form_data):
-    """Send email notifications for form submissions"""
+def log_page_view(request, page_url=None):
+    """Record a page view; analytics must never break a page."""
     try:
-        subject = f'New {form_type} Submission - {settings.SITE_NAME}'
-        
-        # Create email content
-        content = f"""
-        New {form_type} Submission:
-        
-        Details:
-        """
-        
-        for key, value in form_data.items():
-            if key not in ['csrfmiddletoken', 'captcha', 'g-recaptcha-response']:
-                content += f"{key.replace('_', ' ').title()}: {value}\n"
-        
-        # Send to admin
-        send_mail(
-            subject,
-            content,
-            settings.DEFAULT_FROM_EMAIL,
-            [settings.SITE_EMAIL],
-            fail_silently=False,
+        ip, user_agent = get_client_info(request)
+        full_url = page_url or request.build_absolute_uri()
+        PageView.objects.create(
+            page_url=full_url[:200],
+            ip_address=ip,
+            user_agent=user_agent[:500],
+            referrer=request.META.get('HTTP_REFERER', '')[:200] or None,
         )
-        
-        # Send confirmation to user if email provided
-        if 'email' in form_data:
-            user_subject = f'Thank you for contacting {settings.SITE_NAME}'
-            user_content = f"""
-            Dear {form_data.get('name', 'User')},
-            
-            Thank you for your submission. We have received your {form_type} and will contact you within 24 hours.
-            
-            Best regards,
-            {settings.SITE_NAME} Team
-            """
-            
-            send_mail(
-                user_subject,
-                user_content,
-                settings.DEFAULT_FROM_EMAIL,
-                [form_data['email']],
-                fail_silently=True,
-            )
-            
-    except Exception as e:
-        logger.error(f"Email sending failed: {str(e)}")
+    except Exception as e:  # noqa: BLE001
+        logger.warning("Page view logging failed: %s", e)
 
+
+def is_ajax(request):
+    return (request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            or 'application/json' in request.headers.get('Accept', ''))
+
+
+def respond(request, ok, message, fallback='home', errors=None, status=None, **extra):
+    """JSON for AJAX callers, flash message + redirect for plain form posts."""
+    if is_ajax(request):
+        payload = {'success': ok, 'message': message}
+        if errors:
+            payload['errors'] = errors
+        payload.update(extra)
+        return JsonResponse(payload, status=status or (200 if ok else 400))
+    (messages.success if ok else messages.error)(request, message)
+    target = request.META.get('HTTP_REFERER') or None
+    return redirect(target) if target else redirect(fallback)
+
+
+def form_errors(form):
+    return {k: [str(e) for e in v] for k, v in form.errors.items()}
+
+
+def _send_mails(form_type, data):
+    try:
+        lines = [f"{k.replace('_', ' ').title()}: {v}" for k, v in data.items()
+                 if k not in SKIP_FIELDS]
+        send_mail(f'New {form_type} - {settings.SITE_NAME}',
+                  f'New {form_type} received:\n\n' + '\n'.join(lines),
+                  settings.DEFAULT_FROM_EMAIL, [settings.SITE_EMAIL], fail_silently=True)
+        if data.get('email'):
+            send_mail(f'Thank you for contacting {settings.SITE_NAME}',
+                      f"Dear {data.get('name') or 'there'},\n\nThank you for your "
+                      f"{form_type.lower()}. We have received it and will get back to you "
+                      f"within 24 hours.\n\nBest regards,\n{settings.SITE_NAME} Team",
+                      settings.DEFAULT_FROM_EMAIL, [data['email']], fail_silently=True)
+    except Exception as e:  # noqa: BLE001
+        logger.error("Email sending failed: %s", e)
+
+
+def notify(form_type, sheet_name, data):
+    """Email + Google Sheets backup, run off the request thread."""
+    data = {k: ('' if v is None else str(v)) for k, v in dict(data).items()}
+    threading.Thread(target=_send_mails, args=(form_type, data), daemon=True).start()
+    save_to_google_sheet(sheet_name, data)
+
+
+def rate_limited(request, action, limit=10):
+    ip, ua = get_client_info(request)
+    if not check_rate_limit(ip, action, limit=limit, period=60):
+        return True
+    return False
+
+
+# ------------------------------------------------------------ static pages
 def home(request):
-    log_page_view(request, request.path)
+    log_page_view(request)
     return render(request, 'index.html')
 
+
 def about(request):
-    log_page_view(request, request.path)
+    log_page_view(request)
     return render(request, 'about.html')
 
+
 def company_profile(request):
-    log_page_view(request, request.path)
+    log_page_view(request)
     return render(request, 'company-profile.html')
 
+
 def md_profile(request):
-    log_page_view(request, request.path)
+    log_page_view(request)
     return render(request, 'md-profile.html')
 
+
+def team(request):
+    log_page_view(request)
+    return render(request, 'team.html')
+
+
+def privacy(request):
+    log_page_view(request)
+    return render(request, 'privacy.html')
+
+
+@require_GET
+def privacy_pdf(request):
+    pdf_bytes = generate_privacy_policy_pdf()
+    response = HttpResponse(pdf_bytes, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="BunShai-Privacy-Policy.pdf"'
+    response['Content-Length'] = len(pdf_bytes)
+    return response
+
+
+def terms(request):
+    log_page_view(request)
+    return render(request, 'terms.html')
+
+
+@require_GET
+def terms_pdf(request):
+    pdf_bytes = generate_terms_pdf()
+    response = HttpResponse(pdf_bytes, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="BunShai-Terms-and-Conditions.pdf"'
+    response['Content-Length'] = len(pdf_bytes)
+    return response
+
+
+@ensure_csrf_cookie
+def support(request):
+    log_page_view(request)
+    return render(request, 'support.html')
+
+
+def sitemap(request):
+    log_page_view(request)
+    return render(request, 'sitemap.html')
+
+
+@ensure_csrf_cookie
 def services(request):
-    log_page_view(request, request.path)
-    
-    if request.method == 'POST':
-        form = ServiceInquiryForm(request.POST)
-        if form.is_valid():
-            inquiry = form.save(commit=False)
-            ip, user_agent = get_client_info(request)
-            inquiry.ip_address = ip
-            inquiry.save()
-            
-            # Send email and save to Google Sheets
-            form_data = form.cleaned_data
-            send_form_email('Service Inquiry', form_data)
-            save_to_google_sheet('service_inquiries', form_data)
-            
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Thank you for your inquiry! We will contact you soon.'
-                })
-            else:
-                messages.success(request, 'Thank you for your inquiry! We will contact you soon.')
-                return redirect('services')
-        else:
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': False,
-                    'errors': form.errors
-                }, status=400)
-            else:
-                messages.error(request, 'Please fill all required fields correctly.')
-                return redirect('services')
-    else:
-        form = ServiceInquiryForm()
-    
-    return render(request, 'services.html', {'inquiry_form': form})
+    log_page_view(request)
+    return render(request, 'services.html')
+
 
 def service_detail(request, service_slug):
-    log_page_view(request, request.path)
+    log_page_view(request)
     templates = {
         'it-consulting': 'services/it-consulting.html',
         'digital-marketing': 'services/digital-marketing.html',
@@ -193,264 +194,444 @@ def service_detail(request, service_slug):
         'cybersecurity': 'services/cybersecurity.html',
         'data-analytics': 'services/data-analytics.html',
     }
-    
-    template = templates.get(service_slug, 'services.html')
-    return render(request, template)
+    if service_slug not in templates:
+        return redirect('services')
+    return render(request, templates[service_slug])
 
-def contact(request):
-    log_page_view(request, request.path)
-    
-    if request.method == 'POST':
-        # Rate limiting check
-        ip, _ = get_client_info(request)
-        if not check_rate_limit(ip, 'contact_form'):
-            messages.error(request, 'Too many submission attempts. Please try again later.')
-            return redirect('contact')
-        
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            contact_message = form.save(commit=False)
-            ip, user_agent = get_client_info(request)
-            contact_message.ip_address = ip
-            contact_message.user_agent = user_agent
-            contact_message.verification_token = str(uuid.uuid4())
-            
-            # Check for spam
-            spam_keywords = ['buy now', 'click here', 'http://', 'https://', 'www.', '.com']
-            message_lower = contact_message.message.lower()
-            if any(keyword in message_lower for keyword in spam_keywords):
-                contact_message.is_spam = True
-                log_security_event('spam', ip, user_agent, f'Potential spam message from {contact_message.email}')
-            
-            contact_message.save()
-            
-            # Send email and save to Google Sheets
-            form_data = form.cleaned_data
-            send_form_email('Contact Message', form_data)
-            save_to_google_sheet('contact_messages', form_data)
-            
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Thank you for your message! We will get back to you soon.'
-                })
-            else:
-                messages.success(request, 'Thank you for your message! We will get back to you soon.')
-                return redirect('contact')
-        else:
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': False,
-                    'errors': form.errors
-                }, status=400)
-    else:
-        form = ContactForm()
-    
-    return render(request, 'contact.html', {'form': form})
+
+# ---------------------------------------------------------------- captcha
+def _new_captcha(request, captcha_type='contact'):
+    text = generate_captcha_text()
+    request.session[f'{captcha_type}_captcha'] = f"{text}|{datetime.now().isoformat()}"
+    return text
+
+
+@require_GET
+def get_captcha(request):
+    text = _new_captcha(request, request.GET.get('type', 'contact'))
+    return JsonResponse({'success': True, 'captcha_text': text})
+
 
 @require_POST
-@csrf_exempt
+def verify_captcha(request):
+    data = _json_body(request)
+    ok, message = validate_captcha(request, data.get('captcha', ''),
+                                   f"{data.get('type', 'contact')}_captcha")
+    return JsonResponse({'valid': ok, 'message': message})
+
+
+# ------------------------------------------------------------------ forms
+@ensure_csrf_cookie
+def contact(request):
+    if request.method != 'POST':
+        log_page_view(request)
+        return render(request, 'contact.html', {
+            'form': ContactForm(), 'captcha_text': _new_captcha(request)})
+
+    ip, user_agent = get_client_info(request)
+    if rate_limited(request, 'contact_form'):
+        return respond(request, False, 'Too many submission attempts. Please try again later.',
+                       'contact', status=429)
+
+    ok, captcha_msg = validate_captcha(request, request.POST.get('captcha', '').strip(),
+                                       'contact_captcha')
+    form = ContactForm(request.POST)
+    if not ok:
+        return respond(request, False, captcha_msg, 'contact',
+                       errors={**form_errors(form), 'captcha': [captcha_msg]},
+                       new_captcha=_new_captcha(request))
+    if not form.is_valid():
+        return respond(request, False, 'Please correct the highlighted fields.', 'contact',
+                       errors=form_errors(form), new_captcha=_new_captcha(request))
+
+    obj = form.save(commit=False)
+    obj.ip_address, obj.user_agent = ip, user_agent
+    obj.verification_token = uuid.uuid4().hex
+    text = f"{obj.subject} {obj.message}".lower()
+    if any(k in text for k in ('buy now', 'click here', 'earn money', 'make money',
+                               'lottery', 'viagra', 'casino')):
+        obj.is_spam = True
+        log_security_event('spam', ip, user_agent, f'Potential spam from {obj.email}')
+    obj.save()
+    notify('Contact Message', 'contact_messages', form.cleaned_data)
+    return respond(request, True, 'Thank you for your message! We will get back to you soon.',
+                   'contact', new_captcha=_new_captcha(request))
+
+
+@require_POST
 def subscribe(request):
+    if rate_limited(request, 'subscribe'):
+        return respond(request, False, 'Too many attempts. Please try again later.', status=429)
     form = SubscribeForm(request.POST)
-    if form.is_valid():
-        subscriber = form.save(commit=False)
-        ip, user_agent = get_client_info(request)
-        subscriber.ip_address = ip
-        subscriber.verification_token = str(uuid.uuid4())
-        
-        existing = Subscriber.objects.filter(email=subscriber.email).first()
-        if existing:
-            existing.is_active = True
-            existing.save()
+    if not form.is_valid():
+        return respond(request, False, 'Please enter a valid email address.',
+                       errors=form_errors(form))
+    email = form.cleaned_data['email']
+    ip, _ = get_client_info(request)
+    sub, created = Subscriber.objects.get_or_create(
+        email=email, defaults={'ip_address': ip, 'verification_token': uuid.uuid4().hex})
+    if created:
+        message = 'Thank you for subscribing!'
+        notify('Subscription', 'subscribers', {'email': email})
+    else:
+        if not sub.is_active:
+            sub.is_active = True
+            sub.save(update_fields=['is_active'])
             message = 'You have been resubscribed successfully!'
         else:
-            subscriber.save()
-            message = 'Thank you for subscribing!'
-        
-        # Send email and save to Google Sheets
-        form_data = form.cleaned_data
-        send_form_email('Subscription', form_data)
-        save_to_google_sheet('subscribers', form_data)
-        
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': True,
-                'message': message
-            })
-        else:
-            messages.success(request, message)
-            return redirect(request.META.get('HTTP_REFERER', '/'))
-    else:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': False,
-                'errors': form.errors
-            }, status=400)
-        else:
-            messages.error(request, 'Please enter a valid email address.')
-            return redirect(request.META.get('HTTP_REFERER', '/'))
+            message = 'You are already subscribed. Thank you!'
+    return respond(request, True, message)
+
+
+def subscribe_page(request):
+    log_page_view(request)
+    return render(request, 'subscribe.html')
+
+
+def _handle_model_form(request, form_cls, label, sheet, fallback, files=False):
+    if rate_limited(request, sheet):
+        return respond(request, False, 'Too many submission attempts. Please try again later.',
+                       fallback, status=429)
+    form = form_cls(request.POST, request.FILES) if files else form_cls(request.POST)
+    if not form.is_valid():
+        return respond(request, False, 'Please fill all required fields correctly.', fallback,
+                       errors=form_errors(form))
+    obj = form.save(commit=False)
+    obj.ip_address, _ = get_client_info(request)
+    obj.save()
+    data = dict(form.cleaned_data)
+    if 'resume' in data:
+        data['resume'] = obj.resume.name
+    notify(label, sheet, data)
+    return obj
+
+
+@ensure_csrf_cookie
+def career(request):
+    if request.method == 'POST':
+        result = _handle_model_form(request, CareerApplicationForm, 'Career Application',
+                                    'career_applications', 'career', files=True)
+        if not hasattr(result, 'pk'):
+            return result
+        return respond(request, True, 'Application submitted successfully! We will review it soon.',
+                       'career')
+    log_page_view(request)
+    return render(request, 'career.html', {'form': CareerApplicationForm()})
+
 
 @require_POST
 def proposal_request(request):
-    form = ProposalRequestForm(request.POST)
-    if form.is_valid():
-        proposal = form.save(commit=False)
-        ip, user_agent = get_client_info(request)
-        proposal.ip_address = ip
-        proposal.save()
-        
-        # Send email and save to Google Sheets
-        form_data = form.cleaned_data
-        send_form_email('Proposal Request', form_data)
-        save_to_google_sheet('proposal_requests', form_data)
-        
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': True,
-                'message': 'Proposal request submitted successfully! We will contact you soon.'
-            })
-        else:
-            messages.success(request, 'Proposal request submitted successfully! We will contact you soon.')
-            return redirect(request.META.get('HTTP_REFERER', '/'))
-    else:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': False,
-                'errors': form.errors
-            }, status=400)
-        else:
-            messages.error(request, 'Please fill all required fields correctly.')
-            return redirect(request.META.get('HTTP_REFERER', '/'))
+    result = _handle_model_form(request, ProposalRequestForm, 'Proposal Request',
+                                'proposal_requests', 'home')
+    if not hasattr(result, 'pk'):
+        return result
+    return respond(request, True, 'Proposal request submitted successfully! We will contact you soon.')
 
-def career(request):
-    log_page_view(request, request.path)
-    
-    if request.method == 'POST':
-        form = CareerApplicationForm(request.POST, request.FILES)
-        if form.is_valid():
-            application = form.save(commit=False)
-            ip, user_agent = get_client_info(request)
-            application.ip_address = ip
-            application.save()
-            
-            # Send email and save to Google Sheets
-            form_data = form.cleaned_data
-            form_data['resume'] = str(application.resume)
-            send_form_email('Career Application', form_data)
-            save_to_google_sheet('career_applications', form_data)
-            
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Application submitted successfully! We will review it soon.'
-                })
-            else:
-                messages.success(request, 'Application submitted successfully! We will review it soon.')
-                return redirect('career')
-        else:
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': False,
-                    'errors': form.errors
-                }, status=400)
-            else:
-                messages.error(request, 'Please fill all required fields correctly.')
-                return redirect('career')
-    else:
-        form = CareerApplicationForm()
-    
-    return render(request, 'career.html', {'form': form})
 
-def privacy(request):
-    log_page_view(request, request.path)
-    return render(request, 'privacy.html')
+@require_POST
+def service_inquiry(request):
+    result = _handle_model_form(request, ServiceInquiryForm, 'Service Inquiry',
+                                'service_inquiries', 'services')
+    if not hasattr(result, 'pk'):
+        return result
+    return respond(request, True, 'Thank you for your inquiry! We will contact you soon.', 'services')
 
-def terms(request):
-    log_page_view(request, request.path)
-    return render(request, 'terms.html')
 
-def support(request):
-    log_page_view(request, request.path)
-    return render(request, 'support.html')
+@ensure_csrf_cookie
+def courses(request):
+    log_page_view(request)
+    active_category = request.GET.get('category', 'all')
+    valid_slugs = {c['slug'] for c in COURSE_CATEGORIES}
+    if active_category != 'all' and active_category not in valid_slugs:
+        active_category = 'all'
+    return render(request, 'courses.html', {
+        'categories': COURSE_CATEGORIES,
+        'courses': COURSES,
+        'active_category': active_category,
+    })
 
-def sitemap(request):
-    return render(request, 'sitemap.xml')
 
-# Chatbot API Views
+@ensure_csrf_cookie
+def course_detail(request, course_slug):
+    course = COURSES_BY_SLUG.get(course_slug)
+    if not course:
+        return redirect('courses')
+    log_page_view(request)
+    related_courses = [
+        c for c in COURSES if c['slug'] != course_slug and c['category'] == course['category']
+    ]
+    if len(related_courses) < 3:
+        extra = [c for c in COURSES if c['slug'] != course_slug and c not in related_courses]
+        related_courses.extend(extra[:3 - len(related_courses)])
+    return render(request, 'course_detail.html', {
+        'course': course,
+        'related_courses': related_courses[:3],
+    })
+
+
+@require_POST
+def course_enroll(request):
+    if rate_limited(request, 'course_enroll'):
+        return respond(request, False, 'Too many submission attempts. Please try again later.',
+                       'courses', status=429)
+    form = CourseEnrollmentForm(request.POST)
+    if not form.is_valid():
+        return respond(request, False, 'Please fill all required fields correctly.', 'courses',
+                       errors=form_errors(form))
+    obj = form.save(commit=False)
+    matched = COURSES_BY_SLUG.get(obj.course_slug)
+    if matched and not obj.course_title:
+        obj.course_title = matched['title']
+    obj.ip_address, _ = get_client_info(request)
+    obj.save()
+    notify('Course Enrollment', 'course_enrollments', {**form.cleaned_data, 'course_title': obj.course_title})
+    return respond(
+        request,
+        True,
+        f"Enrollment request received for {obj.course_title}! Our academic counselor will reach out within 24 hours.",
+        'courses',
+    )
+
+
+@require_POST
+def syllabus_request(request):
+    if rate_limited(request, 'syllabus_request'):
+        return respond(request, False, 'Too many submission attempts. Please try again later.',
+                       'courses', status=429)
+    form = SyllabusDownloadForm(request.POST)
+    if not form.is_valid():
+        return respond(request, False, 'Please fill all required fields correctly.', 'courses',
+                       errors=form_errors(form))
+    obj = form.save(commit=False)
+    matched = COURSES_BY_SLUG.get(obj.course_slug)
+    if not matched:
+        return respond(request, False, 'Requested course could not be found.', 'courses', status=404)
+    if not obj.course_title:
+        obj.course_title = matched['title']
+    ip, _ = get_client_info(request)
+    obj.ip_address = ip
+    obj.save()
+
+    payload = {
+        **{k: ('' if v is None else str(v)) for k, v in form.cleaned_data.items()},
+        'course_title': obj.course_title,
+        'ip_address': ip,
+    }
+
+    def _mark_synced():
+        SyllabusDownload.objects.filter(pk=obj.pk).update(synced_to_google=True)
+
+    threading.Thread(target=_send_mails, args=('Syllabus Download', payload), daemon=True).start()
+    save_to_google_sheet('syllabus_downloads', payload, on_success=_mark_synced)
+
+    unlocked = list(request.session.get('unlocked_syllabi', []))
+    if obj.course_slug not in unlocked:
+        unlocked.append(obj.course_slug)
+        request.session['unlocked_syllabi'] = unlocked
+
+    token = TimestampSigner().sign(obj.course_slug)
+    download_url = f"/courses/{obj.course_slug}/syllabus-download/?token={token}"
+    return respond(
+        request,
+        True,
+        f"Thank you! Your {obj.course_title} syllabus PDF is downloading now.",
+        'courses',
+        download_url=download_url,
+    )
+
+
+@require_GET
+def syllabus_download(request, course_slug):
+    course = COURSES_BY_SLUG.get(course_slug)
+    if not course:
+        return redirect('courses')
+
+    token = request.GET.get('token', '')
+    authorized = False
+    if token:
+        try:
+            authorized = TimestampSigner().unsign(token, max_age=3600) == course_slug
+        except (BadSignature, SignatureExpired):
+            authorized = False
+    if not authorized and course_slug in request.session.get('unlocked_syllabi', []):
+        authorized = True
+
+    if not authorized:
+        messages.info(request, 'Please fill in your details to download the syllabus PDF.')
+        return redirect('course_detail', course_slug=course_slug)
+
+    pdf_bytes = generate_course_syllabus_pdf(course)
+    response = HttpResponse(pdf_bytes, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="BunShai-{course_slug}-Syllabus.pdf"'
+    response['Content-Length'] = len(pdf_bytes)
+    return response
+
+
+@require_POST
+def support_ticket(request):
+    if rate_limited(request, 'support_ticket'):
+        return respond(request, False, 'Too many submission attempts. Please try again later.',
+                       'support', status=429)
+    form = SupportTicketForm(request.POST)
+    files = request.FILES.getlist('attachments')
+    errors = form_errors(form) if not form.is_valid() else {}
+    allowed = {'jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'txt'}
+    if sum(f.size for f in files) > 10 * 1024 * 1024:
+        errors['attachments'] = ['Attachments must total less than 10MB']
+    for f in files:
+        ext = f.name.rsplit('.', 1)[-1].lower() if '.' in f.name else ''
+        if ext not in allowed:
+            errors['attachments'] = ['Unsupported attachment type']
+    if errors:
+        return respond(request, False, 'Please fill all required fields correctly.', 'support',
+                       errors=errors)
+    saved = []
+    for f in files[:5]:
+        name = default_storage.save(f"tickets/{uuid.uuid4().hex[:8]}_{os.path.basename(f.name)}", f)
+        saved.append(name)
+    ip, _ = get_client_info(request)
+    ticket = SupportTicket.objects.create(
+        ip_address=ip, attachments='\n'.join(saved), **form.cleaned_data)
+    notify('Support Ticket', 'support_tickets',
+           {**form.cleaned_data, 'ticket_number': ticket.ticket_number})
+    return respond(request, True,
+                   f'Ticket {ticket.ticket_number} submitted! We will get back to you within 2 hours.',
+                   'support', ticket_number=ticket.ticket_number)
+
+
+# ---------------------------------------------------------------- chatbot
+def _json_body(request):
+    try:
+        parsed = json.loads(request.body or '{}')
+        return parsed if isinstance(parsed, dict) else {}
+    except (ValueError, TypeError):
+        return {}
+
+
 @csrf_exempt
 @require_POST
 def chatbot_start_session(request):
-    """Start a new chatbot session"""
-    data = json.loads(request.body)
-    session_id = str(uuid.uuid4())
-    
+    data = _json_body(request)
+    ip, user_agent = get_client_info(request)
+    if rate_limited(request, 'chatbot_session', limit=20):
+        return JsonResponse({'success': False, 'error': 'Too many requests'}, status=429)
     session = ChatbotSession.objects.create(
-        session_id=session_id,
-        name=data.get('name'),
-        email=data.get('email'),
-        phone=data.get('phone')
-    )
-    
-    # Check if returning user
-    if data.get('email'):
-        existing = ChatbotSession.objects.filter(email=data['email']).exclude(id=session.id).first()
-        if existing:
-            session.is_returning = True
-            session.save()
-    
-    return JsonResponse({
-        'success': True,
-        'session_id': session_id,
-        'is_returning': session.is_returning
-    })
+        session_id=str(uuid.uuid4()),
+        name=(str(data.get('name') or '')[:100] or None), email=(str(data.get('email') or '')[:254] or None),
+        phone=(str(data.get('phone') or '')[:20] or None))
+    if session.email and ChatbotSession.objects.filter(email=session.email).exclude(pk=session.pk).exists():
+        session.is_returning = True
+        session.save(update_fields=['is_returning'])
+    _sync_chatbot_session(session, str(data.get('page') or '')[:200])
+    return JsonResponse({'success': True, 'session_id': session.session_id,
+                         'is_returning': session.is_returning})
+
+
+def _sync_chatbot_session(session, page=''):
+    save_to_google_sheet('chatbot_sessions', {
+        'session_id': session.session_id, 'name': session.name or '', 'email': session.email or '',
+        'phone': session.phone or '', 'is_returning': 'Yes' if session.is_returning else 'No', 'page': page})
+
+
+@csrf_exempt
+@require_POST
+def chatbot_check_user(request):
+    email = _json_body(request).get('email')
+    prev = ChatbotSession.objects.filter(email=email).exclude(name=None).first() if email else None
+    return JsonResponse({'success': True, 'is_returning': bool(prev),
+                         'name': prev.name if prev else None})
+
 
 @csrf_exempt
 @require_POST
 def chatbot_send_message(request):
-    """Handle chatbot messages"""
-    data = json.loads(request.body)
-    session_id = data.get('session_id')
-    message = data.get('message')
-    
-    if not session_id or not message:
-        return JsonResponse({'success': False, 'error': 'Missing parameters'})
-    
-    session = ChatbotSession.objects.filter(session_id=session_id).first()
+    from .chatbot_ai import extract_contact, get_chatbot_response
+
+    data = _json_body(request)
+    session_id, message = data.get('session_id'), str(data.get('message') or '').strip()
+    if not message:
+        return JsonResponse({'success': False, 'error': 'Missing parameters'}, status=400)
+    if rate_limited(request, 'chatbot_message', limit=40):
+        return JsonResponse({'success': False, 'error': 'Too many messages. Please slow down.'}, status=429)
+    message = message[:1000]
+
+    session = ChatbotSession.objects.filter(session_id=session_id).first() if session_id else None
+    if not session and session_id:
+        return JsonResponse({'success': False, 'error': 'Invalid session'}, status=404)
     if not session:
-        return JsonResponse({'success': False, 'error': 'Invalid session'})
-    
-    # Save user message
-    ChatbotMessage.objects.create(
-        session=session,
-        message=message,
-        is_user=True
-    )
-    
-    # Get bot response (simplified - in production, use AI)
-    from .chatbot_ai import get_chatbot_response
-    bot_response = get_chatbot_response(message, session)
-    
-    # Save bot response
-    ChatbotMessage.objects.create(
-        session=session,
-        message=bot_response,
-        is_user=False
-    )
-    
+        session = ChatbotSession.objects.create(session_id=str(uuid.uuid4()))
+
+    # Capture name / email / phone shared by the visitor during the conversation
+    user_info = data.get('user_info') if isinstance(data.get('user_info'), dict) else {}
+    changed = []
+    email, phone = extract_contact(message)
+    for field, value in (('name', user_info.get('name')), ('email', email or user_info.get('email')),
+                         ('phone', phone or user_info.get('phone'))):
+        value = str(value or '').strip()
+        if value and not getattr(session, field):
+            setattr(session, field, value[:254 if field == 'email' else 100 if field == 'name' else 20])
+            changed.append(field)
+    if changed:
+        if 'email' in changed and ChatbotSession.objects.filter(email=session.email).exclude(pk=session.pk).exists():
+            session.is_returning = True
+            changed.append('is_returning')
+        session.save(update_fields=changed + ['last_activity'])
+        _sync_chatbot_session(session, 'updated contact details')
+
+    ChatbotMessage.objects.create(session=session, message=message, is_user=True)
+    try:
+        result = get_chatbot_response(message, session)
+    except Exception as e:  # noqa: BLE001
+        logger.error("Chatbot error: %s", e)
+        from .chatbot_ai import fallback_response
+        result = fallback_response(message, session)
+    reply = result['reply']
+    ChatbotMessage.objects.create(session=session, message=reply, is_user=False)
+
+    save_to_google_sheet('chatbot_messages', {
+        'session_id': session.session_id, 'name': session.name or '', 'email': session.email or '',
+        'question': message, 'reply': reply[:500], 'intent': result['intent'],
+        'answered': 'No' if result['fallback'] else 'Yes'})
+
+    if result['fallback']:
+        item = ChatbotUnanswered.objects.create(
+            session=session, question=message, name=session.name or '', email=session.email or '',
+            phone=session.phone or '')
+        save_to_google_sheet('chatbot_unanswered', {
+            'session_id': session.session_id, 'name': item.name, 'email': item.email, 'phone': item.phone,
+            'question': message, 'status': 'Redirected to contact form'},
+            on_success=lambda pk=item.pk: ChatbotUnanswered.objects.filter(pk=pk).update(synced_to_google=True))
+
     return JsonResponse({
-        'success': True,
-        'response': bot_response
+        'success': True, 'response': reply, 'session_id': session.session_id,
+        'links': result['links'], 'suggestions': result['suggestions'],
+        'fallback': result['fallback'], 'contact_url': result['contact_url'],
+        'intent': result['intent'],
     })
 
-# Error handlers
-def custom_404(request, exception):
-    return render(request, '404.html', status=404)
+
+# --------------------------------------------------------- error handlers
+def custom_404(request, exception=None):
+    return render(request, '404.html', {'request_path': request.path}, status=404)
+
 
 def custom_500(request):
-    return render(request, '500.html', status=500)
+    try:
+        return render(request, '500.html', status=500)
+    except Exception:  # noqa: BLE001
+        return HttpResponse(
+            '<!DOCTYPE html><html><head><title>500 Server Error</title></head>'
+            '<body style="font-family:sans-serif;text-align:center;padding:60px;">'
+            '<h1>500 - Server Error</h1>'
+            '<p>Something went wrong on our side. Please <a href="/">return home</a>.</p>'
+            '</body></html>',
+            status=500,
+        )
 
-def custom_403(request, exception):
+
+def custom_403(request, exception=None):
     return render(request, '403.html', status=403)
 
-def custom_400(request, exception):
+
+def custom_400(request, exception=None):
     return render(request, '400.html', status=400)

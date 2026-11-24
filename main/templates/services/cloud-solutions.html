@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}Cloud Solutions{% endblock %}
 {% block page_title %}Cloud Solutions{% endblock %}
 {% block page_subtitle %}Scalable, secure, and efficient cloud infrastructure{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/services.css' %}">
+{% endblock %}
 
 {% block content %}
 <section class="page-content">
@@ -13,7 +18,7 @@
                 <p class="lead">Transform your business with scalable cloud infrastructure and managed services</p>
             </div>
             <div class="service-hero-image">
-                <img src="{% static 'images/services/cloud-tools.jpg' %}" alt="Cloud Solutions">
+                <img src="{% static 'images/courses/cloud-computing.png' %}" alt="Cloud Solutions">
             </div>
         </div>
 
@@ -130,161 +135,5 @@
     </div>
 </section>
 
-<style>
-.cloud-platforms {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin: 40px 0;
-    flex-wrap: wrap;
-}
 
-.platform-card {
-    text-align: center;
-    padding: 30px;
-    background: white;
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    min-width: 200px;
-}
-
-.platform-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-lg);
-}
-
-.platform-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    font-size: 2.5rem;
-    color: white;
-}
-
-.platform-icon.aws {
-    background: linear-gradient(135deg, #FF9900, #FF6600);
-}
-
-.platform-icon.azure {
-    background: linear-gradient(135deg, #0078D4, #005A9E);
-}
-
-.platform-icon.gcp {
-    background: linear-gradient(135deg, #4285F4, #0F9D58);
-}
-
-.service-offerings {
-    margin: 60px 0;
-}
-
-.offering-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    margin-top: 30px;
-}
-
-.offering-card {
-    background: white;
-    padding: 25px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    border-left: 4px solid var(--primary);
-}
-
-.offering-card h4 {
-    color: var(--dark);
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-}
-
-.offering-card ul {
-    list-style: none;
-    padding-left: 20px;
-}
-
-.offering-card ul li {
-    margin-bottom: 8px;
-    color: var(--dark-light);
-    position: relative;
-    padding-left: 25px;
-}
-
-.offering-card ul li:before {
-    content: '•';
-    position: absolute;
-    left: 0;
-    color: var(--primary);
-    font-size: 1.2rem;
-}
-
-.benefits-section {
-    background: var(--light);
-    padding: 60px 40px;
-    border-radius: var(--border-radius-lg);
-    margin: 60px 0;
-}
-
-.benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.benefit {
-    text-align: center;
-    padding: 30px 20px;
-    background: white;
-    border-radius: var(--border-radius);
-    transition: var(--transition);
-}
-
-.benefit:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow);
-}
-
-.benefit i {
-    font-size: 2.5rem;
-    color: var(--primary);
-    margin-bottom: 20px;
-}
-
-.benefit h4 {
-    color: var(--dark);
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-}
-
-.benefit p {
-    color: var(--dark-light);
-    font-size: 0.95rem;
-}
-
-@media (max-width: 768px) {
-    .cloud-platforms {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .platform-card {
-        width: 100%;
-        max-width: 300px;
-    }
-    
-    .offering-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .benefits-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
 {% endblock %}

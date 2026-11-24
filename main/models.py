@@ -8,7 +8,10 @@ class ContactMessage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     email = models.EmailField(validators=[EmailValidator()])
-    phone = models.CharField(max_length=20, blank=True, null=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    company = models.CharField(max_length=150, blank=True, default='')
+    subject = models.CharField(max_length=200, blank=True, default='')
+    service = models.CharField(max_length=100, blank=True, default='')
     message = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
@@ -58,15 +61,15 @@ class ServiceInquiry(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     email = models.EmailField(validators=[EmailValidator()])
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=30)
     company = models.CharField(max_length=100, blank=True, null=True)
-    service = models.CharField(max_length=50, choices=SERVICES)
+    service = models.CharField(max_length=100)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     
     def __str__(self):
-        return f"{self.name} - {self.get_service_display()}"
+        return f"{self.name} - {dict(self.SERVICES).get(self.service, self.service)}"
     
     class Meta:
         ordering = ['-created_at']
@@ -98,15 +101,15 @@ class ProposalRequest(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     email = models.EmailField(validators=[EmailValidator()])
-    phone = models.CharField(max_length=20)
-    service = models.CharField(max_length=50, choices=SERVICES)
-    budget = models.CharField(max_length=20, choices=BUDGET_RANGES)
+    phone = models.CharField(max_length=30)
+    service = models.CharField(max_length=100)
+    budget = models.CharField(max_length=100)
     requirements = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     
     def __str__(self):
-        return f"{self.name} - {self.get_service_display()}"
+        return f"{self.name} - {dict(self.SERVICES).get(self.service, self.service)}"
     
     class Meta:
         ordering = ['-created_at']
@@ -130,16 +133,16 @@ class CareerApplication(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     email = models.EmailField(validators=[EmailValidator()])
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=30)
     linkedin_url = models.URLField(blank=True, null=True)
-    position = models.CharField(max_length=50, choices=POSITIONS)
+    position = models.CharField(max_length=100)
     cover_letter = models.TextField()
     resume = models.FileField(upload_to='resumes/')
     applied_at = models.DateTimeField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     
     def __str__(self):
-        return f"{self.name} - {self.get_position_display()}"
+        return f"{self.name} - {dict(self.POSITIONS).get(self.position, self.position)}"
     
     class Meta:
         ordering = ['-applied_at']
@@ -212,6 +215,104 @@ class ChatbotMessage(models.Model):
     message = models.TextField()
     is_user = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{'User' if self.is_user else 'Bot'}: {self.message[:40]}"
     
     class Meta:
         ordering = ['created_at']
+
+
+class ChatbotUnanswered(models.Model):
+    """Questions Sharsh could not answer; visitors are redirected to the contact form."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    session = models.ForeignKey(ChatbotSession, on_delete=models.SET_NULL, null=True, blank=True,
+                                related_name='unanswered')
+    question = models.TextField()
+    name = models.CharField(max_length=100, blank=True, default='')
+    email = models.EmailField(blank=True, default='')
+    phone = models.CharField(max_length=30, blank=True, default='')
+    resolved = models.BooleanField(default=False)
+    synced_to_google = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.question[:60]}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Unanswered Chatbot Question"
+        verbose_name_plural = "Unanswered Chatbot Questions"
+
+
+class SupportTicket(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ticket_number = models.CharField(max_length=20, unique=True, editable=False)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=30, blank=True, default='')
+    account_number = models.CharField(max_length=100, blank=True, default='')
+    issue_type = models.CharField(max_length=50)
+    priority = models.CharField(max_length=20, default='medium')
+    subject = models.CharField(max_length=200)
+    description = models.TextField()
+    attachments = models.TextField(blank=True, default='', help_text='Saved attachment paths, one per line')
+    status = models.CharField(max_length=20, default='open')
+    created_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.ticket_number:
+            self.ticket_number = 'BST-' + uuid.uuid4().hex[:8].upper()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.ticket_number} - {self.subject}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Support Ticket"
+        verbose_name_plural = "Support Tickets"
+
+
+class CourseEnrollment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    email = models.EmailField(validators=[EmailValidator()])
+    phone = models.CharField(max_length=30)
+    course_slug = models.CharField(max_length=100)
+    course_title = models.CharField(max_length=200)
+    learning_mode = models.CharField(max_length=50, default='Live Online')
+    experience_level = models.CharField(max_length=60, blank=True, default='')
+    message = models.TextField(blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.course_title}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Course Enrollment"
+        verbose_name_plural = "Course Enrollments"
+
+
+class SyllabusDownload(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    email = models.EmailField(validators=[EmailValidator()])
+    phone = models.CharField(max_length=30)
+    course_slug = models.CharField(max_length=100)
+    course_title = models.CharField(max_length=200)
+    background = models.CharField(max_length=60, blank=True, default='')
+    synced_to_google = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.course_title}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Syllabus Download"
+        verbose_name_plural = "Syllabus Downloads"

@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}About Us{% endblock %}
 {% block page_title %}About Us{% endblock %}
 {% block page_subtitle %}Learn more about BunShai TECHNOHUB{% endblock %}
 
-{% block content %}
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block content %}
 <!-- Hero Section -->
 <section class="about-hero">
     <div class="container">
@@ -22,8 +26,8 @@
                     <p>Happy Clients</p>
                 </div>
                 <div class="stat">
-                    <h3>5+</h3>
-                    <p>Years Experience</p>
+                    <h3>14+</h3>
+                    <p>Combined Leadership Years</p>
                 </div>
                 <div class="stat">
                     <h3>15+</h3>
@@ -35,51 +39,39 @@
 </section>
 
 <!-- Our Story -->
-<section class="section-light">
+<section class="section-light" id="story">
     <div class="container">
         <div class="section-header">
             <h2>Our Story</h2>
-            <p class="subtitle">From vision to reality - Our journey in technology</p>
+            <p class="subtitle">From vision to reality - our journey from 2025 to 2027</p>
         </div>
-        
+
+        <div style="max-width:960px;margin:0 auto 42px;border-radius:18px;overflow:hidden;box-shadow:0 20px 45px rgba(11,17,32,0.12);border:1px solid #e2e8f0;">
+            <img src="{% static 'images/site/tech-studio.png' %}" alt="BunShai TECHNOHUB Innovation Studio" loading="lazy" style="width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;">
+        </div>
+
         <div class="story-timeline">
             <div class="timeline-item">
-                <div class="timeline-year">2020</div>
+                <div class="timeline-year">2025</div>
                 <div class="timeline-content">
                     <h3>The Beginning</h3>
-                    <p>Founded with a vision to provide affordable, high-quality technology solutions to businesses worldwide. Started with a small team of passionate developers.</p>
+                    <p>BunShai TECHNOHUB was founded in 2025 with a vision to provide affordable, high-quality technology solutions and career-ready skill programs. We started with a small team of passionate engineers, designers and mentors, and delivered our first client projects within months.</p>
                 </div>
             </div>
-            
+
             <div class="timeline-item">
-                <div class="timeline-year">2021</div>
+                <div class="timeline-year">2026</div>
                 <div class="timeline-content">
-                    <h3>Expansion & Growth</h3>
-                    <p>Expanded our service offerings and team. Delivered our first major enterprise solution, establishing credibility in the market.</p>
+                    <h3>Growth &amp; Mentorship Programs</h3>
+                    <p>We expanded our services across IT consulting, software development, cloud, cybersecurity, data analytics and digital marketing, and launched our mentorship programs - 14 programs across 6 career tracks including AI, Full Stack, Cyber Security and Cloud Computing - while starting to serve clients beyond India.</p>
                 </div>
             </div>
-            
+
             <div class="timeline-item">
-                <div class="timeline-year">2022</div>
+                <div class="timeline-year">2027</div>
                 <div class="timeline-content">
-                    <h3>Global Recognition</h3>
-                    <p>Started serving international clients across 10+ countries. Implemented advanced AI/ML solutions and cloud infrastructure projects.</p>
-                </div>
-            </div>
-            
-            <div class="timeline-item">
-                <div class="timeline-year">2023</div>
-                <div class="timeline-content">
-                    <h3>Innovation Leader</h3>
-                    <p>Became a recognized leader in digital transformation. Introduced cutting-edge cybersecurity solutions and data analytics platforms.</p>
-                </div>
-            </div>
-            
-            <div class="timeline-item">
-                <div class="timeline-year">2024</div>
-                <div class="timeline-content">
-                    <h3>Present Day</h3>
-                    <p>Continuing to innovate and expand. Serving clients across 15+ countries with a team of 50+ technology experts. Focused on AI-driven solutions and sustainable technology.</p>
+                    <h3>Vision Ahead - Scaling with AI</h3>
+                    <p>Our roadmap for 2027: scale AI-driven products and automation, grow our mentorship cohorts with placement-focused tracks, deepen enterprise partnerships and build a stronger global presence while keeping quality and affordability at our core.</p>
                 </div>
             </div>
         </div>
@@ -340,77 +332,79 @@
 </section>
 
 <!-- Team Section -->
-<section class="section-dark" id="careers">
+<section class="section-dark" id="team">
     <div class="container">
         <div class="section-header">
             <h2>Our Team</h2>
-            <p class="subtitle">Meet the experts behind our success</p>
+            <p class="subtitle">Meet the leaders behind our success</p>
         </div>
-        
+
         <div class="team-grid">
             <div class="team-member">
                 <div class="member-image">
-                    <img src="{% static 'images/team/md-photo.jpg' %}" alt="Managing Director" onerror="this.src='https://ui-avatars.com/api/?name=MD+BunShai&background=7d0022&color=fff&size=400'">
+                    <img src="{% static 'images/team/md-photo.jpg' %}" alt="Managing Director" onerror="this.src='https://ui-avatars.com/api/?name=MD&background=7d0022&color=fff&size=400'">
                 </div>
                 <div class="member-info">
                     <h3>Managing Director</h3>
-                    <p class="role">Leadership & Strategy</p>
-                    <p class="bio">With 15+ years in technology leadership, our MD drives innovation and ensures we deliver exceptional value to every client.</p>
+                    <p class="role">Leadership &amp; Strategy &bull; 4+ Years Experience</p>
+                    <p class="bio">MBA &amp; B.Tech graduate and keynote speaker at an international conference. Drives vision, partnerships and growth.</p>
+                    <a href="{% url 'md_profile' %}" class="role" style="text-decoration:underline;">View profile &rarr;</a>
                 </div>
             </div>
-            
+
             <div class="team-member">
                 <div class="member-image">
-                    <img src="{% static 'images/team/team-photos/tech-lead.jpg' %}" alt="Technical Lead" onerror="this.src='https://ui-avatars.com/api/?name=Tech+Lead&background=2563eb&color=fff&size=400'">
+                    <img src="{% static 'images/team/team-photos/lee.jpg' %}" alt="Technical Director" onerror="this.src='https://ui-avatars.com/api/?name=TD&background=2563eb&color=fff&size=400'">
                 </div>
                 <div class="member-info">
                     <h3>Technical Director</h3>
-                    <p class="role">Technology & Architecture</p>
-                    <p class="bio">Our technical lead ensures we use the right technologies and follows best practices for scalable, secure solutions.</p>
+                    <p class="role">Technology &amp; Architecture &bull; 3+ Years Experience</p>
+                    <p class="bio">Owns solution architecture, cloud and security standards so every product is scalable and secure.</p>
                 </div>
             </div>
-            
+
             <div class="team-member">
                 <div class="member-image">
-                    <img src="{% static 'images/team/team-photos/design-lead.jpg' %}" alt="Design Lead" onerror="this.src='https://ui-avatars.com/api/?name=Design+Lead&background=10b981&color=fff&size=400'">
+                    <img src="{% static 'images/team/team-photos/sarah.jpg' %}" alt="Creative Director" onerror="this.src='https://ui-avatars.com/api/?name=CD&background=10b981&color=fff&size=400'">
                 </div>
                 <div class="member-info">
                     <h3>Creative Director</h3>
-                    <p class="role">Design & User Experience</p>
-                    <p class="bio">Leading our design team to create intuitive, beautiful interfaces that provide exceptional user experiences.</p>
+                    <p class="role">Design &amp; User Experience &bull; 4+ Years Experience</p>
+                    <p class="bio">Leads brand, UI/UX and digital creative to deliver intuitive, beautiful experiences.</p>
                 </div>
             </div>
-            
+
             <div class="team-member">
                 <div class="member-image">
-                    <img src="{% static 'images/team/team-photos/dev-team.jpg' %}" alt="Development Team" onerror="this.src='https://ui-avatars.com/api/?name=Dev+Team&background=f59e0b&color=fff&size=400'">
+                    <img src="{% static 'images/team/team-photos/david.jpg' %}" alt="Development Team Head" onerror="this.src='https://ui-avatars.com/api/?name=DH&background=f59e0b&color=fff&size=400'">
                 </div>
                 <div class="member-info">
-                    <h3>Development Team</h3>
-                    <p class="role">Engineering Excellence</p>
-                    <p class="bio">Our team of 40+ developers, engineers, and architects bring your ideas to life with technical expertise and innovation.</p>
+                    <h3>Development Team Head</h3>
+                    <p class="role">Engineering Excellence &bull; 3+ Years Experience</p>
+                    <p class="bio">Leads our developers and engineers - code quality, delivery timelines and mentoring.</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="team-stats">
             <div class="team-stat">
-                <h3>50+</h3>
-                <p>Team Members</p>
+                <h3>4</h3>
+                <p>Directors &amp; Heads</p>
             </div>
             <div class="team-stat">
-                <h3>10+</h3>
-                <p>Years Avg. Experience</p>
+                <h3>14+</h3>
+                <p>Combined Leadership Years</p>
             </div>
             <div class="team-stat">
-                <h3>15+</h3>
-                <p>Nationalities</p>
+                <h3>6</h3>
+                <p>Career Tracks Mentored</p>
             </div>
             <div class="team-stat">
                 <h3>24/7</h3>
                 <p>Support Coverage</p>
             </div>
         </div>
+        <p style="text-align:center;margin-top:28px;"><a href="{% url 'team' %}" class="btn-primary">Meet the full team <i class="fas fa-arrow-right"></i></a></p>
     </div>
 </section>
 
@@ -421,7 +415,7 @@
             <h2>Join Our Team</h2>
             <p>We're always looking for talented individuals passionate about technology and innovation.</p>
             <div class="cta-buttons">
-                <a href="/career" class="btn-primary">
+                <a href="{% url 'career' %}" class="btn-primary">
                     <i class="fas fa-briefcase"></i> View Open Positions
                 </a>
                 <a href="mailto:careers@bunshai.com" class="btn-secondary">
@@ -494,7 +488,7 @@
                 <button class="btn-primary" onclick="showProposalPopup()">
                     <i class="fas fa-calendar-check"></i> Schedule Consultation
                 </button>
-                <a href="/contact" class="btn-secondary">
+                <a href="{% url 'contact' %}" class="btn-secondary">
                     <i class="fas fa-envelope"></i> Contact Us
                 </a>
             </div>
@@ -505,4 +499,8 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/about.js' %}"></script>
 {% endblock %}

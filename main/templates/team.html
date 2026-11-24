@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Our Team - Leadership & Experts | BunShai TECHNOHUB{% endblock %}
+{% block breadcrumb_title %}Our Team{% endblock %}
+{% block page_title %}Meet Our Team{% endblock %}
+{% block page_subtitle %}The leaders and experts behind BunShai TECHNOHUB{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/team.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="tm-intro">
+    <div class="container">
+        <span class="tm-eyebrow"><i class="fas fa-users"></i> Founded 2025 &bull; Remote-first</span>
+        <h2>A leadership team that builds, designs, and mentors</h2>
+        <p>Four directors and heads - each with hands-on experience in their craft - guide every project we deliver and every mentorship cohort we run.</p>
+        <div class="tm-stats">
+            <div><strong>4</strong><span>Directors &amp; Heads</span></div>
+            <div><strong>14+</strong><span>Combined Leadership Years</span></div>
+            <div><strong>50+</strong><span>Projects Delivered</span></div>
+            <div><strong>6</strong><span>Career Tracks Mentored</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="tm-leaders" id="leadership">
+    <div class="container">
+        <div class="tm-grid">
+
+            <article class="tm-card" id="managing-director">
+                <div class="tm-photo">
+                    <img src="{% static 'images/team/md-photo.jpg' %}" alt="Managing Director" loading="lazy"
+                         onerror="this.src='https://ui-avatars.com/api/?name=MD&background=8b0a2e&color=fff&size=480'">
+                    <span class="tm-exp">4+ Years Experience</span>
+                </div>
+                <div class="tm-body">
+                    <h3>Managing Director</h3>
+                    <p class="tm-role">Vision, Strategy &amp; Partnerships</p>
+                    <p>Founder of BunShai TECHNOHUB. Holds an MBA and a B.Tech, carries multiple professional certifications and has been a Keynote Speaker at an International Conference.</p>
+                    <ul>
+                        <li>Company vision, growth strategy and partnerships</li>
+                        <li>Client relationships and strategic consultations</li>
+                        <li>Mentorship curriculum and student success</li>
+                    </ul>
+                    <div class="tm-tags"><span>MBA</span><span>B.Tech</span><span>Keynote Speaker</span><span>Strategy</span></div>
+                    <a href="{% url 'md_profile' %}" class="tm-link">Read full profile <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="tm-card" id="technical-director">
+                <div class="tm-photo">
+                    <img src="{% static 'images/team/team-photos/lee.jpg' %}" alt="Technical Director" loading="lazy"
+                         onerror="this.src='https://ui-avatars.com/api/?name=TD&background=1d4ed8&color=fff&size=480'">
+                    <span class="tm-exp">3+ Years Experience</span>
+                </div>
+                <div class="tm-body">
+                    <h3>Technical Director</h3>
+                    <p class="tm-role">Technology &amp; Architecture</p>
+                    <p>Owns the technical direction of every engagement - from choosing the right stack to making sure what we ship is scalable, secure and maintainable.</p>
+                    <ul>
+                        <li>Solution architecture and technology roadmap</li>
+                        <li>Cloud, DevOps and cybersecurity standards</li>
+                        <li>Technical content for cloud &amp; security mentorship tracks</li>
+                    </ul>
+                    <div class="tm-tags"><span>Cloud</span><span>DevOps</span><span>Security</span><span>Architecture</span></div>
+                </div>
+            </article>
+
+            <article class="tm-card" id="creative-director">
+                <div class="tm-photo">
+                    <img src="{% static 'images/team/team-photos/sarah.jpg' %}" alt="Creative Director" loading="lazy"
+                         onerror="this.src='https://ui-avatars.com/api/?name=CD&background=0f766e&color=fff&size=480'">
+                    <span class="tm-exp">4+ Years Experience</span>
+                </div>
+                <div class="tm-body">
+                    <h3>Creative Director</h3>
+                    <p class="tm-role">Design, Brand &amp; User Experience</p>
+                    <p>Leads brand identity, UI/UX and digital creative so that every website, app and campaign looks great and feels effortless to use.</p>
+                    <ul>
+                        <li>Brand identity and visual systems</li>
+                        <li>UI/UX research, wireframes and prototypes</li>
+                        <li>Digital marketing creative and content direction</li>
+                    </ul>
+                    <div class="tm-tags"><span>UI/UX</span><span>Branding</span><span>Marketing Creative</span></div>
+                </div>
+            </article>
+
+            <article class="tm-card" id="development-head">
+                <div class="tm-photo">
+                    <img src="{% static 'images/team/team-photos/david.jpg' %}" alt="Development Team Head" loading="lazy"
+                         onerror="this.src='https://ui-avatars.com/api/?name=DH&background=b45309&color=fff&size=480'">
+                    <span class="tm-exp">3+ Years Experience</span>
+                </div>
+                <div class="tm-body">
+                    <h3>Development Team Head</h3>
+                    <p class="tm-role">Engineering Excellence &amp; Delivery</p>
+                    <p>Leads our developers, engineers and testers - turning designs and requirements into reliable products delivered on time.</p>
+                    <ul>
+                        <li>Sprint planning, code reviews and delivery quality</li>
+                        <li>Full-stack and mobile development practices</li>
+                        <li>Mentoring junior engineers and interns</li>
+                    </ul>
+                    <div class="tm-tags"><span>Full Stack</span><span>Django</span><span>React</span><span>Mobile</span></div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<section class="tm-how">
+    <div class="container">
+        <h2>How our leadership works together</h2>
+        <div class="tm-flow">
+            <div><i class="fas fa-bullseye"></i><h4>Strategy</h4><p>Managing Director defines goals and priorities.</p></div>
+            <div><i class="fas fa-drafting-compass"></i><h4>Design</h4><p>Creative Director shapes the experience.</p></div>
+            <div><i class="fas fa-sitemap"></i><h4>Architecture</h4><p>Technical Director designs the foundation.</p></div>
+            <div><i class="fas fa-code"></i><h4>Delivery</h4><p>Development Head ships quality code.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="tm-depts">
+    <div class="container">
+        <h2>Departments</h2>
+        <div class="tm-dept-grid">
+            <div><h4><i class="fas fa-laptop-code"></i> Engineering</h4><p>Web, mobile, cloud &amp; DevOps engineers, QA specialists.</p></div>
+            <div><h4><i class="fas fa-palette"></i> Creative &amp; Marketing</h4><p>UI/UX designers, content creators and growth marketers.</p></div>
+            <div><h4><i class="fas fa-graduation-cap"></i> Mentorship &amp; Training</h4><p>Industry mentors running live cohorts for 14 career programs.</p></div>
+            <div><h4><i class="fas fa-headset"></i> Support &amp; Success</h4><p>Support engineers and counsellors for clients and learners.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="tm-cta">
+    <div class="container">
+        <h2>Want to work with us - or join us?</h2>
+        <p>Talk to our leadership team about your project or explore open roles.</p>
+        <div class="tm-cta-actions">
+            <a href="{% url 'contact' %}" class="tm-btn primary"><i class="fas fa-envelope"></i> Contact the Team</a>
+            <a href="{% url 'career' %}" class="tm-btn"><i class="fas fa-briefcase"></i> View Careers</a>
+            <a href="{% url 'about' %}" class="tm-btn"><i class="fas fa-building"></i> About Us</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

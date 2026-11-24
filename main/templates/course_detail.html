@@ -1,0 +1,496 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ course.title }} - BunShai TECHNOHUB{% endblock %}
+{% block breadcrumb_title %}{{ course.short_title }}{% endblock %}
+{% block page_title %}{{ course.title }}{% endblock %}
+{% block page_subtitle %}{{ course.category_name }} · {{ course.duration }} · {{ course.hours }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/courses.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="course-detail-hero">
+    <video autoplay muted loop playsinline class="courses-hero-video" poster="{% static course.image %}">
+        <source src="{% static 'video/3.mp4' %}" type="video/mp4">
+    </video>
+    <div class="courses-hero-overlay"></div>
+
+    <div class="container">
+        <div class="course-detail-grid">
+            <div class="course-detail-info">
+                <div class="course-detail-meta">
+                    <span class="detail-pill gold"><i class="fas fa-award"></i> {{ course.badge }}</span>
+                    <span class="detail-pill"><i class="{{ course.icon }}"></i> {{ course.category_name }}</span>
+                    <span class="detail-pill"><i class="far fa-clock"></i> {{ course.duration }} ({{ course.hours }})</span>
+                    <span class="detail-pill"><i class="fas fa-signal"></i> {{ course.level }}</span>
+                </div>
+
+                <div class="course-preview-box" onclick="openCoursePreview()" role="button" tabindex="0"
+                     aria-label="Watch program video preview for {{ course.title }}">
+                    <img src="{% static course.image %}" alt="{{ course.title }}">
+                    <div class="course-preview-scrim">
+                        <div class="course-preview-top">
+                            <span class="preview-chip"><i class="fas fa-star" style="color:#fbbf24;"></i> {{ course.rating }} Learner Rating</span>
+                            <span class="preview-chip"><i class="fas fa-users" style="color:#fb7185;"></i> {{ course.cohort_size }}</span>
+                        </div>
+                        <button type="button" class="preview-play-btn" onclick="event.stopPropagation(); openCoursePreview();">
+                            <span class="preview-play-circle"><i class="fas fa-play"></i></span>
+                            <span>Watch Program Preview</span>
+                        </button>
+                        <div class="course-preview-caption">
+                            <span><i class="fas fa-video"></i> {{ course.mode }}</span>
+                            <span><i class="fas fa-laptop-code"></i> {{ course.projects }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h1>{{ course.title }}</h1>
+                <p class="course-detail-summary">{{ course.summary }}</p>
+
+                <ul class="course-highlights-list">
+                    {% for item in course.highlights %}
+                    <li><i class="fas fa-check-circle"></i> <span>{{ item }}</span></li>
+                    {% endfor %}
+                </ul>
+
+                <div class="course-hero-cta-row">
+                    <button type="button" class="btn-primary"
+                            onclick="showSyllabusPopup('{{ course.slug|escapejs }}', '{{ course.title|escapejs }}')">
+                        <i class="fas fa-file-pdf"></i> Download Full Syllabus (PDF)
+                    </button>
+                    <a href="#why-bunshai" class="btn-secondary">
+                        <i class="fas fa-trophy"></i> Why Choose Us
+                    </a>
+                    <a href="#curriculum" class="btn-secondary">
+                        <i class="fas fa-book-open"></i> Preview Curriculum
+                    </a>
+                </div>
+            </div>
+
+            <div class="enroll-card">
+                <h3>Enroll or Request Free Demo</h3>
+                <p>Reserve your seat in the next cohort (max 25 learners) or book a 1:1 mentor call.</p>
+
+                <form id="courseEnrollForm" method="POST" action="{% url 'course_enroll' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="course_slug" value="{{ course.slug }}">
+                    <input type="hidden" name="course_title" value="{{ course.title }}">
+                    <div style="display:none;"><input type="text" name="honeypot" tabindex="-1" autocomplete="off"></div>
+
+                    <div class="form-group">
+                        <label for="enrollName">Full Name *</label>
+                        <input type="text" id="enrollName" name="name" required placeholder="Your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enrollEmail">Email Address *</label>
+                        <input type="email" id="enrollEmail" name="email" required placeholder="you@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enrollPhone">Phone / WhatsApp *</label>
+                        <input type="tel" id="enrollPhone" name="phone" required placeholder="+91 9876543210">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enrollMode">Preferred Learning Mode</label>
+                        <select id="enrollMode" name="learning_mode" required>
+                            <option value="Live Online">Live Online Cohort</option>
+                            <option value="Hybrid Mentorship">Hybrid Mentorship</option>
+                            <option value="Weekend Batch">Weekend Batch</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enrollExp">Current Background</label>
+                        <select id="enrollExp" name="experience_level">
+                            <option value="Student / Fresher">Student / Fresher</option>
+                            <option value="Working Professional">Working Professional</option>
+                            <option value="Career Switcher">Career Switcher</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enrollMsg">Questions / Goals (Optional)</label>
+                        <textarea id="enrollMsg" name="message" rows="2" placeholder="Tell us your career goal or preferred batch time"></textarea>
+                    </div>
+
+                    <button type="submit" class="enroll-submit-btn">
+                        <i class="fas fa-graduation-cap"></i> Apply for This Program
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Outcome Strip -->
+<section class="outcome-strip">
+    <div class="container">
+        <div class="outcome-grid">
+            <div class="outcome-tile">
+                <div class="outcome-icon"><i class="fas fa-video"></i></div>
+                <div><strong>{{ course.hours }}</strong><span>2-Way Live Interactive Sessions</span></div>
+            </div>
+            <div class="outcome-tile">
+                <div class="outcome-icon"><i class="fas fa-project-diagram"></i></div>
+                <div><strong>{{ course.projects }}</strong><span>Verified Portfolio Deliverables</span></div>
+            </div>
+            <div class="outcome-tile">
+                <div class="outcome-icon"><i class="fas fa-users"></i></div>
+                <div><strong>{{ course.cohort_size }}</strong><span>1:1 Doubt Clinics &amp; Reviews</span></div>
+            </div>
+            <div class="outcome-tile">
+                <div class="outcome-icon"><i class="fas fa-star"></i></div>
+                <div><strong>{{ course.rating }} Rated</strong><span>Mock Interviews &amp; Placement</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us & Head-to-Head Comparison -->
+<section class="course-detail-section alt" id="why-bunshai">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Why Choose BunShai TECHNOHUB Over Other Courses</h2>
+            <p>We train you the way active IT engineering and digital growth teams actually hire and work — never passive slide-reading.</p>
+        </div>
+
+        <div class="why-us-grid">
+            {% for point in course.why_us %}
+            <div class="why-us-card">
+                <i class="{{ point.icon }}"></i>
+                <h3>{{ point.title }}</h3>
+                <p>{{ point.desc }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="comparison-table-wrap">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>What Actually Matters for Your Career</th>
+                        <th class="col-bunshai">BunShai TECHNOHUB</th>
+                        <th>Typical Recorded Courses / Institutes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feature, us, others in course.comparison_rows %}
+                    <tr>
+                        <td><strong>{{ feature }}</strong></td>
+                        <td class="col-bunshai"><i class="fas fa-check-circle"></i> {{ us }}</td>
+                        <td class="col-others"><i class="fas fa-times-circle"></i> {{ others }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- What You Will Build -->
+<section class="course-detail-section">
+    <div class="container">
+        <div class="section-heading">
+            <h2>What You Will Build in {{ course.short_title }}</h2>
+            <p>Concrete, recruiter-ready portfolio assets reviewed personally by your mentors.</p>
+        </div>
+
+        <div class="projects-showcase-grid">
+            {% for proj in course.build_projects %}
+            <div class="project-showcase-card">
+                <span class="project-tag">{{ proj.tag }}</span>
+                <h3>{{ proj.title }}</h3>
+                <p>{{ proj.desc }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if course.capstone %}
+        <div class="capstone-highlight-box">
+            <div class="capstone-icon"><i class="fas fa-trophy"></i></div>
+            <div class="capstone-text">
+                <h4>Flagship Capstone Project</h4>
+                <p>{{ course.capstone }}</p>
+            </div>
+            <button type="button" class="btn-solid-course capstone-dl-btn"
+                    onclick="showSyllabusPopup('{{ course.slug|escapejs }}', '{{ course.title|escapejs }}')">
+                <i class="fas fa-file-pdf"></i> Get Syllabus PDF
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Mentorship & Certification Visual Split -->
+<section class="course-detail-section alt">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Live Studio Experience &amp; Verified Credential</h2>
+            <p>See how our live mentorship cohorts and completion certifications set your profile apart.</p>
+        </div>
+
+        <div class="mentorship-visual-split">
+            <div class="mv-visual-card">
+                <div class="mv-visual-card-img">
+                    <img src="{% static 'images/courses/mentorship-live.png' %}" alt="Live Interactive Mentorship" loading="lazy">
+                </div>
+                <div class="mv-visual-card-body">
+                    <h3>Weekly Live Reviews &amp; Mock Interviews</h3>
+                    <p>Share your screen in real time, fix architecture or campaign bottlenecks with mentors, and pass realistic mock interviews before applying to companies.</p>
+                </div>
+            </div>
+            <div class="mv-visual-card">
+                <div class="mv-visual-card-img">
+                    <img src="{% static 'images/courses/certificate-showcase.png' %}" alt="BunShai Verified Course Certificate" loading="lazy">
+                </div>
+                <div class="mv-visual-card-body">
+                    <h3>Industry-Recognized Completion Certificate</h3>
+                    <p>Awarded after completing your milestones and capstone defense — showcasing verifiable proof of hands-on skills to hiring managers.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Curriculum Accordion -->
+<section class="course-detail-section" id="curriculum">
+    <div class="container">
+        <div class="section-heading curriculum-heading-flex">
+            <h2>Program Curriculum &amp; Syllabus</h2>
+            <p>Explore the step-by-step mentorship milestones ({{ course.duration }} · {{ course.hours }}) or download the complete syllabus PDF.</p>
+            <button type="button" class="btn-syllabus-banner"
+                    onclick="showSyllabusPopup('{{ course.slug|escapejs }}', '{{ course.title|escapejs }}')">
+                <i class="fas fa-download"></i> View &amp; Download Complete Syllabus PDF
+            </button>
+        </div>
+
+        <div class="curriculum-accordion">
+            {% for mod in course.curriculum %}
+            <div class="milestone-item {% if forloop.first %}open{% endif %}">
+                <button type="button" class="milestone-header" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+                    <span class="milestone-title-wrap">
+                        <span class="milestone-num">{{ forloop.counter }}</span>
+                        <strong>{{ mod.milestone }}</strong>
+                    </span>
+                    <span class="milestone-right">
+                        <span>{{ mod.duration }}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
+                </button>
+                <div class="milestone-body">
+                    <ul>
+                        {% for topic in mod.topics %}
+                        <li>{{ topic }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Tools & Roles -->
+<section class="course-detail-section alt">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Tools &amp; Technologies Covered</h2>
+            <p>Hands-on proficiency across the exact stack hiring teams use today.</p>
+        </div>
+        <div class="tools-chip-grid">
+            {% for tool in course.tools %}
+            <span class="tool-chip-lg">{{ tool }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="section-heading" style="margin-top:56px;">
+            <h2>Career Roles You'll Be Ready For</h2>
+        </div>
+        <div class="career-roles-grid">
+            {% for role in course.roles %}
+            <span class="role-chip-lg"><i class="fas fa-briefcase"></i> {{ role }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Course FAQs -->
+<section class="course-detail-section">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything students ask before joining {{ course.short_title }}.</p>
+        </div>
+        <div class="curriculum-accordion">
+            {% for faq in course.faqs %}
+            <div class="milestone-item {% if forloop.first %}open{% endif %}">
+                <button type="button" class="milestone-header" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+                    <span class="milestone-title-wrap">
+                        <span class="milestone-num">?</span>
+                        <strong>{{ faq.q }}</strong>
+                    </span>
+                    <span class="milestone-right">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
+                </button>
+                <div class="milestone-body">
+                    <p style="margin:0;color:var(--dark-light);line-height:1.7;">{{ faq.a }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Related Programs -->
+<section class="course-detail-section alt">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Related Programs</h2>
+            <p>Explore other live mentorship tracks you might be interested in.</p>
+        </div>
+
+        <div class="related-courses-grid">
+            {% for rel in related_courses %}
+            <article class="course-card">
+                <a href="{% url 'course_detail' rel.slug %}" class="course-card-media">
+                    <img src="{% static rel.image %}" alt="{{ rel.title }}" loading="lazy">
+                    <div class="course-media-top">
+                        <span class="course-cat-pill"><i class="{{ rel.icon }}"></i> {{ rel.category_name }}</span>
+                        <span class="course-badge">{{ rel.badge }}</span>
+                    </div>
+                </a>
+                <div class="course-card-body">
+                    <h3><a href="{% url 'course_detail' rel.slug %}" style="color:inherit;text-decoration:none;">{{ rel.title }}</a></h3>
+                    <p>{{ rel.summary }}</p>
+                    <div class="course-meta-row">
+                        <span class="course-meta-chip"><i class="far fa-clock"></i> {{ rel.duration }}</span>
+                        <span class="course-meta-chip"><i class="fas fa-laptop-code"></i> {{ rel.projects }}</span>
+                    </div>
+                </div>
+                <div class="course-card-footer course-card-footer-3">
+                    <button type="button" class="btn-syllabus-course"
+                            onclick="showSyllabusPopup('{{ rel.slug|escapejs }}', '{{ rel.title|escapejs }}')">
+                        <i class="fas fa-file-pdf"></i> View &amp; Download Syllabus
+                    </button>
+                    <div class="course-card-actions-row">
+                        <a href="{% url 'course_detail' rel.slug %}" class="btn-outline-course">Program Details</a>
+                        <button type="button" class="btn-solid-course"
+                                onclick="showCourseEnrollPopup('{{ rel.slug|escapejs }}', '{{ rel.title|escapejs }}')">
+                            Enroll Now
+                        </button>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Sticky Bottom Conversion Bar -->
+<div class="sticky-course-bar" id="stickyCourseBar">
+    <div class="sticky-course-inner">
+        <div class="sticky-course-title">
+            <strong>{{ course.title }}</strong>
+            <span>{{ course.duration }} · {{ course.hours }} · {{ course.cohort_size }}</span>
+        </div>
+        <div class="sticky-course-actions">
+            <button type="button" class="btn-syllabus-course" style="width:auto;padding:9px 16px;"
+                    onclick="showSyllabusPopup('{{ course.slug|escapejs }}', '{{ course.title|escapejs }}')">
+                <i class="fas fa-file-pdf"></i> Syllabus PDF
+            </button>
+            <button type="button" class="btn-solid-course" style="flex:none;padding:9px 20px;"
+                    onclick="showCourseEnrollPopup('{{ course.slug|escapejs }}', '{{ course.title|escapejs }}')">
+                Enroll Now
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Course Video Preview Modal -->
+<div class="modal" id="coursePreviewModal">
+    <div class="preview-modal-card">
+        <div class="preview-modal-header">
+            <h3><i class="fas fa-play-circle" style="color:#f59e0b;margin-right:8px;"></i>{{ course.title }} — Program Preview</h3>
+            <button type="button" class="modal-close" aria-label="Close Preview" onclick="closeCoursePreview()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="preview-stage">
+            <video id="coursePreviewVideo" controls muted loop playsinline poster="{% static course.image %}">
+                <source src="{% static 'video/3.mp4' %}" type="video/mp4">
+            </video>
+            <div class="preview-stage-overlay">
+                <div>
+                    <strong id="previewChapterTitle" style="color:#fbbf24;display:block;">{{ course.video_chapters.0.title }}</strong>
+                    <span id="previewChapterDesc" style="color:#f8fafc;font-size:0.9rem;">{{ course.video_chapters.0.desc }}</span>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button type="button" class="btn-solid-course" style="flex:none;padding:8px 16px;"
+                            onclick="closeCoursePreview(); showSyllabusPopup('{{ course.slug|escapejs }}', '{{ course.title|escapejs }}')">
+                        <i class="fas fa-file-pdf"></i> Download Syllabus
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="preview-chapters">
+            {% for ch in course.video_chapters %}
+            <button type="button" class="chapter-btn {% if forloop.first %}active{% endif %}"
+                    onclick="selectPreviewChapter(this, '{{ ch.title|escapejs }}', '{{ ch.desc|escapejs }}')">
+                <small>{{ ch.time }}</small>
+                <strong>{{ ch.title }}</strong>
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.milestone-header').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const item = this.closest('.milestone-item');
+        const isOpen = item.classList.toggle('open');
+        this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+});
+
+function openCoursePreview() {
+    if (window.openModal) {
+        window.openModal('coursePreviewModal');
+    } else {
+        document.getElementById('coursePreviewModal').style.display = 'flex';
+    }
+    const vid = document.getElementById('coursePreviewVideo');
+    if (vid) vid.play().catch(() => {});
+}
+
+function closeCoursePreview() {
+    const modal = document.getElementById('coursePreviewModal');
+    const vid = document.getElementById('coursePreviewVideo');
+    if (vid) vid.pause();
+    if (window.closeModal) {
+        window.closeModal(modal);
+    } else if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function selectPreviewChapter(btn, title, desc) {
+    document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tEl = document.getElementById('previewChapterTitle');
+    const dEl = document.getElementById('previewChapterDesc');
+    if (tEl) tEl.textContent = title;
+    if (dEl) dEl.textContent = desc;
+}
+
+window.addEventListener('scroll', function () {
+    const bar = document.getElementById('stickyCourseBar');
+    if (bar) bar.classList.toggle('visible', window.scrollY > 520);
+});
+</script>
+{% endblock %}

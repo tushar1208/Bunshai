@@ -17,16 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function animateCounter() {
         const counters = document.querySelectorAll('.counter');
         counters.forEach(counter => {
+            const rawTarget = (counter.getAttribute('data-target') || '').trim();
+            const target = parseInt(rawTarget, 10);
+            if (!Number.isFinite(target) || target <= 0) return;
+            const suffix = counter.textContent.trim().endsWith('+') ? '+' : '';
+            let current = 0;
+            const increment = Math.max(1, target / 100);
             const updateCount = () => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText.replace('+', '');
-                const increment = target / 200;
-
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + increment) + '+';
-                    setTimeout(updateCount, 10);
+                if (current < target) {
+                    current = Math.min(target, current + increment);
+                    counter.innerText = Math.ceil(current) + suffix;
+                    setTimeout(updateCount, 16);
                 } else {
-                    counter.innerText = target + '+';
+                    counter.innerText = target + suffix;
                 }
             };
             updateCount();
@@ -75,25 +78,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Enhanced testimonial rotation
-    if (document.querySelector('.testimonials-grid')) {
+    const testimonials = document.querySelectorAll('.testimonial-card');
+    if (document.querySelector('.testimonials-grid') && testimonials.length > 0) {
         let currentTestimonial = 0;
-        const testimonials = document.querySelectorAll('.testimonial-card');
-        
+
         function rotateTestimonials() {
-            testimonials.forEach((testimonial, index) => {
+            testimonials.forEach((testimonial) => {
                 testimonial.style.opacity = '0.5';
                 testimonial.style.transform = 'scale(0.95)';
             });
-            
+
             testimonials[currentTestimonial].style.opacity = '1';
             testimonials[currentTestimonial].style.transform = 'scale(1)';
-            
+
             currentTestimonial = (currentTestimonial + 1) % testimonials.length;
         }
-        
+
         // Rotate every 5 seconds
         setInterval(rotateTestimonials, 5000);
-        
+
         // Initial state
         rotateTestimonials();
     }
@@ -209,72 +212,31 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('scroll', function() {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
             progressBar.style.width = scrolled + '%';
         });
     }
 
     createScrollProgress();
 
-    // Add keyboard navigation
-    document.addEventListener('keydown', function(e) {
-        // Spacebar to scroll down
-        if (e.code === 'Space' && !e.target.matches('input, textarea')) {
-            e.preventDefault();
-            window.scrollBy({
-                top: window.innerHeight * 0.8,
-                behavior: 'smooth'
-            });
-        }
-        
-        // Arrow up/down for navigation
-        if (e.code === 'ArrowDown') {
-            e.preventDefault();
-            window.scrollBy({
-                top: 100,
-                behavior: 'smooth'
-            });
-        }
-        
-        if (e.code === 'ArrowUp') {
-            e.preventDefault();
-            window.scrollBy({
-                top: -100,
-                behavior: 'smooth'
-            });
-        }
-    });
-
-    // Performance monitoring
-    window.addEventListener('load', function() {
-        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-        console.log(`Page loaded in ${loadTime}ms`);
-        
-        // Send performance data to analytics (in a real implementation)
-        if (loadTime > 3000) {
-            console.warn('Page load time is high. Consider optimizing.');
-        }
-    });
-
     // Service card click tracking
     document.querySelectorAll('.service-card').forEach(card => {
         card.addEventListener('click', function() {
-            const serviceName = this.querySelector('h3').textContent;
-            console.log(`Service clicked: ${serviceName}`);
-            // In a real implementation, you would send this to analytics
+            const h3 = this.querySelector('h3');
+            if (h3) {
+                console.log(`Service clicked: ${h3.textContent.trim()}`);
+            }
         });
     });
 });
 
-// Image slider functionality (from your index.js)
-// This is already included in your index.html, but here's the complete version
-
+// Image slider functionality
 const slider = document.getElementById('image-slider');
-if (slider) {
-    const slides = document.querySelectorAll('.slide');
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('slider-dots');
+if (slider && slides.length > 0 && dotsContainer) {
     const prevBtn = document.getElementById('slider-prev');
     const nextBtn = document.getElementById('slider-next');
-    const dotsContainer = document.getElementById('slider-dots');
 
     let currentSlide = 0;
     let slideWidth = slides[0].offsetWidth + 20;
@@ -417,33 +379,3 @@ if (slider) {
         updateSliderPosition();
     });
 }
-// Counter Animation
-document.addEventListener('DOMContentLoaded', function() {
-    const counters = document.querySelectorAll('.counter');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const counter = entry.target;
-                const target = parseInt(counter.getAttribute('data-target'));
-                const increment = target / 100;
-                let current = 0;
-                
-                const updateCounter = () => {
-                    if (current < target) {
-                        current += increment;
-                        counter.textContent = Math.ceil(current);
-                        setTimeout(updateCounter, 20);
-                    } else {
-                        counter.textContent = target;
-                    }
-                };
-                
-                updateCounter();
-                observer.unobserve(counter);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    counters.forEach(counter => observer.observe(counter));
-});

@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}Privacy Policy{% endblock %}
 {% block page_title %}Privacy Policy - BunShai TECHNOHUB{% endblock %}
 {% block page_subtitle %}How we protect and handle your information{% endblock %}
 
-{% block content %}
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/privacy.css' %}">
+{% endblock %}
+
+{% block content %}
 <section class="privacy-policy">
     <div class="container">
         <div class="policy-header">
@@ -487,6 +491,7 @@
                             <li><strong>December 15, 2024:</strong> Initial privacy policy published</li>
                             <li><strong>January 1, 2025:</strong> Added chatbot data collection details</li>
                             <li><strong>March 15, 2025:</strong> Updated third-party service providers list</li>
+                            <li><strong>November 2026:</strong> Added mentorship course enrollments, downloadable syllabi &amp; Google Sheets sync disclosures</li>
                         </ul>
                     </div>
                 </div>
@@ -504,7 +509,7 @@
                         </div>
                         <div class="contact-info">
                             <h3>Email</h3>
-                            <p><a href="mailto:privacy@bunshai.com">privacy@bunshai.com</a></p>
+                            <p><a href="mailto:team.bunshailogicloop@gmail.com">team.bunshailogicloop@gmail.com</a></p>
                             <small>Response within 48 hours</small>
                         </div>
                     </div>
@@ -538,8 +543,8 @@
                         <i class="fas fa-user-shield"></i>
                         <div>
                             <h4>Data Protection Officer</h4>
-                            <p><a href="mailto:dpo@bunshai.com">dpo@bunshai.com</a></p>
-                            <p>+91 8091401208 (Ext. 101)</p>
+                            <p><a href="mailto:team.bunshailogicloop@gmail.com">team.bunshailogicloop@gmail.com</a></p>
+                            <p>+91 8091401208</p>
                         </div>
                     </div>
                 </div>
@@ -555,15 +560,16 @@
                 <div class="acceptance-card">
                     <h3><i class="fas fa-check-circle"></i> Acceptance of Terms</h3>
                     <p>By using our website, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.</p>
+                    <p id="privacyAcceptedStatus" style="display:none;margin:10px 0 18px;font-weight:600;color:#6ee7b7;"></p>
                     
                     <div class="acceptance-actions">
-                        <button class="accept-btn" onclick="acceptPrivacyPolicy()">
+                        <button type="button" class="accept-btn" onclick="acceptPrivacyPolicy()">
                             <i class="fas fa-thumbs-up"></i> I Accept This Policy
                         </button>
-                        <button class="print-btn" onclick="window.print()">
+                        <button type="button" class="print-btn" onclick="window.print()">
                             <i class="fas fa-print"></i> Print This Policy
                         </button>
-                        <button class="download-btn" onclick="downloadPolicy()">
+                        <button type="button" class="download-btn" onclick="downloadPolicy()">
                             <i class="fas fa-download"></i> Download PDF
                         </button>
                     </div>
@@ -576,79 +582,40 @@
 <script>
 function acceptPrivacyPolicy() {
     localStorage.setItem('privacy_policy_accepted', 'true');
-    showNotification('Privacy Policy accepted successfully!', 'success');
+    localStorage.setItem('privacy_policy_accepted_at', new Date().toLocaleDateString());
+    const status = document.getElementById('privacyAcceptedStatus');
+    if (status) {
+        status.textContent = 'Accepted on ' + localStorage.getItem('privacy_policy_accepted_at');
+        status.style.display = 'block';
+    }
+    if (window.showAlert) window.showAlert('success', 'Privacy Policy accepted successfully!');
 }
 
 function downloadPolicy() {
-    // In a real implementation, this would generate a PDF
-    showNotification('Download feature coming soon!', 'info');
+    if (window.showAlert) window.showAlert('success', 'Downloading Privacy Policy PDF...');
+    window.location.href = "{% url 'privacy_pdf' %}";
 }
 
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
-        <span>${message}</span>
-        <button onclick="this.parentElement.remove()">×</button>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 5000);
-}
+document.addEventListener('DOMContentLoaded', function () {
+    const links = document.querySelectorAll('.quick-nav .nav-links a[href^="#"]');
+    links.forEach(link => {
+        link.addEventListener('click', function (e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                window.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+                links.forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+            }
+        });
+    });
 
-// Add CSS for notifications
-const notificationStyle = document.createElement('style');
-notificationStyle.textContent = `
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: var(--border-radius);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        z-index: 10000;
-        animation: slideIn 0.3s ease;
-        box-shadow: var(--shadow);
-    }
-    
-    .notification.success {
-        background: #10b981;
-        color: white;
-    }
-    
-    .notification.info {
-        background: #3b82f6;
-        color: white;
-    }
-    
-    .notification button {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: 0 5px;
-    }
-    
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-`;
-document.head.appendChild(notificationStyle);
-
-// Check if policy was already accepted
-document.addEventListener('DOMContentLoaded', function() {
     if (localStorage.getItem('privacy_policy_accepted') === 'true') {
-        console.log('Privacy policy already accepted');
+        const status = document.getElementById('privacyAcceptedStatus');
+        if (status) {
+            status.textContent = 'Policy accepted' + (localStorage.getItem('privacy_policy_accepted_at') ? ' on ' + localStorage.getItem('privacy_policy_accepted_at') : '');
+            status.style.display = 'block';
+        }
     }
 });
 </script>

@@ -1,87 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://bunshai.com/</loc>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/</loc>
         <lastmod>{% now "Y-m-d" %}</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://bunshai.com/about/</loc>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/about/</loc>
         <lastmod>{% now "Y-m-d" %}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://bunshai.com/services/</loc>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/company-profile/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/team/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/md-profile/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/services/</loc>
         <lastmod>{% now "Y-m-d" %}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://bunshai.com/services/it-consulting/</loc>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/services/it-consulting/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/services/digital-marketing/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/services/cloud-solutions/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/services/software-development/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/services/cybersecurity/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/services/data-analytics/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/courses/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+{% for group in nav_course_groups %}{% for c in group.courses %}    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/courses/{{ c.slug }}/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+{% endfor %}{% endfor %}    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/career/</loc>
         <lastmod>{% now "Y-m-d" %}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://bunshai.com/services/digital-marketing/</loc>
-        <lastmod>{% now "Y-m-d" %}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://bunshai.com/services/cloud-solutions/</loc>
-        <lastmod>{% now "Y-m-d" %}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://bunshai.com/services/software-development/</loc>
-        <lastmod>{% now "Y-m-d" %}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://bunshai.com/services/cybersecurity/</loc>
-        <lastmod>{% now "Y-m-d" %}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://bunshai.com/services/data-analytics/</loc>
-        <lastmod>{% now "Y-m-d" %}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://bunshai.com/contact/</loc>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/contact/</loc>
         <lastmod>{% now "Y-m-d" %}</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
+        <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://bunshai.com/career/</loc>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/support/</loc>
         <lastmod>{% now "Y-m-d" %}</lastmod>
         <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/subscribe/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://bunshai.com/privacy/</loc>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/privacy/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.4</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/terms/</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.4</priority>
+    </url>
+    <url>
+        <loc>{{ request.scheme|default:"https" }}://{{ request.get_host|default:"bunshaitechnohub.com" }}/sitemap/</loc>
         <lastmod>{% now "Y-m-d" %}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.3</priority>
-    </url>
-    <url>
-        <loc>https://bunshai.com/terms/</loc>
-        <lastmod>{% now "Y-m-d" %}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.3</priority>
-    </url>
-    <url>
-        <loc>https://bunshai.com/sitemap/</loc>
-        <lastmod>{% now "Y-m-d" %}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.2</priority>
     </url>
 </urlset>

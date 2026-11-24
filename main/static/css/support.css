@@ -119,6 +119,39 @@
     margin: 80px 0;
 }
 
+.faq-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.faq-tab-btn {
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+    color: var(--dark);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: var(--transition);
+}
+
+.faq-tab-btn:hover {
+    border-color: var(--primary-light);
+    color: var(--primary);
+    background: #fff1f2;
+}
+
+.faq-tab-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
 .faq-container {
     max-width: 800px;
     margin: 0 auto;

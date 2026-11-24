@@ -1,0 +1,53 @@
+<!-- templates/includes/syllabus_popup.html -->
+<div class="modal" id="syllabusModal">
+    <div class="modal-content syllabus-modal-box">
+        <div class="modal-header syllabus-modal-header">
+            <div>
+                <h2>Download Detailed Syllabus (PDF)</h2>
+                <p id="syllabusModalCourseTitle" class="syllabus-modal-subtitle">Mentorship Program Syllabus</p>
+            </div>
+            <button type="button" class="modal-close" aria-label="Close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" style="padding:0;text-align:left;">
+            <p class="syllabus-modal-desc">
+                Enter your details below to unlock the complete module-by-module syllabus PDF, capstone project details, and tool stack.
+            </p>
+            <form id="syllabusDownloadForm" method="POST" action="{% url 'syllabus_request' %}">
+                {% csrf_token %}
+                <input type="hidden" name="course_slug" value="digital-marketing-mentorship">
+                <input type="hidden" name="course_title" value="Digital Marketing Mentorship Program with AI">
+                <div style="display:none;"><input type="text" name="honeypot" tabindex="-1" autocomplete="off"></div>
+
+                <div class="form-group">
+                    <label for="sylName">Full Name *</label>
+                    <input type="text" id="sylName" name="name" placeholder="Your full name" required class="form-input" style="padding-left:14px;">
+                </div>
+                <div class="form-group">
+                    <label for="sylEmail">Email Address *</label>
+                    <input type="email" id="sylEmail" name="email" placeholder="you@example.com" required class="form-input" style="padding-left:14px;">
+                </div>
+                <div class="form-group">
+                    <label for="sylPhone">Phone / WhatsApp Number *</label>
+                    <input type="tel" id="sylPhone" name="phone" placeholder="+91 9876543210" required class="form-input" style="padding-left:14px;">
+                </div>
+                <div class="form-group">
+                    <label for="sylBg">Current Background</label>
+                    <select id="sylBg" name="background" class="form-input" style="padding-left:14px;">
+                        <option value="Student / Fresher">Student / Fresher</option>
+                        <option value="Working Professional">Working Professional</option>
+                        <option value="Career Switcher">Career Switcher</option>
+                        <option value="Business Owner / Freelancer">Business Owner / Freelancer</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn" style="width:100%;justify-content:center;margin-top:8px;">
+                    <span>Unlock &amp; Download Syllabus PDF</span> <i class="fas fa-file-pdf"></i>
+                </button>
+            </form>
+
+            <a id="syllabusDirectLink" href="#" download class="syllabus-direct-link" style="display:none;">
+                <i class="fas fa-download"></i> Click here if download did not start automatically
+            </a>
+        </div>
+    </div>
+</div>

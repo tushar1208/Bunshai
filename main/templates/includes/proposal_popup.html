@@ -30,7 +30,7 @@
 
             <h2>Get Your Customized Proposal Today</h2>
 
-            <form method="POST" action="/proposal/" class="proposal-form" id="proposalForm" >
+            <form method="POST" action="{% url 'proposal_request' %}" class="proposal-form" id="proposalForm" >
                 {% csrf_token %}
 
                 <div class="form-group">
@@ -77,7 +77,7 @@
                     <input type="checkbox" id="privacyCheck" required>
                     <label for="privacyCheck">
                         I have read and understood the
-                        <a href="/privacy" class="privacy-link">Privacy Policy</a>
+                        <a href="{% url 'privacy' %}" class="privacy-link">Privacy Policy</a>
                     </label>
                 </div>
 

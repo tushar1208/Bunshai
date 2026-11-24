@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block breadcrumb_title %}Subscribe{% endblock %}
 {% block page_title %}Subscribe{% endblock %}
 {% block page_subtitle %}Stay Updated with Our Latest News & Offers{% endblock %}
 
 
 
-{% block content %}
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/subscribe.css'%}">
+{% endblock %}
+
+{% block content %}
 <!-- Hero Section -->
 <section class="subscribe-hero">
     <div class="container">
@@ -231,7 +235,7 @@
                 <p style="color: var(--dark-light); font-size: 0.9rem; margin-bottom: 20px;">
                     <i class="fas fa-lock" style="color: var(--primary);"></i>
                     We respect your privacy. Unsubscribe at any time. Read our 
-                    <a href="/privacy" style="color: var(--primary); text-decoration: none; font-weight: 500;">Privacy Policy</a>
+                    <a href="{% url 'privacy' %}" style="color: var(--primary); text-decoration: none; font-weight: 500;">Privacy Policy</a>
                 </p>
                 
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
@@ -243,7 +247,7 @@
                        style="color: var(--dark-light); text-decoration: none; font-size: 0.9rem;">
                         <i class="fas fa-user-minus"></i> Unsubscribe
                     </a>
-                    <a href="/privacy" 
+                    <a href="{% url 'privacy' %}" 
                        style="color: var(--dark-light); text-decoration: none; font-size: 0.9rem;">
                         <i class="fas fa-shield-alt"></i> Privacy Policy
                     </a>

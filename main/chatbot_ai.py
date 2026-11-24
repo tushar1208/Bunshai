@@ -1,143 +1,168 @@
-import json
+"""Sharsh - retrieval based assistant that answers from the website knowledge base.
+
+``get_chatbot_response(message, session)`` returns a dict::
+
+    {reply, links, suggestions, fallback, contact_url, intent, confidence, entry_id}
+
+When nothing in the knowledge base matches confidently, ``fallback`` is True and a
+pre-filled contact-form URL is returned so the visitor is handed to the human team.
+"""
+import difflib
 import re
-from datetime import datetime
-from .models import ChatbotSession, ServiceInquiry
+from urllib.parse import urlencode
 
-class ChatbotAI:
-    def __init__(self):
-        self.responses = self.load_responses()
-        self.services = {
-            'web development': 'it-consulting',
-            'software development': 'software-development',
-            'mobile app': 'software-development',
-            'digital marketing': 'digital-marketing',
-            'seo': 'digital-marketing',
-            'social media': 'digital-marketing',
-            'cloud': 'cloud-solutions',
-            'aws': 'cloud-solutions',
-            'azure': 'cloud-solutions',
-            'security': 'cybersecurity',
-            'cybersecurity': 'cybersecurity',
-            'data analytics': 'data-analytics',
-            'ai': 'data-analytics',
-            'machine learning': 'data-analytics',
-            'consulting': 'it-consulting'
-        }
-    
-    def load_responses(self):
-        return {
-            'greeting': [
-                "Hello! I'm Sharsh, your AI assistant at BunShai TECHNOHUB. How can I help you today?",
-                "Hi there! I'm Sharsh. How can I assist you with BunShai TECHNOHUB services?",
-                "Welcome! I'm Sharsh, ready to help you with all your technology needs."
-            ],
-            'services': {
-                'intro': "We offer a wide range of IT services including:\n\n",
-                'list': """• **IT Consulting** - Technology strategy and digital transformation\n• **Software Development** - Custom web and mobile applications\n• **Digital Marketing** - SEO, social media, and online advertising\n• **Cloud Solutions** - AWS, Azure, and Google Cloud services\n• **Cybersecurity** - Security audits and protection solutions\n• **Data Analytics** - Business intelligence and AI/ML solutions\n\nWhich service are you interested in?""",
-                'follow_up': "Would you like me to connect you with our {service} specialist?"
-            },
-            'pricing': {
-                'general': "Our pricing depends on project requirements. We offer:\n• Hourly rates from $25-$75\n• Project-based pricing\n• Monthly retainers\n• Custom enterprise solutions\n\nWould you like a free consultation?",
-                'budget': "What's your budget range for this project?"
-            },
-            'contact': {
-                'info': """You can reach us through:\n📧 Email: team.bunshailogicloop@gmail.com\n📞 Phone: +91 8091401208\n💬 WhatsApp: +91 8091401208\n📍 Address: Global Remote Operations\n\nWould you like me to connect you directly?""",
-                'hours': "We're available 24/7 for urgent matters. Regular business hours: Mon-Fri, 9AM-6PM IST."
-            },
-            'hours': "We operate 24/7 for critical support. Regular business hours are Monday to Friday, 9AM to 6PM Indian Standard Time.",
-            'team': "Our team consists of 50+ experienced professionals including software developers, designers, cloud architects, security experts, and data scientists.",
-            'portfolio': "We've delivered 50+ successful projects across various industries. Check our website for case studies and client testimonials.",
-            'default': "I'm not sure I understand. Could you please rephrase? Or you can ask about:\n• Our services\n• Pricing\n• Contact information\n• Portfolio\n• Team"
-        }
-    
-    def get_response(self, message, session):
-        """Get appropriate chatbot response based on user message"""
-        message_lower = message.lower().strip()
-        
-        # Check for greetings
-        if self.is_greeting(message_lower):
-            return self.get_random_response('greeting')
-        
-        # Check for services inquiry
-        service_match = self.check_service_inquiry(message_lower)
-        if service_match:
-            return self.handle_service_inquiry(service_match, session)
-        
-        # Check for pricing
-        if any(word in message_lower for word in ['price', 'cost', 'rate', 'budget', 'how much']):
-            return self.handle_pricing_inquiry(message_lower)
-        
-        # Check for contact information
-        if any(word in message_lower for word in ['contact', 'email', 'phone', 'call', 'reach']):
-            return self.responses['contact']['info']
-        
-        # Check for business hours
-        if any(word in message_lower for word in ['hour', 'time', 'available', 'open', 'close']):
-            return self.responses['hours']
-        
-        # Check for team information
-        if any(word in message_lower for word in ['team', 'people', 'staff', 'employee']):
-            return self.responses['team']
-        
-        # Check for portfolio
-        if any(word in message_lower for word in ['portfolio', 'project', 'work', 'case study', 'client']):
-            return self.responses['portfolio']
-        
-        # Default response
-        return self.responses['default']
-    
-    def is_greeting(self, message):
-        greetings = ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening']
-        return any(greeting in message for greeting in greetings)
-    
-    def check_service_inquiry(self, message):
-        """Check if user is asking about specific services"""
-        for service_key in self.services.keys():
-            if service_key in message:
-                return service_key
-        return None
-    
-    def handle_service_inquiry(self, service, session):
-        """Handle service-specific inquiries"""
-        service_name = service.title()
-        response = f"We offer comprehensive {service_name} services. "
-        
-        # Add service-specific details
-        if service in ['web development', 'software development', 'mobile app']:
-            response += "Our development team specializes in:\n• Custom web applications\n• Mobile apps (iOS/Android)\n• E-commerce solutions\n• API development\n• Progressive Web Apps"
-        elif service in ['digital marketing', 'seo', 'social media']:
-            response += "Our marketing services include:\n• SEO optimization\n• Social media management\n• PPC advertising\n• Content marketing\n• Brand strategy"
-        elif service in ['cloud', 'aws', 'azure']:
-            response += "Our cloud expertise covers:\n• Cloud migration\n• Infrastructure setup\n• DevOps automation\n• Cost optimization\n• Security compliance"
-        elif service in ['security', 'cybersecurity']:
-            response += "Our security services provide:\n• Vulnerability assessments\n• Penetration testing\n• Security monitoring\n• Incident response\n• Compliance audits"
-        elif service in ['data analytics', 'ai', 'machine learning']:
-            response += "Our data services include:\n• Business intelligence\n• Predictive analytics\n• Machine learning models\n• Data visualization\n• Big data solutions"
-        
-        response += f"\n\nWould you like me to schedule a free consultation for {service_name}?"
-        
-        # Store service interest in session
-        if session:
-            session.service_interest = service
-            session.save()
-        
-        return response
-    
-    def handle_pricing_inquiry(self, message):
-        """Handle pricing-related inquiries"""
-        if 'budget' in message:
-            return self.responses['pricing']['budget']
-        return self.responses['pricing']['general']
-    
-    def get_random_response(self, response_type):
-        """Get random response from list"""
-        responses = self.responses.get(response_type, [])
-        if isinstance(responses, list) and responses:
-            import random
-            return random.choice(responses)
-        return responses if isinstance(responses, str) else "I'm here to help!"
+from .knowledge_base import (
+    DEFAULT_SUGGESTIONS, EMAIL, ENTRIES, PHONE, SMALLTALK, WHATSAPP,
+)
 
-def get_chatbot_response(message, session):
-    """Main function to get chatbot response"""
-    chatbot = ChatbotAI()
-    return chatbot.get_response(message, session)
+STOPWORDS = {
+    'the', 'is', 'are', 'a', 'an', 'what', 'whats', 'do', 'does', 'you', 'your', 'yours', 'me', 'my', 'i', 'can',
+    'could', 'would', 'should', 'how', 'to', 'of', 'and', 'in', 'for', 'on', 'about', 'please', 'tell', 'show',
+    'give', 'there', 'any', 'have', 'has', 'we', 'us', 'it', 'its', 'with', 'at', 'be', 'am', 'want', 'need',
+    'know', 'like', 'some', 'get', 'will', 'shall', 'u', 'ur', 'kindly', 'hey', 'hi', 'hello', 'which', 'who',
+    'when', 'where', 'why', 'that', 'this', 'these', 'those', 'also', 'more', 'info', 'information', 'details',
+}
+GENERIC = {'course', 'program', 'service', 'team', 'contact', 'help', 'support', 'career', 'company',
+           'project', 'work', 'year', 'time'}
+AFFIRM = {'yes', 'yeah', 'yep', 'sure', 'ok', 'okay', 'please do', 'yes please', 'definitely', 'go ahead'}
+THRESHOLD = 1.7
+
+EMAIL_RE = re.compile(r'[\w.+-]+@[\w-]+\.[\w.-]+')
+PHONE_RE = re.compile(r'(?<!\d)(\+?\d[\d\s\-()]{8,16}\d)(?!\d)')
+
+
+def _stem(word):
+    if len(word) > 4 and word.endswith('ies'):
+        return word[:-3] + 'y'
+    if len(word) > 4 and word.endswith('es') and not word.endswith(('ses', 'xes')):
+        return word[:-2]
+    if len(word) > 3 and word.endswith('s') and not word.endswith('ss'):
+        return word[:-1]
+    return word
+
+
+def _tokens(text):
+    words = re.findall(r"[a-z0-9+#.]+", text.lower().replace('&', ' and '))
+    return [_stem(w.strip('.')) for w in words if w.strip('.')]
+
+
+def _norm(text):
+    return ' ' + ' '.join(_tokens(text)) + ' '
+
+
+def extract_contact(message):
+    email = EMAIL_RE.search(message)
+    phone = PHONE_RE.search(message)
+    return (email.group(0) if email else None), (phone.group(1).strip() if phone else None)
+
+
+def _score(entry, q_norm, q_tokens, q_set):
+    score = 0.0
+    matched = set()
+    for kw in entry['keywords']:
+        kw_norm = _norm(kw)
+        kw_tokens = kw_norm.split()
+        if not kw_tokens:
+            continue
+        if len(kw_tokens) > 1:
+            if kw_norm in q_norm:
+                score += 3 + len(kw_tokens)
+                matched.update(kw_tokens)
+        else:
+            tok = kw_tokens[0]
+            if tok in q_set:
+                score += 1.8 if tok in GENERIC else 2.5
+                matched.add(tok)
+            elif len(tok) >= 5:
+                for qt in q_tokens:
+                    if len(qt) >= 5 and difflib.SequenceMatcher(None, qt, tok).ratio() >= 0.86:
+                        score += 1.8
+                        matched.add(qt)
+                        break
+    if score:
+        title_tokens = set(_tokens(entry['title']))
+        score += 0.6 * len(title_tokens & q_set)
+        if entry['id'].startswith(('course_', 'cat_', 'svc_')) and matched - GENERIC:
+            score += 0.4
+    return score
+
+
+def _smalltalk(q_norm, q_tokens):
+    clean = ' '.join(q_tokens)
+    for intent, data in SMALLTALK.items():
+        for pattern in data['patterns']:
+            p = ' '.join(_tokens(pattern))
+            if clean == p or (len(q_tokens) <= 6 and f' {p} ' in q_norm and len(q_tokens) <= len(p.split()) + 2):
+                return intent, data['reply']
+    return None, None
+
+
+def contact_url(question='', session=None):
+    params = {'subject': 'Chatbot enquiry', 'source': 'chatbot'}
+    if question:
+        params['message'] = question[:500]
+    if session is not None:
+        for field in ('name', 'email', 'phone'):
+            value = getattr(session, field, None)
+            if value:
+                params[field] = value
+    return '/contact/?' + urlencode(params)
+
+
+def _pack(reply, **kw):
+    out = {'reply': reply, 'links': [], 'suggestions': [], 'fallback': False, 'contact_url': '',
+           'intent': 'answer', 'confidence': 1.0, 'entry_id': ''}
+    out.update(kw)
+    return out
+
+
+def fallback_response(message, session=None):
+    url = contact_url(message, session)
+    return _pack(
+        "I'm sorry - I couldn't find a reliable answer to that on our website. 🙏 Rather than guess, let me "
+        "connect you with our team: please fill in the contact form (I've pre-filled your question) and we'll "
+        f"reply within 24 hours.\n\nYou can also call {PHONE}, WhatsApp us or email {EMAIL}.",
+        links=[{'label': '📝 Open Contact Form', 'url': url},
+               {'label': '💬 WhatsApp Us', 'url': WHATSAPP}],
+        suggestions=DEFAULT_SUGGESTIONS[:3],
+        fallback=True, contact_url=url, intent='fallback', confidence=0.0)
+
+
+def get_chatbot_response(message, session=None):
+    message = (message or '').strip()
+    q_tokens = _tokens(message)
+    q_norm = ' ' + ' '.join(q_tokens) + ' '
+    if not q_tokens:
+        return fallback_response(message, session)
+
+    intent, reply = _smalltalk(q_norm, q_tokens)
+    if intent:
+        return _pack(reply, intent=intent, suggestions=DEFAULT_SUGGESTIONS)
+
+    if ' '.join(q_tokens) in {' '.join(_tokens(a)) for a in AFFIRM}:
+        url = contact_url('', session)
+        return _pack("Wonderful! The quickest way to move ahead is our contact form - our team will personally "
+                     "guide you and reply within 24 hours.",
+                     links=[{'label': '📝 Open Contact Form', 'url': url}, {'label': 'Browse Courses', 'url': '/courses/'}],
+                     intent='affirm', contact_url=url)
+
+    content = [t for t in q_tokens if t not in STOPWORDS]
+    q_set = set(content) or set(q_tokens)
+    scored = sorted(((_score(e, q_norm, content or q_tokens, q_set), e) for e in ENTRIES),
+                    key=lambda x: x[0], reverse=True)
+    best_score, best = scored[0]
+    if best_score < THRESHOLD:
+        return fallback_response(message, session)
+
+    suggestions = list(best['suggestions'])
+    for s, e in scored[1:4]:
+        if s >= THRESHOLD and e['title'] not in suggestions and len(suggestions) < 4:
+            suggestions.append(e['title'])
+    if not suggestions:
+        suggestions = DEFAULT_SUGGESTIONS[:3]
+    links = list(best['links'])
+    if best['id'] in ('fees', 'enroll', 'proposal', 'projects') and not any('/contact/' in l['url'] for l in links):
+        links.append({'label': 'Contact Form', 'url': contact_url(message, session)})
+    return _pack(best['answer'], links=links, suggestions=suggestions[:4], intent=best['id'],
+                 confidence=min(1.0, best_score / 7), entry_id=best['id'],
+                 contact_url=contact_url(message, session))

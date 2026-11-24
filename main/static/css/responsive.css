@@ -1,272 +1,414 @@
-/* Responsive Design Styles */
+/* ==========================================================================
+   BunShai TECHNOHUB — Full Responsive System (320px phones -> 2560px displays)
+   No dark-mode variable inversion; preserves unified light/dark contrast.
+   ========================================================================== */
 
-/* Extra small devices (phones, 576px and down) */
-@media (max-width: 576px) {
-    /* Header */
-    .header {
-        padding: 12px 15px;
+/* Global overflow & media safety */
+html,
+body {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+img,
+video,
+iframe,
+svg {
+    max-width: 100%;
+}
+
+/* Large & Ultra-Wide Displays */
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1240px;
     }
-    
+}
+
+@media (min-width: 1536px) {
+    .container {
+        max-width: 1380px;
+    }
+    .video-content h1 {
+        font-size: 4rem;
+    }
+}
+
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1520px;
+    }
+}
+
+/* Laptops (<= 1199px) */
+@media (max-width: 1199px) {
+    .container {
+        max-width: 96%;
+    }
+    .services-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablets & Mobile Navigation Drawer (<= 992px) */
+@media (max-width: 992px) {
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    nav#main-nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: min(360px, 100%);
+        height: 100vh;
+        height: 100dvh;
+        background: var(--dark);
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        padding: 74px 20px 40px;
+        overflow-y: auto;
+        transition: var(--transition);
+        z-index: 1002;
+        box-shadow: var(--shadow-xl);
+    }
+
+    nav#main-nav.show {
+        left: 0;
+    }
+
+    .nav-close {
+        display: block;
+        position: absolute;
+        top: 18px;
+        right: 20px;
+        font-size: 1.5rem;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    .nav-content {
+        flex-direction: column;
+        gap: 6px;
+        text-align: left;
+    }
+
+    .nav-link {
+        width: 100%;
+        justify-content: space-between;
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    .nav-link::after {
+        display: none;
+    }
+
+    /* Stack multi-column layouts cleanly */
+    .about-content,
+    .contact-grid,
+    .course-detail-grid,
+    .service-hero,
+    .hero-section {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .service-hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .popup-container {
+        flex-direction: column;
+        width: min(94vw, 680px);
+        max-height: 90vh;
+    }
+
+    .popup-left,
+    .popup-right {
+        width: 100%;
+    }
+
+    .popup-left {
+        padding: 24px 20px;
+    }
+
+    .popup-right {
+        padding: 24px 20px;
+    }
+
+    .proposal-form .dropdown {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .proposal-form .dropdown select {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .video-content h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .page-header h1 {
+        font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+    }
+}
+
+/* Mobile & Landscape Phones (<= 768px) */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .brand h1 {
+        font-size: 1.15rem;
+    }
+
+    .logo-img {
+        height: 38px;
+    }
+
+    .page-header {
+        padding: 96px 0 42px;
+        margin-top: 64px;
+    }
+
+    .video-content h1 {
+        font-size: clamp(1.75rem, 6vw, 2.3rem);
+    }
+
+    .video-content p,
+    .page-header p {
+        font-size: 1rem;
+    }
+
+    .hero-buttons,
+    .cta-buttons,
+    .course-hero-cta-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hero-buttons .cta-btn,
+    .hero-buttons .cta-btn-secondary,
+    .cta-buttons .btn-primary,
+    .cta-buttons .btn-secondary,
+    .course-hero-cta-row .btn-primary,
+    .course-hero-cta-row .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-stats {
+        height: auto;
+        gap: 20px;
+    }
+
+    .form-row,
+    .services-grid,
+    .features-grid,
+    .courses-grid,
+    .testimonials-grid,
+    .blog-grid,
+    .team-grid,
+    .values-grid,
+    .support-options,
+    .subscribe-grid,
+    .pillars-grid,
+    .related-courses-grid,
+    .services-content,
+    .content-grid,
+    .cloud-platforms,
+    .offering-grid,
+    .benefits-grid,
+    .tech-grid,
+    .project-types {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid,
+    .courses-hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .courses-toolbar {
+        padding: 14px;
+    }
+
+    .course-search-box {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .contact-form,
+    .contact-form-container,
+    .enroll-card,
+    .support-form-container,
+    .application-form-container {
+        padding: 24px 18px;
+    }
+
+    .captcha-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .captcha-display {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .map-container {
+        height: 280px;
+    }
+
+    .slide {
+        width: min(330px, 82vw);
+    }
+
+    .usage-table,
+    .retention-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .newsletter-content {
+        padding: 36px 20px;
+        text-align: center;
+    }
+
+    .newsletter-form form {
+        flex-direction: column;
+    }
+
+    /* Compact floating action tab on mobile */
+    .header-actions {
+        top: auto;
+        bottom: 158px;
+        transform: none;
+    }
+
+    .lets-connect-btn {
+        padding: 9px 13px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Small Phones (<= 576px) */
+@media (max-width: 576px) {
     .brand h1 {
         font-size: 1rem;
     }
-    
+
     .logo-img {
-        height: 40px;
+        height: 34px;
     }
-    
-    /* Hero Section */
-    .video-content h1 {
-        font-size: 1.8rem;
-        line-height: 1.2;
+
+    .section-header h2,
+    .section-heading h2 {
+        font-size: 1.65rem;
     }
-    
-    .video-content p {
-        font-size: 1rem;
-        padding: 0 10px;
-    }
-    
-    /* Page Header */
-    .page-header {
-        padding: 60px 0 30px;
-    }
-    
-    .page-header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .page-header p {
-        font-size: 1rem;
-        padding: 0 15px;
-    }
-    
-    /* Content Grid */
-    .content-grid {
+
+    .stats-grid,
+    .courses-hero-stats {
         grid-template-columns: 1fr;
-        gap: 30px;
     }
-    
-    .content-text h2 {
-        font-size: 1.6rem;
-    }
-    
-    .content-text h3 {
-        font-size: 1.3rem;
-    }
-    
-    /* Services */
-    .services-content {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .service-category {
-        padding: 20px;
-    }
-    
-    .category-header {
+
+    .course-card-actions-row {
         flex-direction: column;
-        text-align: center;
-        gap: 15px;
     }
-    
-    .category-header h2 {
+
+    #captchaText {
+        font-size: 1.45rem;
+        letter-spacing: 4px;
+    }
+
+    .whatsapp-float {
+        width: 48px;
+        height: 48px;
+        bottom: 16px;
+        right: 16px;
         font-size: 1.5rem;
     }
-    
-    .category-header i {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
+
+    .chatbot-container {
+        bottom: 76px;
+        right: 16px;
     }
-    
-    /* Contact */
-    .contact-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
+
+    .chatbot-window {
+        width: calc(100vw - 24px);
+        right: -8px;
+        height: 62vh;
     }
-    
-    .contact-form-container {
-        padding: 25px;
+
+    .back-to-top {
+        width: 44px;
+        height: 44px;
+        bottom: 16px;
+        left: 16px;
+        right: auto;
     }
-    
-    /* Footer */
-    .footer-top {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 30px;
+
+    .header-actions {
+        display: none;
     }
-    
-    .footer-col h4::after {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    
-    .footer-bottom {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    /* Popups */
-    .popup-container {
-        max-width: 95%;
-        max-height: 85vh;
-    }
-    
-    .popup-right {
-        padding: 20px;
-    }
-    
-    .popup-right h2 {
-        font-size: 1.3rem;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    /* Buttons */
-    .cta-btn,
-    .submit-btn {
-        padding: 12px 25px;
-        font-size: 1rem;
-    }
-    
-    .lets-connect-btn {
-        padding: 8px 16px;
+}
+
+/* Ultra-Small Screens (<= 380px) */
+@media (max-width: 380px) {
+    .brand h1 {
         font-size: 0.9rem;
     }
-    
-    /* WhatsApp Float */
-    .whatsapp-float {
-        width: 50px;
-        height: 50px;
-        bottom: 20px;
-        right: 20px;
+    .video-content h1,
+    .page-header h1,
+    .courses-hero h1 {
+        font-size: 1.55rem;
     }
-    
-    .whatsapp-float i {
-        font-size: 24px;
-    }
-    
-    /* Back to Top */
-    .back-to-top {
-        width: 45px;
-        height: 45px;
-        bottom: 85px;
-        right: 20px;
+    input,
+    textarea,
+    select {
+        font-size: 16px; /* Prevents iOS auto-zoom */
     }
 }
 
-/* Small devices (landscape phones, 576px to 768px) */
-@media (min-width: 577px) and (max-width: 768px) {
-    .header {
-        padding: 15px 20px;
-    }
-    
-    .video-content h1 {
-        font-size: 2.2rem;
-    }
-    
-    .services-content {
-        grid-template-columns: 1fr;
-    }
-    
-    .content-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-    
-    .footer-top {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .popup-container {
-        max-width: 90%;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Medium devices (tablets, 768px to 992px) */
-@media (min-width: 769px) and (max-width: 992px) {
-    .header {
-        padding: 15px 30px;
-    }
-    
-    .nav a {
-        font-size: 0.95rem;
-        padding: 5px 8px;
-    }
-    
-    .services-content {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .video-content h1 {
-        font-size: 2.8rem;
-    }
-    
-    .content-grid {
-        gap: 40px;
-    }
-    
-    .footer-top {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .popup-container {
-        max-width: 85%;
-    }
-}
-
-/* Large devices (desktops, 992px to 1200px) */
-@media (min-width: 993px) and (max-width: 1200px) {
-    .container {
-        max-width: 95%;
-    }
-    
-    .services-content {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .nav {
-        gap: 15px;
-    }
-}
-
-/* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1201px) {
-    .container {
-        max-width: 1140px;
-    }
-}
-
-/* Landscape mode */
+/* Landscape Mobile */
 @media (max-height: 500px) and (orientation: landscape) {
     .video-hero {
-        height: 120vh;
+        height: auto;
+        min-height: 115vh;
+        padding: 90px 0 40px;
     }
-    
-    nav.show {
-        padding: 60px 20px;
-    }
-    
-    nav a {
-        padding: 10px 20px;
-        font-size: 1rem;
-    }
-    
     .popup-container {
         max-height: 95vh;
     }
 }
 
-/* High DPI screens */
+/* Touch Device Ergonomics */
+@media (hover: none) and (pointer: coarse) {
+    .lets-connect-btn,
+    .cta-btn,
+    .submit-btn,
+    .btn-solid-course,
+    .btn-outline-course,
+    .btn-syllabus-course,
+    .enroll-submit-btn {
+        min-height: 44px;
+    }
+    button,
+    a {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* High DPI */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .logo-img,
     .footer-logo {
@@ -274,46 +416,7 @@
     }
 }
 
-/* Print styles */
-@media print {
-    .header,
-    .video-hero,
-    .whatsapp-float,
-    .back-to-top,
-    footer,
-    .popup-overlay,
-    .menu-toggle,
-    .lets-connect-btn {
-        display: none !important;
-    }
-    
-    body {
-        background: white !important;
-        color: black !important;
-        font-size: 12pt !important;
-    }
-    
-    a {
-        color: black !important;
-        text-decoration: underline !important;
-    }
-    
-    .page-content {
-        padding: 20px 0 !important;
-    }
-    
-    .container {
-        max-width: 100% !important;
-        padding: 0 !important;
-    }
-    
-    .content-image,
-    .service-hero-image {
-        display: none !important;
-    }
-}
-
-/* Reduced motion */
+/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -322,143 +425,24 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-    
-    .loader-spinner {
-        animation: none !important;
-    }
-    
     html {
         scroll-behavior: auto !important;
     }
-    
-    .slide {
-        transition: none !important;
-    }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --light: #0f172a;
-        --dark: #f8fafc;
-        --dark-light: #e2e8f0;
-        --light-dark: #1e293b;
+/* Print */
+@media print {
+    .header,
+    .header-actions,
+    .whatsapp-float,
+    .chatbot-container,
+    .back-to-top,
+    footer,
+    .modal {
+        display: none !important;
     }
-    
     body {
-        background: var(--light);
-        color: var(--dark);
-    }
-    
-    .service-card,
-    .contact-form-container,
-    .policy-content,
-    .subscribe-container {
-        background: #1e293b;
-        color: var(--dark);
-    }
-    
-    input,
-    textarea,
-    select {
-        background: #2d3748;
-        color: white;
-        border-color: #4a5568;
-    }
-    
-    input::placeholder,
-    textarea::placeholder {
-        color: #a0aec0;
-    }
-}
-
-/* Touch device optimizations */
-@media (hover: none) and (pointer: coarse) {
-    /* Increase tap targets */
-    nav a {
-        padding: 15px 20px;
-    }
-    
-    .lets-connect-btn,
-    .cta-btn,
-    .submit-btn {
-        min-height: 44px;
-        min-width: 44px;
-    }
-    
-    .dot {
-        width: 12px;
-        height: 12px;
-    }
-    
-    /* Remove hover effects */
-    .service-card:hover,
-    .contact-method:hover,
-    .feature-card:hover {
-        transform: none;
-    }
-    
-    /* Prevent text selection on tap */
-    button,
-    a {
-        -webkit-tap-highlight-color: transparent;
-    }
-}
-
-/* Very small screens */
-@media (max-width: 320px) {
-    .brand h1 {
-        font-size: 0.9rem;
-    }
-    
-    .video-content h1 {
-        font-size: 1.5rem;
-    }
-    
-    .page-header h1 {
-        font-size: 1.5rem;
-    }
-    
-    .content-text h2 {
-        font-size: 1.4rem;
-    }
-}
-
-/* Custom scrollbar for desktop */
-@media (min-width: 768px) {
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: var(--light);
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 5px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--primary-dark);
-    }
-}
-
-/* Form validation responsiveness */
-@media (max-width: 480px) {
-    .form-group {
-        margin-bottom: 15px;
-    }
-    
-    input,
-    textarea,
-    select {
-        padding: 12px;
-        font-size: 16px; /* Prevents zoom on iOS */
-    }
-    
-    /* Error messages */
-    .error-message {
-        font-size: 12px;
+        background: #ffffff !important;
+        color: #000000 !important;
     }
 }
