@@ -446,6 +446,8 @@ class BunshaiSiteTestCase(TestCase):
             for key in ('why_us', 'comparison_rows', 'build_projects', 'faqs', 'video_chapters'):
                 self.assertTrue(course.get(key), f"Course {course['slug']} missing {key}")
 
+        self.assertEqual(len({c['image'] for c in COURSES}), len(COURSES), "Course images must be unique per course")
+
         tpl_root = Path(__file__).resolve().parent / 'templates'
         for p in sorted(tpl_root.rglob('*.html')):
             txt = p.read_text(encoding='utf-8', errors='ignore')

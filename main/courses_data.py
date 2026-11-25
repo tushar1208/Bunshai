@@ -1050,8 +1050,8 @@ _CATEGORY_IMAGES = {
 }
 
 _COURSE_IMAGES = {
-    'seo-aeo-bootcamp': 'images/courses/seo-aeo.png',
-    'data-science-ml': 'images/courses/data-science-ml.png',
+    c['slug']: f"images/courses/{c['slug']}.png"
+    for c in COURSES
 }
 
 _CATEGORY_PROJECTS = {

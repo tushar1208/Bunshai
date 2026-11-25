@@ -253,6 +253,68 @@
                 </div>
             </div>
         </div>
+
+        <!-- Authentic Interactive Sample Certificate Preview -->
+        <div class="sample-cert-section" id="sample-certificate">
+            <div class="sample-cert-header">
+                <div>
+                    <span class="cert-eyebrow"><i class="fas fa-certificate"></i> Exact Credential Preview</span>
+                    <h3>Sample Certificate You Will Earn in {{ course.short_title }}</h3>
+                    <p>Every graduate who completes {{ course.projects }} and passes the capstone review receives this verifiable BunShai TECHNOHUB credential.</p>
+                </div>
+                <button type="button" class="btn-solid-course" style="flex:none;padding:11px 20px;" onclick="openCertificateModal()">
+                    <i class="fas fa-expand-alt"></i> View Fullscreen Sample
+                </button>
+            </div>
+
+            <div class="cert-frame-outer" onclick="openCertificateModal()" role="button" tabindex="0" aria-label="Preview full sample certificate">
+                <div class="cert-parchment">
+                    <div class="cert-border-gold">
+                        <div class="cert-watermark" aria-hidden="true">SAMPLE</div>
+                        <div class="cert-top-brand">
+                            <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB Seal Logo" class="cert-logo">
+                            <span class="cert-org">BUNSHAI TECHNOHUB</span>
+                            <span class="cert-div">INDUSTRY MENTORSHIP &amp; TECHNOLOGY TRAINING DIVISION</span>
+                        </div>
+
+                        <h4 class="cert-heading">CERTIFICATE OF COMPLETION</h4>
+                        <p class="cert-presented">THIS CREDENTIAL IS PROUDLY PRESENTED TO</p>
+                        <div class="cert-recipient">Aarav Sharma</div>
+                        <p class="cert-statement">for successfully completing all live cohort milestones, mentor code reviews, and flagship capstone in</p>
+                        <div class="cert-course-name">{{ course.title }}</div>
+                        <div class="cert-course-meta">{{ course.duration }} &bull; {{ course.hours }} &bull; {{ course.projects }}</div>
+
+                        <div class="cert-footer-row">
+                            <div class="cert-sig-block">
+                                <div class="cert-sig-script">BunShai MD</div>
+                                <div class="cert-sig-line"></div>
+                                <strong>Managing Director</strong>
+                                <span>MBA, B.Tech &bull; BunShai TECHNOHUB</span>
+                            </div>
+
+                            <div class="cert-seal-badge">
+                                <div class="cert-seal-inner">
+                                    <span>VERIFIED</span>
+                                    <strong>2026</strong>
+                                </div>
+                            </div>
+
+                            <div class="cert-sig-block">
+                                <div class="cert-sig-script">Tech Director</div>
+                                <div class="cert-sig-line"></div>
+                                <strong>Technical Director</strong>
+                                <span>Architecture &amp; Mentorship Lead</span>
+                            </div>
+
+                            <div class="cert-qr-box" aria-label="Verification QR">
+                                <div class="cert-qr-grid"></div>
+                                <span>ID: BST-2026-{{ course.slug|slice:":4"|upper }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -411,6 +473,55 @@
     </div>
 </div>
 
+<!-- Certificate Fullscreen Sample Modal -->
+<div class="modal" id="certificateZoomModal">
+    <div class="preview-modal-card" style="max-width:980px;background:#0a0f1e;">
+        <div class="preview-modal-header">
+            <h3><i class="fas fa-award" style="color:#f59e0b;margin-right:8px;"></i>Sample Certificate — {{ course.title }}</h3>
+            <button type="button" class="modal-close" aria-label="Close Certificate Preview" onclick="closeCertificateModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="padding:20px;">
+            <div class="cert-parchment cert-parchment-modal">
+                <div class="cert-border-gold">
+                    <div class="cert-watermark" aria-hidden="true">SAMPLE</div>
+                    <div class="cert-top-brand">
+                        <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB Seal Logo" class="cert-logo">
+                        <span class="cert-org">BUNSHAI TECHNOHUB</span>
+                        <span class="cert-div">INDUSTRY MENTORSHIP &amp; TECHNOLOGY TRAINING DIVISION</span>
+                    </div>
+                    <h4 class="cert-heading">CERTIFICATE OF COMPLETION</h4>
+                    <p class="cert-presented">THIS CREDENTIAL IS PROUDLY PRESENTED TO</p>
+                    <div class="cert-recipient">Aarav Sharma</div>
+                    <p class="cert-statement">for successfully completing all live cohort milestones, mentor code reviews, and flagship capstone in</p>
+                    <div class="cert-course-name">{{ course.title }}</div>
+                    <div class="cert-course-meta">{{ course.duration }} &bull; {{ course.hours }} &bull; {{ course.projects }}</div>
+                    <div class="cert-footer-row">
+                        <div class="cert-sig-block">
+                            <div class="cert-sig-script">BunShai MD</div>
+                            <div class="cert-sig-line"></div>
+                            <strong>Managing Director</strong>
+                            <span>MBA, B.Tech &bull; BunShai TECHNOHUB</span>
+                        </div>
+                        <div class="cert-seal-badge">
+                            <div class="cert-seal-inner"><span>VERIFIED</span><strong>2026</strong></div>
+                        </div>
+                        <div class="cert-sig-block">
+                            <div class="cert-sig-script">Tech Director</div>
+                            <div class="cert-sig-line"></div>
+                            <strong>Technical Director</strong>
+                            <span>Architecture &amp; Mentorship Lead</span>
+                        </div>
+                        <div class="cert-qr-box">
+                            <div class="cert-qr-grid"></div>
+                            <span>ID: BST-2026-{{ course.slug|slice:":4"|upper }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Course Video Preview Modal -->
 <div class="modal" id="coursePreviewModal">
     <div class="preview-modal-card">
@@ -486,6 +597,23 @@ function selectPreviewChapter(btn, title, desc) {
     const dEl = document.getElementById('previewChapterDesc');
     if (tEl) tEl.textContent = title;
     if (dEl) dEl.textContent = desc;
+}
+
+function openCertificateModal() {
+    if (window.openModal) {
+        window.openModal('certificateZoomModal');
+    } else {
+        document.getElementById('certificateZoomModal').style.display = 'flex';
+    }
+}
+
+function closeCertificateModal() {
+    const modal = document.getElementById('certificateZoomModal');
+    if (window.closeModal) {
+        window.closeModal(modal);
+    } else if (modal) {
+        modal.style.display = 'none';
+    }
 }
 
 window.addEventListener('scroll', function () {

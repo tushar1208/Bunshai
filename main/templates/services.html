@@ -12,213 +12,291 @@
 {% block content %}
 <section class="services-hero">
     <div class="container">
-        <h1>Our Services</h1>
-        <p class="lead">Comprehensive technology solutions to drive your business growth and digital transformation</p>
-    </div>
-</section>
+        <div class="srv-hero-badge">
+            <i class="fas fa-sparkles"></i> Enterprise IT &amp; Digital Solutions
+        </div>
+        <h1>Engineering Digital Advantage for Modern Businesses</h1>
+        <p class="lead">From cloud modernization and enterprise security audits to custom AI web platforms and high-ROAS digital growth — delivered with clarity, speed, and accountability.</p>
 
-<section class="services-overview">
-    <div class="container">
-        <div class="overview-content">
-            <h2>Transform Your Business with Technology</h2>
-            <p>From web development to AI solutions, we provide end-to-end technology services that help businesses innovate, scale, and succeed in the digital age.</p>
+        <div class="srv-hero-cta">
+            <a href="#services-catalog" class="btn-primary">
+                <i class="fas fa-layer-group"></i> Explore Services
+            </a>
+            <button type="button" class="btn-secondary" onclick="showProposalPopup()">
+                <i class="fas fa-file-signature"></i> Request Custom Proposal
+            </button>
+        </div>
 
-            <div class="stats-grid">
-                <div class="stat">
-                    <h3>50+</h3>
-                    <p>Projects Delivered</p>
-                </div>
-                <div class="stat">
-                    <h3>30+</h3>
-                    <p>Happy Clients</p>
-                </div>
-                <div class="stat">
-                    <h3>15+</h3>
-                    <p>Countries Served</p>
-                </div>
-                <div class="stat">
-                    <h3>5+</h3>
-                    <p>Years Experience</p>
-                </div>
-            </div>
+        <div class="srv-trust-strip">
+            <div class="srv-trust-pill"><strong>50+</strong><span>Projects Delivered</span></div>
+            <div class="srv-trust-pill"><strong>30+</strong><span>Global Clients</span></div>
+            <div class="srv-trust-pill"><strong>14+</strong><span>Combined Leadership Yrs</span></div>
+            <div class="srv-trust-pill"><strong>24/7</strong><span>Dedicated Support SLA</span></div>
         </div>
     </div>
 </section>
 
-<section class="services-grid-section">
-    <div class="container">
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-card-media">
-                    <img src="{% static 'images/services/it-consulting.png' %}" alt="IT Consulting" loading="lazy">
-                </div>
-                <div class="service-icon">
-                    <i class="fas fa-laptop-code"></i>
-                </div>
-                <h3>IT Consulting</h3>
-                <p>Strategic technology consulting to optimize your IT infrastructure and drive digital transformation.</p>
-                <ul>
-                    <li>Technology roadmap development</li>
-                    <li>IT strategy planning</li>
-                    <li>Process optimization</li>
-                    <li>Digital transformation</li>
-                </ul>
-                <a href="{% url 'service_detail' 'it-consulting' %}" class="service-link">
-                    Learn More <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="service-card">
-                <div class="service-card-media">
-                    <img src="{% static 'images/courses/full-stack-ai.png' %}" alt="Software Development" loading="lazy">
-                </div>
-                <div class="service-icon">
-                    <i class="fas fa-code"></i>
-                </div>
-                <h3>Software Development</h3>
-                <p>Custom software solutions built with modern technologies for scalable, secure applications.</p>
-                <ul>
-                    <li>Web applications</li>
-                    <li>Mobile apps</li>
-                    <li>Desktop software</li>
-                    <li>API development</li>
-                </ul>
-                <a href="{% url 'service_detail' 'software-development' %}" class="service-link">
-                    Learn More <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="service-card">
-                <div class="service-card-media">
-                    <img src="{% static 'images/courses/cloud-computing.png' %}" alt="Cloud Solutions" loading="lazy">
-                </div>
-                <div class="service-icon">
-                    <i class="fas fa-cloud"></i>
-                </div>
-                <h3>Cloud Solutions</h3>
-                <p>Scalable cloud infrastructure and migration services for cost-effective, secure operations.</p>
-                <ul>
-                    <li>Cloud migration</li>
-                    <li>Infrastructure as Code</li>
-                    <li>DevOps & CI/CD</li>
-                    <li>Multi-cloud management</li>
-                </ul>
-                <a href="{% url 'service_detail' 'cloud-solutions' %}" class="service-link">
-                    Learn More <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="service-card">
-                <div class="service-card-media">
-                    <img src="{% static 'images/courses/cyber-security.png' %}" alt="Cybersecurity" loading="lazy">
-                </div>
-                <div class="service-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3>Cybersecurity</h3>
-                <p>Comprehensive security solutions to protect your digital assets from evolving threats.</p>
-                <ul>
-                    <li>Network security</li>
-                    <li>Data protection</li>
-                    <li>Threat intelligence</li>
-                    <li>Compliance management</li>
-                </ul>
-                <a href="{% url 'service_detail' 'cybersecurity' %}" class="service-link">
-                    Learn More <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="service-card">
-                <div class="service-card-media">
-                    <img src="{% static 'images/courses/data-analytics.png' %}" alt="Data Analytics" loading="lazy">
-                </div>
-                <div class="service-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <h3>Data Analytics</h3>
-                <p>Transform data into actionable insights with advanced analytics and business intelligence.</p>
-                <ul>
-                    <li>Business intelligence</li>
-                    <li>Machine learning</li>
-                    <li>Data visualization</li>
-                    <li>Predictive analytics</li>
-                </ul>
-                <a href="{% url 'service_detail' 'data-analytics' %}" class="service-link">
-                    Learn More <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="service-card">
-                <div class="service-card-media">
-                    <img src="{% static 'images/courses/digital-marketing.png' %}" alt="Digital Marketing" loading="lazy">
-                </div>
-                <div class="service-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <h3>Digital Marketing</h3>
-                <p>Data-driven marketing strategies to increase online visibility and drive business growth.</p>
-                <ul>
-                    <li>SEO optimization</li>
-                    <li>Social media marketing</li>
-                    <li>PPC advertising</li>
-                    <li>Email marketing</li>
-                </ul>
-                <a href="{% url 'service_detail' 'digital-marketing' %}" class="service-link">
-                    Learn More <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="process-section">
+<section class="services-grid-section" id="services-catalog">
     <div class="container">
         <div class="section-header">
-            <h2>Our Process</h2>
-            <p>How we deliver successful projects</p>
+            <span class="srv-section-eyebrow">What We Deliver</span>
+            <h2>End-to-End Capabilities Under One Roof</h2>
+            <p>Choose an integrated service track or partner with us across your full technology roadmap.</p>
         </div>
 
-        <div class="process-steps">
-            <div class="step">
-                <div class="step-number">1</div>
+        <div class="srv-filter-bar" id="serviceFilterBar">
+            <button type="button" class="srv-filter-btn active" data-group="all">All Services (6)</button>
+            <button type="button" class="srv-filter-btn" data-group="engineering">Strategy &amp; Engineering</button>
+            <button type="button" class="srv-filter-btn" data-group="cloud-sec">Cloud &amp; Security</button>
+            <button type="button" class="srv-filter-btn" data-group="data-growth">Data, AI &amp; Growth</button>
+        </div>
+
+        <div class="services-grid srv-cards-elevated" id="servicesCatalogGrid">
+            <article class="service-card srv-card" data-group="engineering">
+                <div class="service-card-media">
+                    <img src="{% static 'images/services/it-consulting.png' %}" alt="IT Consulting" loading="lazy">
+                    <span class="srv-card-tag">Strategy</span>
+                </div>
+                <div class="srv-card-body">
+                    <div class="service-icon srv-float-icon"><i class="fas fa-laptop-code"></i></div>
+                    <h3>IT Consulting</h3>
+                    <p>Strategic technology roadmaps, architecture reviews, and digital transformation execution aligned with ROI.</p>
+                    <ul>
+                        <li>Technology roadmap &amp; stack advisory</li>
+                        <li>Legacy system modernization plan</li>
+                        <li>Workflow &amp; process automation</li>
+                        <li>Enterprise IT governance</li>
+                    </ul>
+                    <div class="srv-outcome-note"><i class="fas fa-check-circle"></i> Cut operational waste by up to 35%</div>
+                    <div class="srv-card-actions">
+                        <a href="{% url 'service_detail' 'it-consulting' %}" class="service-link srv-btn-outline">
+                            Explore Service <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <button type="button" class="srv-btn-solid" onclick="showServiceInquiryPopup('IT Consulting')">
+                            Get Quote
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="service-card srv-card" data-group="engineering">
+                <div class="service-card-media">
+                    <img src="{% static 'images/courses/full-stack-ai.png' %}" alt="Software Development" loading="lazy">
+                    <span class="srv-card-tag">Engineering</span>
+                </div>
+                <div class="srv-card-body">
+                    <div class="service-icon srv-float-icon"><i class="fas fa-code"></i></div>
+                    <h3>Software Development</h3>
+                    <p>Custom web apps, mobile platforms, and AI-enabled APIs built for speed, security, and maintainability.</p>
+                    <ul>
+                        <li>Full-stack React, Django &amp; Node.js apps</li>
+                        <li>iOS &amp; Android cross-platform apps</li>
+                        <li>REST/GraphQL &amp; third-party integrations</li>
+                        <li>Automated QA &amp; performance tuning</li>
+                    </ul>
+                    <div class="srv-outcome-note"><i class="fas fa-check-circle"></i> Rapid 2-week sprint ship cycles</div>
+                    <div class="srv-card-actions">
+                        <a href="{% url 'service_detail' 'software-development' %}" class="service-link srv-btn-outline">
+                            Explore Service <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <button type="button" class="srv-btn-solid" onclick="showServiceInquiryPopup('Software Development')">
+                            Get Quote
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="service-card srv-card" data-group="cloud-sec">
+                <div class="service-card-media">
+                    <img src="{% static 'images/courses/cloud-computing.png' %}" alt="Cloud Solutions" loading="lazy">
+                    <span class="srv-card-tag">Cloud &amp; DevOps</span>
+                </div>
+                <div class="srv-card-body">
+                    <div class="service-icon srv-float-icon"><i class="fas fa-cloud"></i></div>
+                    <h3>Cloud Solutions</h3>
+                    <p>Resilient AWS, Azure, and GCP architecture with Infrastructure as Code, Kubernetes, and FinOps savings.</p>
+                    <ul>
+                        <li>Zero-downtime cloud migration</li>
+                        <li>Terraform &amp; CI/CD pipeline setup</li>
+                        <li>Docker &amp; Kubernetes orchestration</li>
+                        <li>Cloud cost optimization (FinOps)</li>
+                    </ul>
+                    <div class="srv-outcome-note"><i class="fas fa-check-circle"></i> 99.95% high-availability architecture</div>
+                    <div class="srv-card-actions">
+                        <a href="{% url 'service_detail' 'cloud-solutions' %}" class="service-link srv-btn-outline">
+                            Explore Service <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <button type="button" class="srv-btn-solid" onclick="showServiceInquiryPopup('Cloud Solutions')">
+                            Get Quote
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="service-card srv-card" data-group="cloud-sec">
+                <div class="service-card-media">
+                    <img src="{% static 'images/courses/cyber-security.png' %}" alt="Cybersecurity" loading="lazy">
+                    <span class="srv-card-tag">Security</span>
+                </div>
+                <div class="srv-card-body">
+                    <div class="service-icon srv-float-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Cybersecurity</h3>
+                    <p>Proactive vulnerability assessments, penetration testing (VAPT), and 24/7 SOC hardening for peace of mind.</p>
+                    <ul>
+                        <li>Web, API &amp; network penetration testing</li>
+                        <li>IAM &amp; zero-trust security hardening</li>
+                        <li>SIEM threat detection &amp; alerting</li>
+                        <li>Compliance readiness audits</li>
+                    </ul>
+                    <div class="srv-outcome-note"><i class="fas fa-check-circle"></i> Actionable remediation VAPT reports</div>
+                    <div class="srv-card-actions">
+                        <a href="{% url 'service_detail' 'cybersecurity' %}" class="service-link srv-btn-outline">
+                            Explore Service <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <button type="button" class="srv-btn-solid" onclick="showServiceInquiryPopup('Cybersecurity')">
+                            Get Quote
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="service-card srv-card" data-group="data-growth">
+                <div class="service-card-media">
+                    <img src="{% static 'images/courses/data-analytics.png' %}" alt="Data Analytics" loading="lazy">
+                    <span class="srv-card-tag">Data &amp; AI</span>
+                </div>
+                <div class="srv-card-body">
+                    <div class="service-icon srv-float-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Data Analytics &amp; AI</h3>
+                    <p>Turn raw operational data into live executive dashboards, forecasting models, and custom AI copilots.</p>
+                    <ul>
+                        <li>SQL/warehouse ETL engineering</li>
+                        <li>Power BI &amp; Looker executive KPIs</li>
+                        <li>Predictive ML &amp; RAG AI assistants</li>
+                        <li>Automated anomaly reporting</li>
+                    </ul>
+                    <div class="srv-outcome-note"><i class="fas fa-check-circle"></i> Real-time decision visibility</div>
+                    <div class="srv-card-actions">
+                        <a href="{% url 'service_detail' 'data-analytics' %}" class="service-link srv-btn-outline">
+                            Explore Service <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <button type="button" class="srv-btn-solid" onclick="showServiceInquiryPopup('Data & Analytics')">
+                            Get Quote
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="service-card srv-card" data-group="data-growth">
+                <div class="service-card-media">
+                    <img src="{% static 'images/courses/digital-marketing.png' %}" alt="Digital Marketing" loading="lazy">
+                    <span class="srv-card-tag">Growth</span>
+                </div>
+                <div class="srv-card-body">
+                    <div class="service-icon srv-float-icon"><i class="fas fa-bullhorn"></i></div>
+                    <h3>Digital Marketing</h3>
+                    <p>Full-funnel SEO, AI Answer Engine Optimization (AEO), paid acquisition, and CRM automation that scales pipeline.</p>
+                    <ul>
+                        <li>Technical SEO &amp; AI Overviews (AEO)</li>
+                        <li>Google &amp; Meta performance campaigns</li>
+                        <li>GA4, GTM &amp; server-side attribution</li>
+                        <li>HubSpot &amp; n8n lead nurturing</li>
+                    </ul>
+                    <div class="srv-outcome-note"><i class="fas fa-check-circle"></i> Measurable ROAS &amp; organic growth</div>
+                    <div class="srv-card-actions">
+                        <a href="{% url 'service_detail' 'digital-marketing' %}" class="service-link srv-btn-outline">
+                            Explore Service <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <button type="button" class="srv-btn-solid" onclick="showServiceInquiryPopup('Digital Marketing')">
+                            Get Quote
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="process-section srv-process-band">
+    <div class="container">
+        <div class="section-header">
+            <span class="srv-section-eyebrow">Delivery Framework</span>
+            <h2>How We Ship Reliable Outcomes</h2>
+            <p>A transparent 5-stage engineering and strategy workflow from first call to ongoing care.</p>
+        </div>
+
+        <div class="process-steps srv-stepper">
+            <div class="step srv-step">
+                <div class="step-number">01</div>
                 <h3>Discovery</h3>
-                <p>Understanding your requirements and business goals</p>
+                <p>Align on business KPIs, users, constraints, and technical landscape.</p>
             </div>
-            <div class="step">
-                <div class="step-number">2</div>
-                <h3>Planning</h3>
-                <p>Creating detailed project roadmap and strategy</p>
+            <div class="step srv-step">
+                <div class="step-number">02</div>
+                <h3>Architecture</h3>
+                <p>Design clear milestones, UX wireframes, and scalable system blueprints.</p>
             </div>
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Development</h3>
-                <p>Agile development with regular updates</p>
+            <div class="step srv-step">
+                <div class="step-number">03</div>
+                <h3>Agile Build</h3>
+                <p>Deliver working increments in 2-week sprints with live demo reviews.</p>
             </div>
-            <div class="step">
-                <div class="step-number">4</div>
-                <h3>Testing</h3>
-                <p>Comprehensive quality assurance</p>
+            <div class="step srv-step">
+                <div class="step-number">04</div>
+                <h3>QA &amp; Security</h3>
+                <p>Automated testing, performance benchmarks, and security verification.</p>
             </div>
-            <div class="step">
-                <div class="step-number">5</div>
-                <h3>Deployment</h3>
-                <p>Seamless launch and ongoing support</p>
+            <div class="step srv-step">
+                <div class="step-number">05</div>
+                <h3>Launch &amp; Care</h3>
+                <p>Smooth production rollout, monitoring, and 24/7 support coverage.</p>
             </div>
         </div>
     </div>
 </section>
 
-<section class="cta-section">
+<section class="srv-engagement-band">
+    <div class="container">
+        <div class="section-header">
+            <span class="srv-section-eyebrow">Flexible Collaboration</span>
+            <h2>Engagement Models Built Around Your Stage</h2>
+            <p>Partner with BunShai TECHNOHUB in the way that best matches your timeline and internal team.</p>
+        </div>
+
+        <div class="srv-engagement-grid">
+            <div class="srv-eng-card">
+                <div class="srv-eng-icon"><i class="fas fa-box-open"></i></div>
+                <h3>Fixed-Scope Delivery</h3>
+                <p>Ideal for well-defined web/mobile apps, security audits, or cloud migrations with locked milestones and predictable pricing.</p>
+                <span class="srv-eng-tag">Best for Launches &amp; MVPs</span>
+            </div>
+            <div class="srv-eng-card featured">
+                <div class="srv-eng-icon"><i class="fas fa-users-cog"></i></div>
+                <h3>Dedicated Engineering Squad</h3>
+                <p>Extend your product organization with vetted full-stack, AI, and DevOps specialists working seamlessly inside your workflow.</p>
+                <span class="srv-eng-tag">Most Popular for Scaling Teams</span>
+            </div>
+            <div class="srv-eng-card">
+                <div class="srv-eng-icon"><i class="fas fa-compass"></i></div>
+                <h3>Advisory &amp; Growth Retainer</h3>
+                <p>Ongoing architecture leadership, SEO/paid growth optimization, and continuous DevOps/SOC monitoring every month.</p>
+                <span class="srv-eng-tag">Best for Continuous Optimization</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section srv-luxury-cta">
     <div class="container">
         <div class="cta-content">
-            <h2>Ready to Get Started?</h2>
-            <p>Let's discuss your project and create a customized solution</p>
+            <h2>Ready to Transform Your Business?</h2>
+            <p>Let's discuss your goals and craft a tailored engineering, cloud, or growth proposal within 24 hours.</p>
             <div class="cta-buttons">
-                <button class="btn-primary" onclick="showProposalPopup()">
-                    <i class="fas fa-calendar-check"></i> Schedule Consultation
+                <button type="button" class="btn-primary" onclick="showProposalPopup()">
+                    <i class="fas fa-calendar-check"></i> Schedule Free Consultation
                 </button>
                 <a href="{% url 'contact' %}" class="btn-secondary">
-                    <i class="fas fa-envelope"></i> Contact Us
+                    <i class="fas fa-envelope"></i> Contact Us Directly
                 </a>
             </div>
         </div>
@@ -227,5 +305,20 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/services.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const btns = document.querySelectorAll('#serviceFilterBar .srv-filter-btn');
+    const cards = document.querySelectorAll('#servicesCatalogGrid .srv-card');
+    btns.forEach(btn => {
+        btn.addEventListener('click', function () {
+            btns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const grp = this.dataset.group;
+            cards.forEach(card => {
+                card.style.display = (grp === 'all' || card.dataset.group === grp) ? 'flex' : 'none';
+            });
+        });
+    });
+});
+</script>
 {% endblock %}

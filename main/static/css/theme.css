@@ -1,15 +1,15 @@
 /* ==========================================================
    BunShai TECHNOHUB - Unified High-Contrast Theme & Footer
-   Brand palette: Royal Crimson (--primary) + Midnight Navy
-   (--dark) + Warm Gold (--accent-gold) + Crisp Rose (--accent)
+   Brand palette: Burgundy Garnet (--primary) + Obsidian Navy
+   (--dark) + Champagne Gold (--accent / --accent-gold) + Teal
    ========================================================== */
 :root {
-  --accent: #fb7185;          /* crisp rose on dark backgrounds */
-  --accent-soft: #fecdd3;
-  --accent-gold: #f59e0b;
-  --text: #0f172a;
+  --accent: #f59e0b;          /* warm champagne gold on dark backgrounds */
+  --accent-soft: #fde68a;
+  --accent-gold: #d97706;
+  --text: #0a0f1e;
   --text-muted: #64748b;
-  --text-on-dark: rgba(255, 255, 255, 0.9);
+  --text-on-dark: rgba(248, 250, 252, 0.92);
 }
 
 html { -webkit-text-size-adjust: 100%; }
@@ -24,8 +24,8 @@ select:focus-visible, textarea:focus-visible {
 /* ---- Header & Navigation ---- */
 .header.scrolled,
 .header.dark-header {
-  background: rgba(11, 17, 32, 0.96);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 15, 30, 0.96);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.16);
 }
 .nav-close { display: none; }
 @media (max-width: 910px) { .nav-close { display: block; } }
