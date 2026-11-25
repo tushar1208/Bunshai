@@ -1,0 +1,41 @@
+databases:
+  - name: bunshai-db
+    plan: free
+    databaseName: bunshai
+    user: bunshai
+
+services:
+  - type: web
+    name: bunshai-technohub
+    runtime: python
+    plan: free
+    buildCommand: "bash build.sh"
+    startCommand: "gunicorn bunshai_technohub.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120"
+    healthCheckPath: "/"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bunshai-db
+          property: connectionString
+      - key: EMAIL_HOST
+        value: "smtp.gmail.com"
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_USE_TLS
+        value: "True"
+      - key: EMAIL_HOST_USER
+        value: "team.bunshailogicloop@gmail.com"
+      - key: DEFAULT_FROM_EMAIL
+        value: "team.bunshailogicloop@gmail.com"
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: GOOGLE_SHEET_ID
+        sync: false
+      - key: GOOGLE_SHEETS_JSON
+        sync: false

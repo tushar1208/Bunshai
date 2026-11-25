@@ -10,17 +10,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security Settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-insecure-key-change-me-in-production')
-# Your existing line
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME', '').strip()
 
-# Add this for testing (temporarily)
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h.strip()]
+if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 if DEBUG:
-    # Add common tunnel domains for testing
-    ALLOWED_HOSTS.extend([
-       '*'
-    ])
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',')
+    ALLOWED_HOSTS.extend(['*'])
+
+CSRF_TRUSTED_ORIGINS = [
+    o.strip() for o in os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',') if o.strip()
+]
+if RENDER_EXTERNAL_HOSTNAME:
+    _render_origin = f'https://{RENDER_EXTERNAL_HOSTNAME}'
+    if _render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_render_origin)
 
 # Application definition
 INSTALLED_APPS = [
@@ -76,7 +82,8 @@ WSGI_APPLICATION = 'bunshai_technohub.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600
+        conn_max_age=600,
+        conn_health_checks=True,
     )
 }
 
@@ -95,9 +102,18 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    },
+}
 
 # Media files
 MEDIA_URL = '/media/'
@@ -112,6 +128,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
 # Security Headers (production only)
 if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_HSTS_SECONDS = 31536000
@@ -151,7 +168,10 @@ SITE_NAME = "BunShai TECHNOHUB"
 SITE_DESCRIPTION = "Your trusted technology partner for digital transformation"
 SITE_KEYWORDS = "IT Consulting, Software Development, Digital Marketing, Cloud Solutions"
 SITE_AUTHOR = "BunShai TECHNOHUB Team"
-SITE_URL = "http://127.0.0.1:8000"
+SITE_URL = os.getenv(
+    'SITE_URL',
+    f'https://{RENDER_EXTERNAL_HOSTNAME}' if RENDER_EXTERNAL_HOSTNAME else 'http://127.0.0.1:8000',
+)
 
 # Contact Information
 SITE_EMAIL = "team.bunshailogicloop@gmail.com"
@@ -177,3 +197,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ]
+if RENDER_EXTERNAL_HOSTNAME:
+    _render_cors = f'https://{RENDER_EXTERNAL_HOSTNAME}'
+    if _render_cors not in CORS_ALLOWED_ORIGINS:
+        CORS_ALLOWED_ORIGINS.append(_render_cors)

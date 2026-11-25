@@ -23,6 +23,7 @@ class SecurityHeadersMiddleware:
                 "script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com; "
                 "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
                 "img-src 'self' data: https:; "
+                "media-src 'self'; "
                 "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com data:; "
                 "connect-src 'self'; "
                 "frame-ancestors 'none'; "
