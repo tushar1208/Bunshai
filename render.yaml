@@ -39,4 +39,19 @@ services:
         sync: false
       - key: GOOGLE_SHEETS_JSON
         sync: false
+      - key: WHATSAPP_DRY_RUN
+        value: "True"
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      - key: WHATSAPP_APP_SECRET
+        sync: false
+      - key: WHATSAPP_ADMIN_PHONE
+        value: "918091401208"
+      - key: WHATSAPP_API_KEY
+        sync: false
+
 

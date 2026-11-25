@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block breadcrumb_title %}Support{% endblock %}
-{% block page_title %}Support Center{% endblock %}
-{% block page_subtitle %}24/7 Technical Support &amp; Assistance{% endblock %}
+{% block page_header %}
+<div class="compact-breadcrumb-bar"><div class="container"><div class="breadcrumb"><a href="/">Home</a><i class="fas fa-chevron-right"></i><span>Support</span></div></div></div>
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/support.css' %}">

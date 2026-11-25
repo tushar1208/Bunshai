@@ -47,6 +47,9 @@ SHEET_SPEC = {
     'chatbot_unanswered': [('Session ID', 'session_id'), ('Name', 'name'), ('Email', 'email'),
                            ('Phone', 'phone'), ('Unanswered Question', 'question'),
                            ('Status', 'status')],
+    'whatsapp_messages': [('Direction', 'direction'), ('Phone', 'phone'),
+                          ('Contact Name', 'contact_name'), ('Type', 'message_type'),
+                          ('Body', 'body'), ('Status', 'status'), ('Source', 'source')],
 }
 
 HEADERS = ['Timestamp', 'Name', 'Email', 'Phone', 'Data']

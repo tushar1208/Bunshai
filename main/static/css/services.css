@@ -1,6 +1,6 @@
 /* Services & Cloud Solutions Page Styles */
 .services-hero {
-    background: linear-gradient(135deg, #0b1120 0%, #1e1024 55%, #3b0a1f 100%);
+    background: linear-gradient(135deg, #0a0f1e 0%, #1e1024 55%, #3b0a1f 100%);
     color: #ffffff;
     padding: 90px 0;
     text-align: center;
@@ -10,7 +10,7 @@
 .services-hero h1 {
     font-size: 3.2rem;
     margin-bottom: 16px;
-    background: linear-gradient(to right, #ffffff, #ffe4e6, #fda4af);
+    background: linear-gradient(110deg, #ffffff 0%, #fef3c7 68%, #fbbf24 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -227,8 +227,10 @@
     flex-wrap: wrap;
 }
 
-.btn-primary,
-.btn-secondary {
+.services-hero .btn-primary,
+.services-hero .btn-secondary,
+.cta-section .btn-primary,
+.cta-section .btn-secondary {
     padding: 14px 32px;
     border-radius: 30px;
     text-decoration: none;
@@ -241,27 +243,32 @@
     font-size: 1rem;
 }
 
-.btn-primary {
-    background: #ffffff;
-    color: var(--primary);
-    border: 2px solid #ffffff;
+.services-hero .btn-primary,
+.cta-section .btn-primary {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #0a0f1e;
+    border: 2px solid transparent;
 }
 
-.btn-primary:hover {
-    background: #fff1f2;
-    color: var(--primary-dark);
+.services-hero .btn-primary:hover,
+.cta-section .btn-primary:hover {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #0a0f1e;
     transform: translateY(-3px);
 }
 
-.btn-secondary {
-    background: transparent;
+.services-hero .btn-secondary,
+.cta-section .btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
     color: #ffffff;
-    border: 2px solid #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.6);
 }
 
-.btn-secondary:hover {
+.services-hero .btn-secondary:hover,
+.cta-section .btn-secondary:hover {
     background: #ffffff;
     color: var(--primary);
+    border-color: #ffffff;
     transform: translateY(-3px);
 }
 
@@ -625,7 +632,7 @@
 }
 
 .srv-btn-outline:hover {
-    background: #fff1f2;
+    background: #fffbeb;
     color: var(--primary-dark);
 }
 

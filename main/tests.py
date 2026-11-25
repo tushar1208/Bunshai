@@ -28,6 +28,10 @@ from .models import (
     Subscriber,
     SupportTicket,
     SyllabusDownload,
+    WhatsAppAutoReplyRule,
+    WhatsAppConversation,
+    WhatsAppMessage,
+    WhatsAppScheduledMessage,
 )
 from .views import custom_400, custom_403, custom_404, custom_500
 
@@ -456,3 +460,325 @@ class BunshaiSiteTestCase(TestCase):
                 asset = static_root / ref
                 self.assertTrue(asset.is_file() and asset.stat().st_size > 0,
                                 f"Missing static asset {ref} in {p.relative_to(tpl_root)}")
+
+    def test_css_theme_consistency_and_csrf_connectivity(self):
+        import re
+        css_root = Path(__file__).resolve().parent / 'static' / 'css'
+        forbidden = {'#7d0022', '#5a0018', '#a73356', '#8b0a2e', '#b91c48', '#fb7185', '#fda4af', '#fecdd3', '#007bff'}
+        for p in sorted(css_root.glob('*.css')):
+            txt = p.read_text(encoding='utf-8', errors='ignore')
+            self.assertEqual(txt.count('{'), txt.count('}'), f"Unbalanced braces in {p.name}")
+            found = {h.lower() for h in re.findall(r'#[0-9a-fA-F]{3,6}\b', txt)} & forbidden
+            self.assertFalse(found, f"Legacy colors {found} found in {p.name}")
+
+        # Verify every public page sets CSRF cookie or includes csrfmiddlewaretoken
+        for path in ('/', '/about/', '/team/', '/services/', '/courses/', '/contact/', '/subscribe/', '/support/', '/career/', '/privacy/', '/terms/'):
+            resp = self.client.get(path)
+            self.assertEqual(resp.status_code, 200)
+            has_csrf = ('csrftoken' in resp.cookies) or (b'csrfmiddlewaretoken' in resp.content)
+            self.assertTrue(has_csrf, f"Missing CSRF token/cookie on {path}")
+
+        # Verify every service detail page loads services.css
+        for slug in ('it-consulting', 'digital-marketing', 'cloud-solutions', 'cybersecurity', 'data-analytics', 'software-development'):
+            resp = self.client.get(f'/services/{slug}/')
+            self.assertContains(resp, 'css/services.css')
+
+
+@override_settings(
+    EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+    GOOGLE_SHEET_ID='',
+    WHATSAPP_ENABLED=True,
+    WHATSAPP_DRY_RUN=True,
+    WHATSAPP_VERIFY_TOKEN='bunshai-verify-secret',
+    WHATSAPP_APP_SECRET='bunshai-app-secret',
+    WHATSAPP_ADMIN_PHONE='918091401208',
+    WHATSAPP_DEFAULT_COUNTRY_CODE='91',
+    WHATSAPP_API_KEY='bunshai-wa-api-key',
+)
+class WhatsAppAutomationTestCase(TestCase):
+    def setUp(self):
+        cache.clear()
+        self.client = Client()
+        self.ajax_headers = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+        self.api_headers = {'HTTP_X_API_KEY': 'bunshai-wa-api-key'}
+
+    @staticmethod
+    def _sign(raw_body: bytes, secret: str = 'bunshai-app-secret') -> str:
+        import hashlib
+        import hmac
+        digest = hmac.new(secret.encode('utf-8'), raw_body, hashlib.sha256).hexdigest()
+        return f'sha256={digest}'
+
+    @staticmethod
+    def _meta_webhook(wa_id: str, phone: str, text: str, name: str = 'Riya') -> bytes:
+        return json.dumps({
+            'object': 'whatsapp_business_account',
+            'entry': [{
+                'id': 'waba-1',
+                'changes': [{
+                    'field': 'messages',
+                    'value': {
+                        'messaging_product': 'whatsapp',
+                        'contacts': [{'profile': {'name': name}, 'wa_id': phone}],
+                        'messages': [{
+                            'from': phone,
+                            'id': wa_id,
+                            'timestamp': '1730000000',
+                            'type': 'text',
+                            'text': {'body': text},
+                        }],
+                    },
+                }],
+            }],
+        }).encode('utf-8')
+
+    def test_webhook_get_verification(self):
+        ok = self.client.get('/whatsapp/webhook/', {
+            'hub.mode': 'subscribe',
+            'hub.verify_token': 'bunshai-verify-secret',
+            'hub.challenge': '99887766',
+        })
+        self.assertEqual(ok.status_code, 200)
+        self.assertEqual(ok.content, b'99887766')
+
+        bad = self.client.get('/whatsapp/webhook/', {
+            'hub.mode': 'subscribe',
+            'hub.verify_token': 'wrong',
+            'hub.challenge': '99887766',
+        })
+        self.assertEqual(bad.status_code, 403)
+
+    def test_webhook_signature_dedup_and_status_update(self):
+        raw = self._meta_webhook('wamid.1001', '919876543210', 'hi', name='Riya')
+        bad = self.client.post(
+            '/whatsapp/webhook/', data=raw, content_type='application/json',
+            HTTP_X_HUB_SIGNATURE_256='sha256=deadbeef',
+        )
+        self.assertEqual(bad.status_code, 403)
+
+        good = self.client.post(
+            '/whatsapp/webhook/', data=raw, content_type='application/json',
+            HTTP_X_HUB_SIGNATURE_256=self._sign(raw),
+        )
+        self.assertEqual(good.status_code, 200)
+        self.assertEqual(good.json()['processed'], 1)
+
+        # Duplicate delivery is ignored
+        dup = self.client.post(
+            '/whatsapp/webhook/', data=raw, content_type='application/json',
+            HTTP_X_HUB_SIGNATURE_256=self._sign(raw),
+        )
+        self.assertEqual(dup.status_code, 200)
+        self.assertEqual(dup.json()['processed'], 0)
+
+        outbound = WhatsAppMessage.objects.filter(direction='outbound').first()
+        self.assertIsNotNone(outbound)
+        self.assertEqual(outbound.message_type, 'interactive')
+
+        # Status webhook updates stored message status
+        status_body = json.dumps({
+            'entry': [{'changes': [{'value': {
+                'statuses': [{'id': outbound.wa_message_id, 'status': 'delivered'}]
+            }}]}]
+        }).encode('utf-8')
+        st_resp = self.client.post(
+            '/whatsapp/webhook/', data=status_body, content_type='application/json',
+            HTTP_X_HUB_SIGNATURE_256=self._sign(status_body),
+        )
+        self.assertEqual(st_resp.status_code, 200)
+        outbound.refresh_from_db()
+        self.assertEqual(outbound.status, 'delivered')
+
+    def _sim(self, phone: str, text: str, name: str = 'Riya'):
+        return self.client.post(
+            '/api/whatsapp/simulate/',
+            data=json.dumps({'phone': phone, 'text': text, 'contact_name': name}),
+            content_type='application/json',
+            **self.api_headers,
+        )
+
+    def test_interactive_flows_create_real_records(self):
+        # 1. Course Enrollment flow
+        m = self._sim('9876543210', 'hi')
+        self.assertEqual(m.status_code, 200)
+        self.assertEqual(m.json()['source'], 'flow:menu')
+
+        self.assertEqual(self._sim('9876543210', '1').json()['source'], 'flow:course_enroll:start')
+        self.assertEqual(self._sim('9876543210', 'Cloud Computing').json()['source'], 'flow:course_enroll:ask_contact')
+        done_enroll = self._sim('9876543210', 'Riya Sharma, riya@example.com').json()
+        self.assertEqual(done_enroll['source'], 'flow:course_enroll:completed')
+        self.assertEqual(CourseEnrollment.objects.count(), 1)
+        self.assertEqual(CourseEnrollment.objects.first().email, 'riya@example.com')
+        self.assertEqual(done_enroll['team_alert']['phone'], '918091401208')
+
+        # 2. Service Inquiry flow
+        self.assertEqual(self._sim('9876543211', '2').json()['source'], 'flow:service_inquiry:start')
+        self.assertEqual(self._sim('9876543211', 'Cloud Solutions').json()['source'], 'flow:service_inquiry:ask_details')
+        done_svc = self._sim('9876543211', 'Need AWS migration for SaaS app lead@saas.io').json()
+        self.assertEqual(done_svc['source'], 'flow:service_inquiry:completed')
+        self.assertEqual(ServiceInquiry.objects.count(), 1)
+        self.assertEqual(ServiceInquiry.objects.first().service, 'cloud')
+
+        # 3. Support Ticket flow
+        self.assertEqual(self._sim('9876543212', '3').json()['source'], 'flow:support_ticket:start')
+        done_tkt = self._sim('9876543212', 'Cannot access LMS dashboard after reset').json()
+        self.assertEqual(done_tkt['source'], 'flow:support_ticket:completed')
+        self.assertEqual(SupportTicket.objects.count(), 1)
+        self.assertTrue(SupportTicket.objects.first().ticket_number.startswith('BST-'))
+
+    def test_human_handoff_pause_and_resume(self):
+        self.assertEqual(self._sim('9876543215', '4', 'Karan').json()['source'], 'flow:human_handoff:start')
+        handed = self._sim('9876543215', 'Need enterprise pricing call', 'Karan').json()
+        self.assertEqual(handed['source'], 'flow:human_handoff:handed_off')
+        self.assertEqual(handed['team_alert']['phone'], '918091401208')
+        self.assertTrue(WhatsAppConversation.objects.get(phone='919876543215').human_handoff)
+
+        # Follow-up stays paused
+        paused = self._sim('9876543215', 'Are you there?', 'Karan').json()
+        self.assertEqual(paused['source'], 'flow:human_handoff_paused')
+        self.assertIsNone(paused['reply'])
+
+        # Resume via API
+        resumed = self.client.post('/api/whatsapp/conversations/9876543215/resume/', **self.api_headers)
+        self.assertEqual(resumed.status_code, 200)
+        self.assertTrue(resumed.json()['resumed'])
+
+        # Now Sharsh answers normally
+        after = self._sim('9876543215', 'Tell me about the cloud computing course', 'Karan').json()
+        self.assertTrue(after['source'].startswith('sharsh:'))
+        self.assertIn('Cloud', after['reply']['body'])
+
+    def test_custom_rules_and_sharsh_knowledge_base(self):
+        WhatsAppAutoReplyRule.objects.create(
+            name='Low Priority', match_type='contains', pattern='discount',
+            reply_text='Generic discount info', priority=50,
+        )
+        WhatsAppAutoReplyRule.objects.create(
+            name='VIP Regex', match_type='regex', pattern=r'vip\s+discount',
+            reply_text='Hi {name}, VIP scholarship code is BUNSHAI20!', priority=10,
+        )
+
+        r_match = self._sim('9876543216', 'Any VIP discount available?', 'Maya').json()
+        self.assertEqual(r_match['source'], 'rule:VIP Regex')
+        self.assertIn('Hi Maya', r_match['reply']['body'])
+
+        # Sharsh KB answer
+        kb_hit = self._sim('9876543216', 'Tell me about the cloud computing course', 'Maya').json()
+        self.assertTrue(kb_hit['source'].startswith('sharsh:'))
+        self.assertIn('Cloud', kb_hit['reply']['body'])
+
+        # Sharsh fallback logs ChatbotUnanswered
+        kb_miss = self._sim('9876543216', 'who won the cricket world cup in 2011?', 'Maya').json()
+        self.assertEqual(kb_miss['source'], 'sharsh:fallback')
+        self.assertEqual(ChatbotUnanswered.objects.count(), 1)
+
+    def test_website_forms_trigger_whatsapp_notifications(self):
+        course = COURSES[0]
+        self.client.post('/courses/enroll/', {
+            'name': 'Learner WhatsApp',
+            'email': 'learner@example.com',
+            'phone': '9876543220',
+            'course_slug': course['slug'],
+            'learning_mode': 'Live Online',
+        }, **self.ajax_headers)
+        self.assertTrue(WhatsAppMessage.objects.filter(phone='919876543220', direction='outbound').exists())
+
+        self.client.post('/proposal-request/', {
+            'name': 'Prop Lead',
+            'email': 'prop@example.com',
+            'phone': '9876543221',
+            'service': 'web',
+            'budget': '5k-10k',
+            'requirements': 'Build custom web platform for client.',
+        }, **self.ajax_headers)
+        self.assertTrue(WhatsAppMessage.objects.filter(phone='919876543221', direction='outbound').exists())
+
+        self.client.post('/support/ticket/', {
+            'name': 'Ticket User',
+            'email': 'tkt@example.com',
+            'phone': '9876543222',
+            'issue_type': 'technical',
+            'priority': 'high',
+            'subject': 'API Help',
+            'description': 'Need assistance with API keys and access.',
+        }, **self.ajax_headers)
+        self.assertTrue(WhatsAppMessage.objects.filter(phone='919876543222', direction='outbound').exists())
+
+        self.client.post('/courses/syllabus-request/', {
+            'name': 'Syl User',
+            'email': 'syl@example.com',
+            'phone': '9876543223',
+            'course_slug': course['slug'],
+            'course_title': course['title'],
+            'background': 'Student',
+        }, **self.ajax_headers)
+        self.assertTrue(WhatsAppMessage.objects.filter(phone='919876543223', direction='outbound').exists())
+        # Team alerts sent to WHATSAPP_ADMIN_PHONE
+        self.assertGreaterEqual(WhatsAppMessage.objects.filter(phone='918091401208', direction='outbound').count(), 4)
+
+    def test_scheduled_messages_management_command(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        past = timezone.now() - timedelta(minutes=5)
+        once_job = WhatsAppScheduledMessage.objects.create(
+            name='One-off Reminder', phone='919876543230',
+            body='Session starts soon!', scheduled_for=past, recurrence='once',
+        )
+        daily_job = WhatsAppScheduledMessage.objects.create(
+            name='Daily Tip', phone='919876543231',
+            body='Daily SQL tip!', scheduled_for=past, recurrence='daily',
+        )
+        call_command('send_scheduled_whatsapp')
+
+        once_job.refresh_from_db()
+        daily_job.refresh_from_db()
+        self.assertEqual(once_job.status, 'sent')
+        self.assertIsNotNone(once_job.last_run_at)
+        self.assertEqual(daily_job.status, 'pending')
+        self.assertGreater(daily_job.scheduled_for, past)
+
+    def test_broadcast_auth_and_staff_dashboard(self):
+        CourseEnrollment.objects.create(
+            name='Aarav', email='aarav@example.com', phone='9876543240',
+            course_slug=COURSES[0]['slug'], course_title=COURSES[0]['title'],
+        )
+        # Unauthorized without API key or staff login
+        unauth = self.client.post(
+            '/api/whatsapp/broadcast/',
+            data=json.dumps({'audience': 'course_enrollments', 'message_template': 'Hi {name}'}),
+            content_type='application/json',
+        )
+        self.assertEqual(unauth.status_code, 401)
+
+        # Audience broadcast with X-API-Key
+        ok = self.client.post(
+            '/api/whatsapp/broadcast/',
+            data=json.dumps({
+                'audience': 'course_enrollments',
+                'message_template': 'Hi {name}, batch update for {extra}!',
+            }),
+            content_type='application/json',
+            **self.api_headers,
+        )
+        self.assertEqual(ok.status_code, 200)
+        self.assertEqual(ok.json()['sent'], 1)
+        self.assertEqual(ok.json()['results'][0]['phone'], '919876543240')
+
+        # CSV upload broadcast
+        csv_bytes = b'phone,name\n9876543241,Neha\n9876543242,Vikram\n'
+        csv_file = SimpleUploadedFile('leads.csv', csv_bytes, content_type='text/csv')
+        csv_resp = self.client.post(
+            '/api/whatsapp/broadcast/',
+            {'file': csv_file, 'message_template': 'Hello {name} from BunShai!'},
+            **self.api_headers,
+        )
+        self.assertEqual(csv_resp.status_code, 200)
+        self.assertEqual(csv_resp.json()['sent'], 2)
+
+        # Staff dashboard access
+        admin_user = User.objects.create_superuser('waadmin', 'wa@example.com', 'StrongPass123!')
+        self.client.force_login(admin_user)
+        dash = self.client.get('/whatsapp/dashboard/')
+        self.assertEqual(dash.status_code, 200)
+        self.assertContains(dash, 'BunShai TECHNOHUB')

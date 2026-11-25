@@ -202,6 +202,7 @@
         </div>
 
         <!-- Page Header for other pages -->
+        {% block page_header %}
         {% if request.path != '/' %}
         <section class="page-header">
             <div class="container">
@@ -215,6 +216,7 @@
             </div>
         </section>
         {% endif %}
+        {% endblock %}
 
         <!-- Content Block -->
         {% block content %}{% endblock %}

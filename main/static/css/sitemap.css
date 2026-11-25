@@ -42,7 +42,7 @@
 .sitemap-tab-btn:hover {
     border-color: var(--primary-light);
     color: var(--primary);
-    background: #fff1f2;
+    background: #fffbeb;
 }
 
 .sitemap-tab-btn.active {
@@ -152,7 +152,7 @@
 }
 
 .sitemap-list li a:hover {
-    background: #fff1f2;
+    background: #fffbeb;
     color: var(--primary);
     transform: translateX(4px);
 }

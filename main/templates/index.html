@@ -763,8 +763,9 @@
                 <p>Subscribe to our newsletter for the latest technology insights and updates.</p>
             </div>
             <div class="newsletter-form">
-                <form id="newsletter-form">
-                    <input type="email" placeholder="Enter your email address" required>
+                <form id="newsletter-form" method="POST" action="{% url 'subscribe' %}">
+                    {% csrf_token %}
+                    <input type="email" name="email" placeholder="Enter your email address" required>
                     <button type="submit">
                         <i class="fas fa-paper-plane"></i> Subscribe
                     </button>

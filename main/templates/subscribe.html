@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block breadcrumb_title %}Subscribe{% endblock %}
-{% block page_title %}Subscribe{% endblock %}
-{% block page_subtitle %}Stay Updated with Our Latest News & Offers{% endblock %}
+{% block page_header %}
+<div class="compact-breadcrumb-bar"><div class="container"><div class="breadcrumb"><a href="/">Home</a><i class="fas fa-chevron-right"></i><span>Subscribe</span></div></div></div>
+{% endblock %}
 
 
 
@@ -19,9 +20,9 @@
         <p>Subscribe to our newsletter and be the first to know about our latest projects, technology insights, and exclusive offers.</p>
         
         <div class="main-subscribe-form">
-            <form id="heroSubscribeForm">
+            <form id="heroSubscribeForm" method="POST" action="{% url 'subscribe' %}">
                 {% csrf_token %}
-                <input type="email" placeholder="Enter your email address" required>
+                <input type="email" name="email" placeholder="Enter your email address" required>
                 <button type="submit">
                     <i class="fas fa-paper-plane"></i> Subscribe
                 </button>
@@ -139,11 +140,12 @@
                 </div>
                 
                 <div style="margin-top: 40px; max-width: 400px; margin-left: auto; margin-right: auto;">
-                    <form id="statsSubscribeForm" style="display: flex; gap: 10px;">
-                        <input type="email" placeholder="Your email" required 
-                               style="flex: 1; padding: 15px; border: none; border-radius: var(--border-radius);">
+                    <form id="statsSubscribeForm" method="POST" action="{% url 'subscribe' %}" style="display: flex; gap: 10px;">
+                        {% csrf_token %}
+                        <input type="email" name="email" placeholder="Your email" required 
+                               style="flex: 1; padding: 15px; border: none; border-radius: var(--border-radius); background: #ffffff; color: var(--dark);">
                         <button type="submit" 
-                                style="background: var(--primary); color: white; border: none; padding: 15px 25px; border-radius: var(--border-radius); cursor: pointer; font-weight: bold;">
+                                style="background: #f59e0b; color: #0a0f1e; border: none; padding: 15px 25px; border-radius: var(--border-radius); cursor: pointer; font-weight: bold;">
                             Join
                         </button>
                     </form>
@@ -206,11 +208,12 @@
             <h2>Ready to Stay Updated?</h2>
             <p>Don't miss out on valuable insights and opportunities. Join our community of forward-thinking professionals.</p>
             
-            <form id="finalSubscribeForm" style="max-width: 400px; margin: 30px auto;">
+            <form id="finalSubscribeForm" method="POST" action="{% url 'subscribe' %}" style="max-width: 400px; margin: 30px auto;">
+                {% csrf_token %}
                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <input type="text" placeholder="Your Name" required 
+                    <input type="text" name="name" placeholder="Your Name" required 
                            style="flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: var(--border-radius);">
-                    <input type="email" placeholder="Email Address" required 
+                    <input type="email" name="email" placeholder="Email Address" required 
                            style="flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: var(--border-radius);">
                 </div>
                 
@@ -471,7 +474,9 @@
         // Handle form submission
         document.getElementById('preferencesForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Preferences saved successfully!');
+            if (window.showAlert) {
+                window.showAlert('success', 'Newsletter preferences saved successfully!');
+            }
             closePreferences();
         });
     }

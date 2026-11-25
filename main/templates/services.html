@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block breadcrumb_title %}Services{% endblock %}
-{% block page_title %}Our Services - BunShai TECHNOHUB{% endblock %}
-{% block page_subtitle %}Comprehensive Technology Solutions{% endblock %}
+{% block page_header %}
+<div class="compact-breadcrumb-bar"><div class="container"><div class="breadcrumb"><a href="/">Home</a><i class="fas fa-chevron-right"></i><span>Services</span></div></div></div>
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/services.css' %}">

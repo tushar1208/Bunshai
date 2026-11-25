@@ -316,3 +316,116 @@ class SyllabusDownload(models.Model):
         ordering = ['-created_at']
         verbose_name = "Syllabus Download"
         verbose_name_plural = "Syllabus Downloads"
+
+
+class WhatsAppMessage(models.Model):
+    DIRECTION_CHOICES = [
+        ('inbound', 'Inbound'),
+        ('outbound', 'Outbound'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    wa_message_id = models.CharField(max_length=128, unique=True, null=True, blank=True)
+    direction = models.CharField(max_length=16, choices=DIRECTION_CHOICES)
+    phone = models.CharField(max_length=30, db_index=True)
+    contact_name = models.CharField(max_length=120, blank=True, default='')
+    message_type = models.CharField(max_length=24, default='text')
+    body = models.TextField()
+    status = models.CharField(max_length=24, default='received')
+    source = models.CharField(max_length=80, blank=True, default='')
+    raw_payload = models.JSONField(default=dict, blank=True)
+    synced_to_google = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"[{self.direction}] {self.phone}: {self.body[:40]}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "WhatsApp Message"
+        verbose_name_plural = "WhatsApp Messages"
+
+
+class WhatsAppConversation(models.Model):
+    phone = models.CharField(max_length=30, primary_key=True)
+    contact_name = models.CharField(max_length=120, blank=True, default='')
+    flow = models.CharField(max_length=40, default='idle')
+    step = models.CharField(max_length=40, blank=True, default='')
+    draft_data = models.JSONField(default=dict, blank=True)
+    human_handoff = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.phone} ({self.flow}/{self.step or 'idle'})"
+
+    class Meta:
+        ordering = ['-updated_at']
+        verbose_name = "WhatsApp Conversation"
+        verbose_name_plural = "WhatsApp Conversations"
+
+
+class WhatsAppAutoReplyRule(models.Model):
+    MATCH_TYPES = [
+        ('exact', 'Exact'),
+        ('contains', 'Contains'),
+        ('regex', 'Regex'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    match_type = models.CharField(max_length=16, choices=MATCH_TYPES, default='contains')
+    pattern = models.CharField(max_length=200)
+    reply_text = models.TextField()
+    priority = models.PositiveIntegerField(default=100)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.match_type}: {self.pattern})"
+
+    class Meta:
+        ordering = ['priority', 'created_at']
+        verbose_name = "WhatsApp Auto-Reply Rule"
+        verbose_name_plural = "WhatsApp Auto-Reply Rules"
+
+
+class WhatsAppScheduledMessage(models.Model):
+    MESSAGE_TYPES = [
+        ('text', 'Text'),
+        ('template', 'Approved Template'),
+    ]
+    RECURRENCE_CHOICES = [
+        ('once', 'One-Time'),
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('monthly', 'Monthly'),
+    ]
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('sent', 'Sent'),
+        ('failed', 'Failed'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=150, blank=True, default='')
+    phone = models.CharField(max_length=30)
+    message_type = models.CharField(max_length=16, choices=MESSAGE_TYPES, default='text')
+    body = models.TextField(blank=True, default='')
+    template_name = models.CharField(max_length=120, blank=True, default='')
+    template_lang = models.CharField(max_length=20, default='en_US')
+    template_params = models.JSONField(default=list, blank=True)
+    scheduled_for = models.DateTimeField(db_index=True)
+    recurrence = models.CharField(max_length=20, choices=RECURRENCE_CHOICES, default='once')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    last_run_at = models.DateTimeField(null=True, blank=True)
+    last_error = models.TextField(blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name or self.phone} ({self.status} @ {self.scheduled_for})"
+
+    class Meta:
+        ordering = ['scheduled_for']
+        verbose_name = "WhatsApp Scheduled Message"
+        verbose_name_plural = "WhatsApp Scheduled Messages"

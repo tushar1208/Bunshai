@@ -51,7 +51,7 @@
 .contact-method i {
     font-size: 1.8rem;
     color: var(--primary);
-    background: rgba(125, 0, 34, 0.1);
+    background: rgba(136, 19, 55, 0.1);
     width: 60px;
     height: 60px;
     display: flex;
@@ -241,7 +241,7 @@
 .form-group select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(125, 0, 34, 0.1);
+    box-shadow: 0 0 0 3px rgba(136, 19, 55, 0.1);
 }
 
 .form-group textarea {
@@ -317,8 +317,8 @@
     font-size: 1.85rem;
     font-weight: 800;
     letter-spacing: 6px;
-    color: #7d0022;
-    -webkit-text-fill-color: #7d0022;
+    color: #881337;
+    -webkit-text-fill-color: #881337;
     background: none;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
     padding: 0 6px;
@@ -327,8 +327,8 @@
 }
 
 #refreshCaptcha {
-    background: rgba(139, 10, 46, 0.08);
-    border: 1px solid rgba(139, 10, 46, 0.2);
+    background: rgba(136, 19, 55, 0.08);
+    border: 1px solid rgba(136, 19, 55, 0.2);
     color: var(--primary);
     width: 36px;
     height: 36px;
@@ -363,7 +363,7 @@
 
 #captchaInput:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(125, 0, 34, 0.1);
+    box-shadow: 0 0 0 3px rgba(136, 19, 55, 0.1);
 }
 
 .captcha-note {
@@ -425,7 +425,7 @@
 
 .submit-btn:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(125, 0, 34, 0.3);
+    box-shadow: 0 10px 25px rgba(136, 19, 55, 0.3);
 }
 
 .submit-btn:disabled {

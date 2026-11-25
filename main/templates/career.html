@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block breadcrumb_title %}Careers{% endblock %}
-{% block page_title %}Careers{% endblock %}
-{% block page_subtitle %}Join Our Team of Innovators{% endblock %}
+{% block page_header %}
+<div class="compact-breadcrumb-bar"><div class="container"><div class="breadcrumb"><a href="/">Home</a><i class="fas fa-chevron-right"></i><span>Careers</span></div></div></div>
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/career.css' %}">

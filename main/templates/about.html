@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block breadcrumb_title %}About Us{% endblock %}
-{% block page_title %}About Us{% endblock %}
-{% block page_subtitle %}Learn more about BunShai TECHNOHUB{% endblock %}
+{% block page_header %}
+<div class="compact-breadcrumb-bar"><div class="container"><div class="breadcrumb"><a href="/">Home</a><i class="fas fa-chevron-right"></i><span>About Us</span></div></div></div>
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/about.css' %}">

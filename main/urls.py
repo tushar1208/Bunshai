@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, whatsapp_views
 
 urlpatterns = [
     # Main pages
@@ -44,4 +44,14 @@ urlpatterns = [
     path('api/chatbot/start-session/', views.chatbot_start_session, name='chatbot_start_session'),
     path('api/chatbot/send-message/', views.chatbot_send_message, name='chatbot_send_message'),
     path('api/chatbot/check-user/', views.chatbot_check_user, name='chatbot_check_user'),
+
+    # WhatsApp Cloud API Automation
+    path('whatsapp/webhook/', whatsapp_views.whatsapp_webhook, name='whatsapp_webhook'),
+    path('whatsapp/dashboard/', whatsapp_views.whatsapp_dashboard, name='whatsapp_dashboard'),
+    path('api/whatsapp/simulate/', whatsapp_views.api_whatsapp_simulate, name='api_whatsapp_simulate'),
+    path('api/whatsapp/send/', whatsapp_views.api_whatsapp_send, name='api_whatsapp_send'),
+    path('api/whatsapp/schedule/', whatsapp_views.api_whatsapp_schedule, name='api_whatsapp_schedule'),
+    path('api/whatsapp/schedule/run-due/', whatsapp_views.api_whatsapp_run_due_schedules, name='api_whatsapp_run_due_schedules'),
+    path('api/whatsapp/broadcast/', whatsapp_views.api_whatsapp_broadcast, name='api_whatsapp_broadcast'),
+    path('api/whatsapp/conversations/<str:phone>/resume/', whatsapp_views.api_whatsapp_resume_conversation, name='api_whatsapp_resume_conversation'),
 ]

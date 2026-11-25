@@ -33,6 +33,7 @@ from .security import (
     check_rate_limit, generate_captcha_text, log_security_event,
     validate_captcha,
 )
+from .whatsapp_service import trigger_form_whatsapp_async
 
 logger = logging.getLogger(__name__)
 
@@ -100,10 +101,11 @@ def _send_mails(form_type, data):
 
 
 def notify(form_type, sheet_name, data):
-    """Email + Google Sheets backup, run off the request thread."""
+    """Email + Google Sheets backup + WhatsApp notification, run off the request thread."""
     data = {k: ('' if v is None else str(v)) for k, v in dict(data).items()}
     threading.Thread(target=_send_mails, args=(form_type, data), daemon=True).start()
     save_to_google_sheet(sheet_name, data)
+    trigger_form_whatsapp_async(form_type, data)
 
 
 def rate_limited(request, action, limit=10):
@@ -114,31 +116,37 @@ def rate_limited(request, action, limit=10):
 
 
 # ------------------------------------------------------------ static pages
+@ensure_csrf_cookie
 def home(request):
     log_page_view(request)
     return render(request, 'index.html')
 
 
+@ensure_csrf_cookie
 def about(request):
     log_page_view(request)
     return render(request, 'about.html')
 
 
+@ensure_csrf_cookie
 def company_profile(request):
     log_page_view(request)
     return render(request, 'company-profile.html')
 
 
+@ensure_csrf_cookie
 def md_profile(request):
     log_page_view(request)
     return render(request, 'md-profile.html')
 
 
+@ensure_csrf_cookie
 def team(request):
     log_page_view(request)
     return render(request, 'team.html')
 
 
+@ensure_csrf_cookie
 def privacy(request):
     log_page_view(request)
     return render(request, 'privacy.html')
@@ -153,6 +161,7 @@ def privacy_pdf(request):
     return response
 
 
+@ensure_csrf_cookie
 def terms(request):
     log_page_view(request)
     return render(request, 'terms.html')
@@ -173,6 +182,7 @@ def support(request):
     return render(request, 'support.html')
 
 
+@ensure_csrf_cookie
 def sitemap(request):
     log_page_view(request)
     return render(request, 'sitemap.html')
@@ -184,6 +194,7 @@ def services(request):
     return render(request, 'services.html')
 
 
+@ensure_csrf_cookie
 def service_detail(request, service_slug):
     log_page_view(request)
     templates = {
@@ -283,6 +294,7 @@ def subscribe(request):
     return respond(request, True, message)
 
 
+@ensure_csrf_cookie
 def subscribe_page(request):
     log_page_view(request)
     return render(request, 'subscribe.html')
@@ -423,6 +435,7 @@ def syllabus_request(request):
 
     threading.Thread(target=_send_mails, args=('Syllabus Download', payload), daemon=True).start()
     save_to_google_sheet('syllabus_downloads', payload, on_success=_mark_synced)
+    trigger_form_whatsapp_async('Syllabus Download', payload)
 
     unlocked = list(request.session.get('unlocked_syllabi', []))
     if obj.course_slug not in unlocked:

@@ -3,8 +3,9 @@
 
 {% block title %}{{ course.title }} - BunShai TECHNOHUB{% endblock %}
 {% block breadcrumb_title %}{{ course.short_title }}{% endblock %}
-{% block page_title %}{{ course.title }}{% endblock %}
-{% block page_subtitle %}{{ course.category_name }} · {{ course.duration }} · {{ course.hours }}{% endblock %}
+{% block page_header %}
+<div class="compact-breadcrumb-bar"><div class="container"><div class="breadcrumb"><a href="/">Home</a><i class="fas fa-chevron-right"></i><a href="{% url 'courses' %}">Courses</a><i class="fas fa-chevron-right"></i><span>{{ course.short_title }}</span></div></div></div>
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/courses.css' %}">
@@ -33,7 +34,7 @@
                     <div class="course-preview-scrim">
                         <div class="course-preview-top">
                             <span class="preview-chip"><i class="fas fa-star" style="color:#fbbf24;"></i> {{ course.rating }} Learner Rating</span>
-                            <span class="preview-chip"><i class="fas fa-users" style="color:#fb7185;"></i> {{ course.cohort_size }}</span>
+                            <span class="preview-chip"><i class="fas fa-users" style="color:#f59e0b;"></i> {{ course.cohort_size }}</span>
                         </div>
                         <button type="button" class="preview-play-btn" onclick="event.stopPropagation(); openCoursePreview();">
                             <span class="preview-play-circle"><i class="fas fa-play"></i></span>

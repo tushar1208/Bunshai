@@ -201,3 +201,17 @@ if RENDER_EXTERNAL_HOSTNAME:
     _render_cors = f'https://{RENDER_EXTERNAL_HOSTNAME}'
     if _render_cors not in CORS_ALLOWED_ORIGINS:
         CORS_ALLOWED_ORIGINS.append(_render_cors)
+
+# WhatsApp Cloud API Automation Settings
+WHATSAPP_ENABLED = os.getenv('WHATSAPP_ENABLED', 'True') == 'True'
+WHATSAPP_DRY_RUN = os.getenv('WHATSAPP_DRY_RUN', 'True') == 'True'
+WHATSAPP_API_VERSION = os.getenv('WHATSAPP_API_VERSION', 'v21.0').strip()
+WHATSAPP_PHONE_NUMBER_ID = os.getenv('WHATSAPP_PHONE_NUMBER_ID', '').strip()
+WHATSAPP_ACCESS_TOKEN = os.getenv('WHATSAPP_ACCESS_TOKEN', '').strip()
+WHATSAPP_VERIFY_TOKEN = os.getenv('WHATSAPP_VERIFY_TOKEN', 'bunshai-whatsapp-verify-token').strip()
+WHATSAPP_APP_SECRET = os.getenv('WHATSAPP_APP_SECRET', '').strip()
+WHATSAPP_ADMIN_PHONE = os.getenv('WHATSAPP_ADMIN_PHONE', '918091401208').strip()
+WHATSAPP_DEFAULT_COUNTRY_CODE = os.getenv('WHATSAPP_DEFAULT_COUNTRY_CODE', '91').strip()
+WHATSAPP_AUTO_NOTIFY_USERS = os.getenv('WHATSAPP_AUTO_NOTIFY_USERS', 'True') == 'True'
+WHATSAPP_AUTO_NOTIFY_TEAM = os.getenv('WHATSAPP_AUTO_NOTIFY_TEAM', 'True') == 'True'
+WHATSAPP_API_KEY = os.getenv('WHATSAPP_API_KEY', '').strip()

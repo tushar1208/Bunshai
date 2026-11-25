@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BunShai TECHNOHUB — WhatsApp Automation Dashboard</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-2: #273449;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --info: #38bdf8;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+    header h1 { margin: 0; font-size: 1.15rem; }
+    .badge { padding: 3px 10px; border-radius: 999px; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; }
+    .badge-dry { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-live { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+    .badge-info { background: rgba(56, 189, 248, 0.2); color: #7dd3fc; }
+    .links a { color: var(--info); text-decoration: none; margin-left: 14px; font-size: 0.88rem; }
+    main { max-width: 1200px; margin: 22px auto; padding: 0 18px 48px; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 18px; }
+    .stat-label { color: var(--muted); font-size: 0.82rem; }
+    .stat-value { font-size: 1.65rem; font-weight: 700; margin-top: 4px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 18px; }
+    h2 { margin: 0 0 12px; font-size: 1.05rem; }
+    label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 4px; }
+    input, select, textarea { width: 100%; padding: 8px 10px; margin-bottom: 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; font-size: 0.9rem; }
+    textarea { min-height: 70px; resize: vertical; }
+    .btn { background: var(--accent); color: #052e16; border: none; border-radius: 7px; padding: 8px 14px; font-weight: 700; cursor: pointer; font-size: 0.86rem; }
+    .btn-sec { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+    .btn-sm { padding: 4px 9px; font-size: 0.78rem; }
+    .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { color: var(--muted); font-size: 0.76rem; text-transform: uppercase; }
+    pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; overflow-x: auto; font-size: 0.8rem; color: #cbd5e1; }
+    .muted { color: var(--muted); font-size: 0.84rem; }
+    #toast { position: fixed; bottom: 18px; right: 18px; background: var(--surface-2); border: 1px solid var(--border); padding: 10px 15px; border-radius: 8px; display: none; z-index: 999; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <h1>BunShai TECHNOHUB — WhatsApp Automation</h1>
+      {% if dry_run %}
+        <span class="badge badge-dry">Dry-Run Mode</span>
+      {% else %}
+        <span class="badge badge-live">Live Cloud API</span>
+      {% endif %}
+    </div>
+    <div class="links">
+      <span class="muted">Admin Phone: {{ admin_phone|default:"Not set" }}</span>
+      <a href="/admin/">Django Admin</a>
+      <a href="/">Website Home</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="stats">
+      <div class="card" style="margin:0;"><div class="stat-label">Total Messages</div><div class="stat-value">{{ total_messages }}</div></div>
+      <div class="card" style="margin:0;"><div class="stat-label">Inbound</div><div class="stat-value">{{ inbound_count }}</div></div>
+      <div class="card" style="margin:0;"><div class="stat-label">Outbound</div><div class="stat-value">{{ outbound_count }}</div></div>
+      <div class="card" style="margin:0;"><div class="stat-label">Active Rules</div><div class="stat-value">{{ active_rules }}</div></div>
+      <div class="card" style="margin:0;"><div class="stat-label">Pending Schedules</div><div class="stat-value">{{ pending_schedules }}</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>Inbound WhatsApp Simulator</h2>
+        <p class="muted">Test interactive flows, auto-reply rules, and Sharsh AI knowledge base answers.</p>
+        <div class="presets">
+          <button type="button" class="btn btn-sm btn-sec preset" data-text="hi">hi (Menu)</button>
+          <button type="button" class="btn btn-sm btn-sec preset" data-text="1">1 (Courses)</button>
+          <button type="button" class="btn btn-sm btn-sec preset" data-text="2">2 (Proposal)</button>
+          <button type="button" class="btn btn-sm btn-sec preset" data-text="3">3 (Support)</button>
+          <button type="button" class="btn btn-sm btn-sec preset" data-text="4">4 (Human)</button>
+          <button type="button" class="btn btn-sm btn-sec preset" data-text="Tell me about the cloud computing course">Sharsh: Cloud Course</button>
+        </div>
+        <form id="sim-form">
+          <label>Sender Phone</label>
+          <input id="sim-phone" value="919876543210" required />
+          <label>Sender Name</label>
+          <input id="sim-name" value="Riya" />
+          <label>Message Text</label>
+          <input id="sim-text" value="hi" required />
+          <button type="submit" class="btn">Simulate Inbound</button>
+        </form>
+        <pre id="sim-out" style="display:none;"></pre>
+      </div>
+
+      <div class="card">
+        <h2>Quick Send &amp; Schedule</h2>
+        <form id="send-form">
+          <label>Recipient Phone</label>
+          <input id="send-phone" value="919876543210" required />
+          <label>Message Body</label>
+          <textarea id="send-body" placeholder="Hello from BunShai TECHNOHUB!"></textarea>
+          <button type="submit" class="btn">Send Now</button>
+        </form>
+        <hr style="border:0; border-top:1px solid var(--border); margin:16px 0;" />
+        <form id="schedule-form">
+          <label>Schedule Name</label>
+          <input id="sch-name" placeholder="Batch Reminder" />
+          <label>Recipient Phone</label>
+          <input id="sch-phone" value="919876543210" required />
+          <label>Run At (ISO Datetime)</label>
+          <input id="sch-at" placeholder="2026-12-01T10:00:00+05:30" required />
+          <label>Recurrence</label>
+          <select id="sch-rec">
+            <option value="once">One-Time</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+          <label>Body</label>
+          <textarea id="sch-body" placeholder="Reminder: Live session starts in 30 mins." required></textarea>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="submit" class="btn">Create Schedule</button>
+            <button type="button" id="run-due-btn" class="btn btn-sec">Run Due Schedules Now</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>Audience / CSV Broadcast</h2>
+        <form id="audience-form">
+          <label>Target Audience</label>
+          <select id="aud-type">
+            <option value="course_enrollments">Course Enrollments</option>
+            <option value="syllabus_downloads">Syllabus Downloads</option>
+            <option value="service_inquiries">Service Inquiries</option>
+            <option value="proposal_requests">Proposal Requests</option>
+            <option value="contact_messages">Contact Messages</option>
+          </select>
+          <label>Course Filter (optional)</label>
+          <select id="aud-course">
+            <option value="">All Courses</option>
+            {% for c in courses %}
+              <option value="{{ c.slug }}">{{ c.short_title }}</option>
+            {% endfor %}
+          </select>
+          <label>Message Template (supports {name} and {extra})</label>
+          <textarea id="aud-msg" placeholder="Hi {name}, new batch update for {extra}!" required></textarea>
+          <button type="submit" class="btn">Broadcast to Audience</button>
+        </form>
+        <hr style="border:0; border-top:1px solid var(--border); margin:16px 0;" />
+        <form id="csv-form">
+          <label>Or Upload CSV (column: phone, name, ...)</label>
+          <input id="csv-file" type="file" accept=".csv,text/csv" required />
+          <label>CSV Message Template</label>
+          <textarea id="csv-msg" placeholder="Hi {name}, thanks for connecting with BunShai TECHNOHUB!" required></textarea>
+          <button type="submit" class="btn btn-sec">Send CSV Broadcast</button>
+        </form>
+        <pre id="bc-out" style="display:none;"></pre>
+      </div>
+
+      <div class="card">
+        <h2>Paused Human Handoffs</h2>
+        <p class="muted">Bot auto-replies stay paused for these numbers until resumed.</p>
+        <table>
+          <thead><tr><th>Phone</th><th>Name</th><th>Updated</th><th>Action</th></tr></thead>
+          <tbody>
+            {% for conv in paused_conversations %}
+              <tr>
+                <td>{{ conv.phone }}</td>
+                <td>{{ conv.contact_name|default:"-" }}</td>
+                <td>{{ conv.updated_at|date:"Y-m-d H:i" }}</td>
+                <td><button class="btn btn-sm btn-sec" onclick="resumeBot('{{ conv.phone }}')">Resume Bot</button></td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4" class="muted">No conversations currently handed off.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Recent WhatsApp Messages</h2>
+      <table>
+        <thead><tr><th>Direction</th><th>Phone</th><th>Type</th><th>Body</th><th>Status</th><th>Source</th></tr></thead>
+        <tbody>
+          {% for m in recent_messages %}
+            <tr>
+              <td><span class="badge badge-info">{{ m.direction }}</span></td>
+              <td>{{ m.phone }}</td>
+              <td>{{ m.message_type }}</td>
+              <td>{{ m.body|linebreaksbr }}</td>
+              <td>{{ m.status }}</td>
+              <td class="muted">{{ m.source }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6" class="muted">No WhatsApp messages logged yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <div id="toast"></div>
+  {% csrf_token %}
+
+  <script>
+    const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]")?.value || "";
+    function toast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.style.display = "block";
+      setTimeout(() => { el.style.display = "none"; }, 3500);
+    }
+    async function postJson(url, payload) {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Request failed");
+      return data;
+    }
+
+    document.querySelectorAll(".preset").forEach((b) => {
+      b.addEventListener("click", () => {
+        document.getElementById("sim-text").value = b.dataset.text;
+        document.getElementById("sim-form").requestSubmit();
+      });
+    });
+
+    document.getElementById("sim-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        const data = await postJson("/api/whatsapp/simulate/", {
+          phone: document.getElementById("sim-phone").value,
+          contact_name: document.getElementById("sim-name").value,
+          text: document.getElementById("sim-text").value,
+        });
+        const out = document.getElementById("sim-out");
+        out.style.display = "block";
+        out.textContent = JSON.stringify(data, null, 2);
+        toast("Simulated (" + (data.source || "ok") + ")");
+      } catch (err) { toast(err.message); }
+    });
+
+    document.getElementById("send-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        await postJson("/api/whatsapp/send/", {
+          phone: document.getElementById("send-phone").value,
+          body: document.getElementById("send-body").value,
+        });
+        toast("Message sent!");
+        location.reload();
+      } catch (err) { toast(err.message); }
+    });
+
+    document.getElementById("schedule-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        await postJson("/api/whatsapp/schedule/", {
+          name: document.getElementById("sch-name").value,
+          phone: document.getElementById("sch-phone").value,
+          scheduled_for: document.getElementById("sch-at").value,
+          recurrence: document.getElementById("sch-rec").value,
+          body: document.getElementById("sch-body").value,
+        });
+        toast("Schedule created!");
+        location.reload();
+      } catch (err) { toast(err.message); }
+    });
+
+    document.getElementById("run-due-btn").addEventListener("click", async () => {
+      try {
+        const res = await postJson("/api/whatsapp/schedule/run-due/", {});
+        toast(`Processed ${res.processed}, sent ${res.sent}, failed ${res.failed}`);
+        location.reload();
+      } catch (err) { toast(err.message); }
+    });
+
+    document.getElementById("audience-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        const res = await postJson("/api/whatsapp/broadcast/", {
+          audience: document.getElementById("aud-type").value,
+          course_slug: document.getElementById("aud-course").value,
+          message_template: document.getElementById("aud-msg").value,
+        });
+        const out = document.getElementById("bc-out");
+        out.style.display = "block";
+        out.textContent = JSON.stringify(res, null, 2);
+        toast(`Sent ${res.sent}/${res.total}`);
+      } catch (err) { toast(err.message); }
+    });
+
+    document.getElementById("csv-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData();
+      fd.append("file", document.getElementById("csv-file").files[0]);
+      fd.append("message_template", document.getElementById("csv-msg").value);
+      try {
+        const res = await fetch("/api/whatsapp/broadcast/", {
+          method: "POST",
+          headers: { "X-CSRFToken": csrfToken },
+          body: fd,
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "CSV failed");
+        const out = document.getElementById("bc-out");
+        out.style.display = "block";
+        out.textContent = JSON.stringify(data, null, 2);
+        toast(`CSV sent ${data.sent}/${data.total}`);
+      } catch (err) { toast(err.message); }
+    });
+
+    async function resumeBot(phone) {
+      try {
+        await postJson(`/api/whatsapp/conversations/${encodeURIComponent(phone)}/resume/`, {});
+        toast("Bot resumed for " + phone);
+        location.reload();
+      } catch (err) { toast(err.message); }
+    }
+  </script>
+</body>
+</html>
