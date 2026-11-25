@@ -429,3 +429,49 @@ class WhatsAppScheduledMessage(models.Model):
         ordering = ['scheduled_for']
         verbose_name = "WhatsApp Scheduled Message"
         verbose_name_plural = "WhatsApp Scheduled Messages"
+
+
+class SiteMetrics(models.Model):
+    """Singleton settings model for site-wide headline statistics editable from Django Admin."""
+
+    projects_delivered = models.PositiveIntegerField(
+        default=46,
+        help_text="Total projects delivered (displayed with '+' across the site)",
+    )
+    happy_clients = models.PositiveIntegerField(
+        default=58,
+        help_text="Total happy clients (displayed with '+' across the site)",
+    )
+    countries_served = models.PositiveIntegerField(
+        default=10,
+        help_text="Total countries served (displayed with '+' across the site)",
+    )
+    years_experience = models.PositiveIntegerField(
+        default=4,
+        help_text="Years of industry experience (displayed with '+' across the site)",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Site Metrics"
+        verbose_name_plural = "Site Metrics"
+
+    def __str__(self):
+        return (
+            f"Site Metrics ({self.projects_delivered}+ Projects, "
+            f"{self.happy_clients}+ Clients, "
+            f"{self.countries_served}+ Countries, "
+            f"{self.years_experience}+ Years)"
+        )
+
+    @classmethod
+    def get_solo(cls):
+        """Return the singleton SiteMetrics row, creating defaults if missing or safely falling back."""
+        try:
+            obj = cls.objects.first()
+            if obj is None:
+                obj = cls.objects.create()
+            return obj
+        except Exception:  # noqa: BLE001 - safe fallback before migrations run
+            return cls()
+

@@ -535,26 +535,55 @@
 }
 
 .btn-primary {
-    background: white;
-    color: var(--primary);
-    border: 2px solid white;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #ffffff;
+    border: 2px solid transparent;
 }
 
 .btn-primary:hover {
-    background: transparent;
-    color: white;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    color: #ffffff;
     transform: translateY(-3px);
 }
 
 .btn-secondary {
-    background: transparent;
-    color: white;
-    border: 2px solid white;
+    background: rgba(136, 19, 55, 0.06);
+    color: var(--primary);
+    border: 2px solid var(--primary);
 }
 
 .btn-secondary:hover {
-    background: white;
+    background: var(--primary);
+    color: #ffffff;
+    transform: translateY(-3px);
+}
+
+.career-cta .btn-primary,
+.final-cta .btn-primary {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #0a0f1e;
+    border: 2px solid transparent;
+}
+
+.career-cta .btn-primary:hover,
+.final-cta .btn-primary:hover {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #0a0f1e;
+    transform: translateY(-3px);
+}
+
+.career-cta .btn-secondary,
+.final-cta .btn-secondary {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.78);
+}
+
+.career-cta .btn-secondary:hover,
+.final-cta .btn-secondary:hover {
+    background: #ffffff;
     color: var(--primary);
+    border-color: #ffffff;
     transform: translateY(-3px);
 }
 

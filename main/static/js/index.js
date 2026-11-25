@@ -14,20 +14,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Counter animation for statistics
+    let countersAnimated = false;
     function animateCounter() {
+        if (countersAnimated) return;
+        countersAnimated = true;
         const counters = document.querySelectorAll('.counter');
         counters.forEach(counter => {
             const rawTarget = (counter.getAttribute('data-target') || '').trim();
             const target = parseInt(rawTarget, 10);
             if (!Number.isFinite(target) || target <= 0) return;
-            const suffix = counter.textContent.trim().endsWith('+') ? '+' : '';
+            const suffix = counter.textContent.trim().endsWith('+') ? '+' : '+';
             let current = 0;
-            const increment = Math.max(1, target / 100);
+            const increment = Math.max(1, target / 50);
             const updateCount = () => {
                 if (current < target) {
                     current = Math.min(target, current + increment);
                     counter.innerText = Math.ceil(current) + suffix;
-                    setTimeout(updateCount, 16);
+                    setTimeout(updateCount, 18);
                 } else {
                     counter.innerText = target + suffix;
                 }
@@ -49,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 entry.target.classList.add('animate-in');
                 
                 // Trigger counter animation for stats
-                if (entry.target.classList.contains('stats-section')) {
+                if (entry.target.classList.contains('stats-counter') || entry.target.classList.contains('stats-section')) {
                     animateCounter();
                 }
                 
@@ -59,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
 
     // Observe elements for animation
-    document.querySelectorAll('.service-card, .testimonial-card, .about-content, .stats-section').forEach(el => {
+    document.querySelectorAll('.service-card, .testimonial-card, .about-content, .stats-counter, .stats-section').forEach(el => {
         observer.observe(el);
     });
 

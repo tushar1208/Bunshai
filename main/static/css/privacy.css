@@ -714,8 +714,13 @@
 }
 
 .print-btn {
-    background: white;
-    color: var(--dark);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #0a0f1e;
+}
+
+.print-btn:hover {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #0a0f1e;
 }
 
 .download-btn {

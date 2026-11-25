@@ -229,32 +229,36 @@
 }
 
 .cta-btn {
-    background: var(--primary);
-    color: white;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #0a0f1e;
     padding: 15px 30px;
     border-radius: var(--border-radius);
+    border: 2px solid transparent;
     text-decoration: none;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
     transition: var(--transition);
 }
 
 .cta-btn:hover {
-    background: var(--primary-dark);
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
     transform: translateY(-3px);
-    color: white;
+    color: #0a0f1e;
 }
 
 .cta-btn.secondary {
-    background: transparent;
-    border: 2px solid white;
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.78);
 }
 
 .cta-btn.secondary:hover {
     background: white;
     color: var(--dark);
+    border-color: white;
 }
 
 @media (max-width: 768px) {

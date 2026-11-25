@@ -1,49 +1,55 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}BunShai TECHNOHUB - Your Technology Partner{% endblock %}</title>
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="BunShai TECHNOHUB - Leading IT consulting, software development, cloud solutions, cybersecurity, and digital marketing services provider.">
-    <meta name="keywords" content="IT consulting, software development, cloud solutions, cybersecurity, digital marketing, web development, mobile apps">
+    <meta name="description"
+        content="BunShai TECHNOHUB - Leading IT consulting, software development, cloud solutions, cybersecurity, and digital marketing services provider.">
+    <meta name="keywords"
+        content="IT consulting, software development, cloud solutions, cybersecurity, digital marketing, web development, mobile apps">
     <meta name="author" content="BunShai TECHNOHUB">
     <meta name="robots" content="index, follow">
-    
+
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="BunShai TECHNOHUB - Your Technology Partner">
-    <meta property="og:description" content="Innovation that inspires - Creating digital experiences that transform brands and drive business growth">
+    <meta property="og:description"
+        content="Innovation that inspires - Creating digital experiences that transform brands and drive business growth">
     <meta property="og:image" content="{% static 'images/Logo1.png' %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
-    
+
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="BunShai TECHNOHUB">
     <meta name="twitter:description" content="Your Global Technology Partner">
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'images/Logo1.png' %}">
     <link rel="apple-touch-icon" href="{% static 'images/Logo1.png' %}">
-    
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
     <link rel="stylesheet" href="{% static 'css/proposal_popup.css' %}">
     {% block extra_css %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/theme.css' %}">
-    
+
     <!-- Security Meta Tags -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
 </head>
+
 <body>
     <!-- Loading Screen -->
     <div class="loader">
@@ -62,7 +68,7 @@
                 <div class="menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
                     <i class="fas fa-bars"></i>
                 </div>
-                
+
                 <!-- Brand Logo -->
                 <div class="brand">
                     <a href="#" class="logo-link" id="logoTrigger">
@@ -71,18 +77,18 @@
                     </a>
                 </div>
 
-                
+
                 <!-- Navigation -->
                 <nav id="main-nav">
                     <div class="nav-close" id="nav-close" aria-label="Close menu">
                         <i class="fas fa-times"></i>
                     </div>
-                    
+
                     <div class="nav-content">
                         <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
                             <i class="fas fa-home"></i> Home
                         </a>
-                        
+
                         <div class="nav-dropdown">
                             <a class="nav-link">
                                 <i class="fas fa-building"></i> About <i class="fas fa-chevron-down"></i>
@@ -95,7 +101,7 @@
                                 <a href="{% url 'about' %}#values">Core Values</a>
                             </div>
                         </div>
-                         
+
                         <div class="nav-dropdown">
                             <a class="nav-link">
                                 <i class="fas fa-cogs"></i> Services <i class="fas fa-chevron-down"></i>
@@ -111,7 +117,8 @@
                         </div>
 
                         <div class="nav-dropdown nav-dropdown-mega">
-                            <a href="{% url 'courses' %}" class="nav-link {% if '/courses/' in request.path %}active{% endif %}">
+                            <a href="{% url 'courses' %}"
+                                class="nav-link {% if '/courses/' in request.path %}active{% endif %}">
                                 <i class="fas fa-graduation-cap"></i> Courses <i class="fas fa-chevron-down"></i>
                             </a>
                             <div class="dropdown-content mega-dropdown mega-dropdown-wscube">
@@ -119,8 +126,8 @@
                                     <div class="mega-sidebar" role="tablist" aria-label="Course Categories">
                                         {% for group in nav_course_groups %}
                                         <button type="button"
-                                                class="mega-cat-btn {% if forloop.first %}active{% endif %}"
-                                                data-mega-cat="{{ group.slug }}">
+                                            class="mega-cat-btn {% if forloop.first %}active{% endif %}"
+                                            data-mega-cat="{{ group.slug }}">
                                             <span class="mega-cat-btn-left">
                                                 <i class="{{ group.icon }}"></i>
                                                 <span>{{ group.name }}</span>
@@ -136,13 +143,15 @@
                                     </div>
                                     <div class="mega-panels">
                                         {% for group in nav_course_groups %}
-                                        <div class="mega-panel {% if forloop.first %}active{% endif %}" data-mega-panel="{{ group.slug }}">
+                                        <div class="mega-panel {% if forloop.first %}active{% endif %}"
+                                            data-mega-panel="{{ group.slug }}">
                                             <div class="mega-panel-head">
                                                 <div>
                                                     <h5>{{ group.name }}</h5>
                                                     <p>{{ group.description }}</p>
                                                 </div>
-                                                <a href="{% url 'courses' %}?category={{ group.slug }}" class="mega-cat-view">
+                                                <a href="{% url 'courses' %}?category={{ group.slug }}"
+                                                    class="mega-cat-view">
                                                     Explore Track <i class="fas fa-arrow-right"></i>
                                                 </a>
                                             </div>
@@ -166,21 +175,24 @@
                                 </div>
                                 <div class="mega-dropdown-footer">
                                     <span>Mentor-led live cohorts (4–8 months) · Real projects · Career support</span>
-                                    <a href="{% url 'courses' %}" class="mega-all-link">View All 14 Mentorship Programs <i class="fas fa-arrow-right"></i></a>
+                                    <a href="{% url 'courses' %}" class="mega-all-link">View All 14 Mentorship Programs
+                                        <i class="fas fa-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>
-                        
-                        <a href="{% url 'career' %}" class="nav-link {% if '/career/' in request.path %}active{% endif %}">
+
+                        <a href="{% url 'career' %}"
+                            class="nav-link {% if '/career/' in request.path %}active{% endif %}">
                             <i class="fas fa-briefcase"></i> Careers
                         </a>
-                        
-                        <a href="{% url 'contact' %}" class="nav-link {% if '/contact/' in request.path %}active{% endif %}">
+
+                        <a href="{% url 'contact' %}"
+                            class="nav-link {% if '/contact/' in request.path %}active{% endif %}">
                             <i class="fas fa-envelope"></i> Contact
                         </a>
                     </div>
                 </nav>
-                
+
                 <!-- Header Actions -->
                 <!-- <div class="header-actions">
                     <button class="lets-connect-btn" id="openProposalBtn">
@@ -254,7 +266,8 @@
             </div>
             <div id="chatbot-messages" class="chatbot-messages">
                 <div class="chatbot-welcome">
-                    <p>Hello! I'm Sharsh, your AI assistant. Ask me anything about our courses, services, team or company.</p>
+                    <p>Hello! I'm Sharsh, your AI assistant. Ask me anything about our courses, services, team or
+                        company.</p>
                 </div>
             </div>
             <div class="chatbot-input">
@@ -278,8 +291,8 @@
     </button>
 
     <!-- WHATSAPP FLOAT -->
-    <a href="https://wa.me/918091401208?text=Hi%20BunShai%20Team,%20I%20need%20assistance" 
-       class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <a href="https://wa.me/918091401208?text=Hi%20BunShai%20Team,%20I%20need%20assistance" class="whatsapp-float"
+        target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
@@ -293,14 +306,18 @@
                         <img src="{% static 'images/Logo1.png' %}" alt="BunShai TECHNOHUB" class="footer-logo">
                         <span>BunShai <strong>TECHNOHUB</strong></span>
                     </div>
-                    <p class="footer-tagline">Your Global Technology Partner. We deliver innovative, secure solutions that accelerate digital transformation and business growth.</p>
+                    <p class="footer-tagline">Your Global Technology Partner. We deliver innovative, secure solutions
+                        that accelerate digital transformation and business growth.</p>
                     <div class="footer-contact">
-                        <p><span class="footer-icon-pill"><i class="fas fa-envelope"></i></span> <a href="mailto:team.bunshailogicloop@gmail.com">team.bunshailogicloop@gmail.com</a></p>
-                        <p><span class="footer-icon-pill"><i class="fas fa-phone"></i></span> <a href="tel:+918091401208">+91 8091401208</a></p>
-                        <p><span class="footer-icon-pill"><i class="fas fa-map-marker-alt"></i></span> <span>Global Remote Operations</span></p>
+                        <p><span class="footer-icon-pill"><i class="fas fa-envelope"></i></span> <a
+                                href="mailto:team.bunshailogicloop@gmail.com">team.bunshailogicloop@gmail.com</a></p>
+                        <p><span class="footer-icon-pill"><i class="fas fa-phone"></i></span> <a
+                                href="tel:+918091401208">+91 8091401208</a></p>
+                        <p><span class="footer-icon-pill"><i class="fas fa-map-marker-alt"></i></span> <span>Global
+                                Remote Operations</span></p>
                     </div>
                 </div>
-                
+
                 <div class="footer-col">
                     <h4>Quick Links</h4>
                     <ul>
@@ -313,7 +330,7 @@
                         <li><a href="{% url 'support' %}">Support</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-col">
                     <h4>Our Services</h4>
                     <ul>
@@ -325,7 +342,7 @@
                         <li><a href="{% url 'service_detail' 'data-analytics' %}">Data Analytics</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-col footer-connect">
                     <h4>Stay Connected</h4>
                     <div class="footer-newsletter-card">
@@ -333,37 +350,43 @@
                         <p class="newsletter-hint">Monthly tech insights, zero spam.</p>
                         <form id="footer-subscribe-form" class="subscribe-form">
                             {% csrf_token %}
-                            <input type="email" name="email" placeholder="Your email address" required aria-label="Email address for newsletter">
+                            <input type="email" name="email" placeholder="Your email address" required
+                                aria-label="Email address for newsletter">
                             <button type="submit" aria-label="Subscribe"><i class="fas fa-paper-plane"></i></button>
                         </form>
                         <p id="subscribe-message"></p>
                     </div>
                     <div class="social-links footer-social">
-                        <a href="https://www.facebook.com/share/1DFuBTBXN2/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                        <a href="https://www.facebook.com/share/1DFuBTBXN2/" target="_blank" rel="noopener noreferrer"
+                            aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.youtube.com/@Bun_Shai" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                        <a href="https://www.youtube.com/@Bun_Shai" target="_blank" rel="noopener noreferrer"
+                            aria-label="YouTube">
                             <i class="fab fa-youtube"></i>
                         </a>
-                        <a href="https://www.linkedin.com/company/bunshai-technohub" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <a href="https://www.linkedin.com/company/bunshai-technohub" target="_blank"
+                            rel="noopener noreferrer" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                         <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                            aria-label="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="https://wa.me/918091401208" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                        <a href="https://wa.me/918091401208" target="_blank" rel="noopener noreferrer"
+                            aria-label="WhatsApp">
                             <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <div class="footer-copy">
-                    © {% now "Y" %} BunShai TECHNOHUB®. All rights reserved. | Crafted with <i class="fas fa-heart"></i> for innovation
+                    © {% now "Y" %} BunShai TECHNOHUB®. All rights reserved.
                 </div>
                 <div class="footer-links">
                     <a href="{% url 'privacy' %}">Privacy Policy</a>
@@ -373,12 +396,14 @@
                 </div>
             </div>
         </div>
-        
+
     </footer>
-    
+
     {% block extra_js %}{% endblock %}
 
     <script src="{% static 'js/site.js' %}"></script>
+    <script src="{% static 'js/security.js' %}"></script>
     <script src="{% static 'js/chatbot.js' %}"></script>
 </body>
+
 </html>

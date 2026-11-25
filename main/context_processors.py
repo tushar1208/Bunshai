@@ -1,5 +1,5 @@
 from django.conf import settings
-from .models import ContactMessage, Subscriber, ServiceInquiry
+from .models import ContactMessage, Subscriber, ServiceInquiry, SiteMetrics
 from .courses_data import NAV_COURSE_GROUPS
 
 def site_info(request):
@@ -12,6 +12,7 @@ def site_info(request):
         'current_path': request.path,
         'is_homepage': request.path == '/',
         'nav_course_groups': NAV_COURSE_GROUPS,
+        'site_metrics': SiteMetrics.get_solo(),
     }
 
 def form_counts(request):

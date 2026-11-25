@@ -27,7 +27,7 @@
                 <div class="overview-grid">
                     <div class="overview-item">
                         <h3>Our Story</h3>
-                        <p>BunShai TECHNOHUB was founded with a vision to revolutionize digital transformation for businesses worldwide. Starting as a small team of passionate developers, we've grown into a global technology solutions provider serving clients across 15+ countries.</p>
+                        <p>BunShai TECHNOHUB was founded with a vision to revolutionize digital transformation for businesses worldwide. Starting as a small team of passionate developers, we've grown into a global technology solutions provider serving clients across {{ site_metrics.countries_served }}+ countries.</p>
                         <p>Our journey began with a simple mission: to make cutting-edge technology accessible and affordable for businesses of all sizes. Today, we stand as a testament to innovation, quality, and customer-centric service.</p>
                         <div style="margin-top:20px;border-radius:14px;overflow:hidden;box-shadow:0 14px 30px rgba(11,17,32,0.12);">
                             <img src="{% static 'images/site/tech-studio.png' %}" alt="BunShai TECHNOHUB Collaborative Studio" loading="lazy" style="width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;">
@@ -91,27 +91,27 @@
                 <h2><i class="fas fa-chart-line"></i> By The Numbers</h2>
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <div class="stat-number" data-count="50">0</div>
+                        <div class="stat-number" data-count="{{ site_metrics.projects_delivered }}">{{ site_metrics.projects_delivered }}+</div>
                         <div class="stat-label">Projects Completed</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" data-count="30">0</div>
+                        <div class="stat-number" data-count="{{ site_metrics.happy_clients }}">{{ site_metrics.happy_clients }}+</div>
                         <div class="stat-label">Happy Clients</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" data-count="15">0</div>
+                        <div class="stat-number" data-count="{{ site_metrics.countries_served }}">{{ site_metrics.countries_served }}+</div>
                         <div class="stat-label">Countries Served</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" data-count="98">0</div>
+                        <div class="stat-number" data-count="{{ site_metrics.years_experience }}">{{ site_metrics.years_experience }}+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="98">98%</div>
                         <div class="stat-label">Client Satisfaction</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" data-count="50">0</div>
-                        <div class="stat-label">Team Members</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" data-count="24">0</div>
+                        <div class="stat-number" data-count="24">24</div>
                         <div class="stat-label">/7 Support</div>
                     </div>
                 </div>

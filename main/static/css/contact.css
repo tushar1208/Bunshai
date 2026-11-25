@@ -523,8 +523,8 @@
 }
 
 .emergency-btn {
-    background: white;
-    color: #ef4444;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #0a0f1e;
     padding: 12px 25px;
     border-radius: 25px;
     text-decoration: none;
@@ -536,6 +536,8 @@
 }
 
 .emergency-btn:hover {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #0a0f1e;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
 }

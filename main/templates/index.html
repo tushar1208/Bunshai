@@ -40,28 +40,28 @@
                 <div class="stat-icon">
                     <i class="fas fa-project-diagram"></i>
                 </div>
-                <h3 class="counter" data-target="50">0</h3>
+                <h3 class="counter" data-target="{{ site_metrics.projects_delivered }}">{{ site_metrics.projects_delivered }}+</h3>
                 <p>Projects Delivered</p>
             </div>
             <div class="stat-item">
                 <div class="stat-icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <h3 class="counter" data-target="30">0</h3>
+                <h3 class="counter" data-target="{{ site_metrics.happy_clients }}">{{ site_metrics.happy_clients }}+</h3>
                 <p>Happy Clients</p>
             </div>
             <div class="stat-item">
                 <div class="stat-icon">
                     <i class="fas fa-globe"></i>
                 </div>
-                <h3 class="counter" data-target="15">0</h3>
+                <h3 class="counter" data-target="{{ site_metrics.countries_served }}">{{ site_metrics.countries_served }}+</h3>
                 <p>Countries Served</p>
             </div>
             <div class="stat-item">
                 <div class="stat-icon">
                     <i class="fas fa-award"></i>
                 </div>
-                <h3 class="counter" data-target="5">0</h3>
+                <h3 class="counter" data-target="{{ site_metrics.years_experience }}">{{ site_metrics.years_experience }}+</h3>
                 <p>Years Experience</p>
             </div>
         </div>
@@ -350,11 +350,11 @@
                 <div class="about-features">
                     <div class="feature">
                         <i class="fas fa-check-circle"></i>
-                        <span>5+ years of industry experience</span>
+                        <span>{{ site_metrics.years_experience }}+ years of industry experience</span>
                     </div>
                     <div class="feature">
                         <i class="fas fa-check-circle"></i>
-                        <span>50+ successful projects delivered</span>
+                        <span>{{ site_metrics.projects_delivered }}+ successful projects delivered</span>
                     </div>
                     <div class="feature">
                         <i class="fas fa-check-circle"></i>
@@ -366,7 +366,7 @@
                     </div>
                     <div class="feature">
                         <i class="fas fa-check-circle"></i>
-                        <span>Global client base across 15+ countries</span>
+                        <span>Global client base across {{ site_metrics.countries_served }}+ countries</span>
                     </div>
                     <div class="feature">
                         <i class="fas fa-check-circle"></i>

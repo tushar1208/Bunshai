@@ -442,8 +442,8 @@
 }
 
 .connect-btn.email {
-    background: white;
-    color: var(--dark);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #0a0f1e;
 }
 
 .connect-btn.calendar {
@@ -452,9 +452,9 @@
 }
 
 .connect-btn.proposal {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.12);
     color: white;
-    border: 2px solid white;
+    border: 2px solid rgba(255, 255, 255, 0.78);
 }
 
 .connect-btn:hover {
@@ -463,7 +463,8 @@
 }
 
 .connect-btn.email:hover {
-    background: #f0f0f0;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #0a0f1e;
 }
 
 .connect-btn.calendar:hover {

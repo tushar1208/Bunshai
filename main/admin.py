@@ -473,6 +473,40 @@ class WhatsAppScheduledMessageAdmin(admin.ModelAdmin):
     send_selected_now.short_description = "Send selected scheduled messages now"
 
 
+@admin.register(SiteMetrics)
+class SiteMetricsAdmin(BaseAdmin):
+    list_display = (
+        'label',
+        'projects_delivered',
+        'happy_clients',
+        'countries_served',
+        'years_experience',
+        'updated_at',
+    )
+    list_display_links = ('label',)
+    list_editable = (
+        'projects_delivered',
+        'happy_clients',
+        'countries_served',
+        'years_experience',
+    )
+    readonly_fields = ('updated_at',)
+
+    def label(self, obj):
+        return "Website Statistics"
+    label.short_description = "Configuration"
+
+    def has_add_permission(self, request):
+        return not SiteMetrics.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        SiteMetrics.get_solo()
+        return super().changelist_view(request, extra_context=extra_context)
+
+
 custom_admin_site.register(ChatbotUnanswered, ChatbotUnansweredAdmin)
 custom_admin_site.register(SupportTicket, SupportTicketAdmin)
 custom_admin_site.register(CourseEnrollment, CourseEnrollmentAdmin)
@@ -481,3 +515,4 @@ custom_admin_site.register(WhatsAppMessage, WhatsAppMessageAdmin)
 custom_admin_site.register(WhatsAppConversation, WhatsAppConversationAdmin)
 custom_admin_site.register(WhatsAppAutoReplyRule, WhatsAppAutoReplyRuleAdmin)
 custom_admin_site.register(WhatsAppScheduledMessage, WhatsAppScheduledMessageAdmin)
+custom_admin_site.register(SiteMetrics, SiteMetricsAdmin)

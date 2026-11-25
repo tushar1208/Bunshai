@@ -782,3 +782,55 @@ class WhatsAppAutomationTestCase(TestCase):
         dash = self.client.get('/whatsapp/dashboard/')
         self.assertEqual(dash.status_code, 200)
         self.assertContains(dash, 'BunShai TECHNOHUB')
+
+
+class SiteMetricsAndUiRegressionTests(TestCase):
+    def test_site_metrics_defaults_and_admin_update(self):
+        from main.models import SiteMetrics
+
+        metrics = SiteMetrics.get_solo()
+        self.assertEqual(
+            (
+                metrics.projects_delivered,
+                metrics.happy_clients,
+                metrics.countries_served,
+                metrics.years_experience,
+            ),
+            (46, 58, 10, 4),
+        )
+
+        home_resp = self.client.get('/')
+        self.assertEqual(home_resp.status_code, 200)
+        self.assertContains(home_resp, 'data-target="46">46+</h3>')
+        self.assertContains(home_resp, 'data-target="58">58+</h3>')
+        self.assertContains(home_resp, 'data-target="10">10+</h3>')
+        self.assertContains(home_resp, 'data-target="4">4+</h3>')
+
+        # Updating SiteMetrics in DB updates rendered pages without code edits
+        metrics.projects_delivered = 72
+        metrics.happy_clients = 89
+        metrics.countries_served = 14
+        metrics.years_experience = 6
+        metrics.save()
+
+        updated_home = self.client.get('/')
+        self.assertContains(updated_home, 'data-target="72">72+</h3>')
+        self.assertContains(updated_home, 'data-target="89">89+</h3>')
+        self.assertContains(updated_home, 'data-target="14">14+</h3>')
+        self.assertContains(updated_home, 'data-target="6">6+</h3>')
+
+        about_resp = self.client.get('/about/')
+        self.assertContains(about_resp, '<h3>72+</h3>')
+        self.assertContains(about_resp, '<h3>89+</h3>')
+        self.assertContains(about_resp, '<h3>14+</h3>')
+
+    def test_footer_copyright_and_inspect_protection_script(self):
+        resp = self.client.get('/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'BunShai TECHNOHUB®. All rights reserved.')
+        self.assertNotContains(resp, 'Crafted with')
+        self.assertContains(resp, 'js/security.js')
+        sec_resp = self.client.get('/static/js/security.js')
+        self.assertEqual(sec_resp.status_code, 200)
+        self.assertContains(sec_resp, 'contextmenu')
+
