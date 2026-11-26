@@ -152,10 +152,10 @@ EMAIL_BACKEND = ('django.core.mail.backends.smtp.EmailBackend' if _has_real_smtp
                  else 'django.core.mail.backends.console.EmailBackend')
 EMAIL_TIMEOUT = 10
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
-CONTACT_EMAIL = "contact@bunshaitechnohub.com"
-SUPPORT_EMAIL = "support@bunshaitechnohub.com"
-INFO_EMAIL = "info@bunshaitechnohub.com"
-ADMIN_EMAIL = "admin@bunshaitechnohub.com"
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", EMAIL_HOST_USER)
+SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", EMAIL_HOST_USER)
+INFO_EMAIL = os.getenv("INFO_EMAIL", EMAIL_HOST_USER)
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", EMAIL_HOST_USER)
 
 # Google Sheets Settings
 GOOGLE_SHEETS_CREDENTIALS = BASE_DIR / 'google_credentials.json'
@@ -180,11 +180,11 @@ SITE_ADDRESS = "Global / Remote-first Company"
 SITE_COUNTRY = "India"
 
 # Social Media
-SITE_FACEBOOK = "https://www.facebook.com/share/1DFuBTBXN2/"
-SITE_YOUTUBE = "https://www.youtube.com/@Bun_Shai"
-SITE_LINKEDIN = "https://www.linkedin.com/company/bunshai-technohub"
-SITE_TWITTER = "https://twitter.com"
-SITE_INSTAGRAM = "https://instagram.com"
+SITE_FACEBOOK = os.getenv("SITE_FACEBOOK", "https://www.facebook.com/share/1DFuBTBXN2/")
+SITE_YOUTUBE = os.getenv("SITE_YOUTUBE", "https://www.youtube.com/@Bun_Shai")
+SITE_LINKEDIN = os.getenv("SITE_LINKEDIN", "https://www.linkedin.com/company/bunshai-technohub")
+SITE_TWITTER = os.getenv("SITE_TWITTER", "")
+SITE_INSTAGRAM = os.getenv("SITE_INSTAGRAM", "")
 
 # Business Info
 BUSINESS_HOURS_START = "9:00 AM"

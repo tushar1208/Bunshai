@@ -124,9 +124,9 @@
         <div class="email-footer">
             <p>&copy; {% now "Y" %} BunShai TECHNOHUB. All rights reserved.</p>
             <div class="footer-links">
-                <a href="https://bunshai.com">Website</a>
-                <a href="https://bunshai.com/admin">Admin Panel</a>
-                <a href="mailto:support@bunshai.com">Support</a>
+                <a href="{{ site_url|default:'/' }}">Website</a>
+                <a href="{{ admin_url|default:'/admin/' }}">Admin Panel</a>
+                <a href="mailto:{{ support_email|default:'team.bunshailogicloop@gmail.com' }}">Support</a>
             </div>
         </div>
     </div>

@@ -834,3 +834,55 @@ class SiteMetricsAndUiRegressionTests(TestCase):
         self.assertEqual(sec_resp.status_code, 200)
         self.assertContains(sec_resp, 'contextmenu')
 
+    def test_seo_links_placeholders_and_real_admin_activity(self):
+        from django.template.loader import render_to_string
+
+        home = self.client.get('/')
+        self.assertEqual(home.status_code, 200)
+        self.assertContains(home, '<link rel="canonical"')
+        self.assertContains(home, 'http://testserver/static/images/Logo1.png')
+        self.assertContains(home, 'application/ld+json')
+        self.assertContains(home, '/services/software-development/')
+        self.assertContains(home, '/services/cloud-solutions/')
+        self.assertContains(home, '/services/cybersecurity/')
+        self.assertNotContains(home, 'randomuser.me')
+
+        for path in ('/', '/about/', '/contact/', '/md-profile/', '/subscribe/'):
+            resp = self.client.get(path)
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotContains(resp, 'https://twitter.com"')
+            self.assertNotContains(resp, 'https://instagram.com"')
+            self.assertNotContains(resp, 'https://calendly.com')
+            self.assertNotContains(resp, 'careers@bunshai.com')
+
+        about = self.client.get('/about/')
+        self.assertNotContains(about, 'href="#contact"')
+
+        # Email templates should point to configured SITE_URL & live inbox
+        conf_html = render_to_string(
+            'emails/contact_confirmation.html',
+            {
+                'subscriber': {'email': 'lead@example.com'},
+                'verification_token': 'tok123456',
+                'site_name': 'BunShai TECHNOHUB',
+                'site_url': 'https://bunshai-technohub.onrender.com',
+                'support_email': 'team.bunshailogicloop@gmail.com',
+            },
+        )
+        self.assertNotIn('https://bunshai.com/blog', conf_html)
+        self.assertIn('https://bunshai-technohub.onrender.com/courses/', conf_html)
+
+        # Custom admin dashboard shows real DB activity rather than dummy john@example.com
+        ContactMessage.objects.create(
+            name='Real Lead', email='reallead@example.com', message='Interested in cloud migration.'
+        )
+        superuser = User.objects.create_superuser('dashadmin', 'dash@example.com', 'StrongPass123!')
+        rf = RequestFactory()
+        req = rf.get('/customadmin/dashboard/')
+        req.user = superuser
+        dash = custom_admin_site.dashboard_view(req)
+        self.assertEqual(dash.status_code, 200)
+        self.assertContains(dash, 'Real Lead')
+        self.assertNotContains(dash, 'john@example.com')
+
+

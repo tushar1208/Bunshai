@@ -3,6 +3,11 @@ __pycache__/
 *$py.class
 .venv/
 venv/
+.env
+.env.*
+!.env.example
+db.sqlite3
+db.sqlite3-journal
 staticfiles/
 media/
 google_credentials.json

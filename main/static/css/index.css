@@ -630,6 +630,19 @@
     object-fit: cover;
 }
 
+.author-avatar-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary), #0a0f1e);
+    color: #fde68a;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+    border: 2px solid rgba(245, 158, 11, 0.45);
+}
+
 .author-info h4 {
     color: var(--dark);
     margin-bottom: 5px;

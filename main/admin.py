@@ -290,7 +290,46 @@ class CustomAdminSite(admin.AdminSite):
     
     def dashboard_view(self, request):
         thirty_days_ago = timezone.now() - timedelta(days=30)
-        
+
+        recent_activities = []
+        for sub in Subscriber.objects.order_by('-subscribed_at')[:3]:
+            recent_activities.append({
+                'icon': 'fas fa-user-plus',
+                'text': f'New subscriber registered: {sub.email}',
+                'timestamp': sub.subscribed_at,
+            })
+        for msg in ContactMessage.objects.order_by('-date_sent')[:3]:
+            recent_activities.append({
+                'icon': 'fas fa-comment',
+                'text': f'New contact message from {msg.name}',
+                'timestamp': msg.date_sent,
+            })
+        for enr in CourseEnrollment.objects.order_by('-created_at')[:3]:
+            recent_activities.append({
+                'icon': 'fas fa-graduation-cap',
+                'text': f'Course enrollment: {enr.name} ({enr.course_title})',
+                'timestamp': enr.created_at,
+            })
+        for prop in ProposalRequest.objects.order_by('-created_at')[:2]:
+            recent_activities.append({
+                'icon': 'fas fa-file-contract',
+                'text': f'Proposal request from {prop.name} ({prop.get_service_display()})',
+                'timestamp': prop.created_at,
+            })
+        for app in CareerApplication.objects.order_by('-applied_at')[:2]:
+            recent_activities.append({
+                'icon': 'fas fa-briefcase',
+                'text': f'Career application from {app.name} ({app.get_position_display()})',
+                'timestamp': app.applied_at,
+            })
+        for tkt in SupportTicket.objects.order_by('-created_at')[:2]:
+            recent_activities.append({
+                'icon': 'fas fa-life-ring',
+                'text': f'Support ticket {tkt.ticket_number} from {tkt.name}',
+                'timestamp': tkt.created_at,
+            })
+        recent_activities.sort(key=lambda item: item['timestamp'], reverse=True)
+
         context = {
             'title': 'Dashboard',
             'total_contacts': ContactMessage.objects.count(),
@@ -308,6 +347,7 @@ class CustomAdminSite(admin.AdminSite):
             'recent_chatbot_sessions': ChatbotSession.objects.filter(last_activity__gte=thirty_days_ago).count(),
             'security_events_today': SecurityLog.objects.filter(created_at__date=timezone.now().date()).count(),
             'total_whatsapp_messages': WhatsAppMessage.objects.count(),
+            'recent_activities': recent_activities[:6],
         }
         
         return render(request, 'admin/dashboard.html', context)

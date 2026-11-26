@@ -43,7 +43,7 @@
             </ul>
             
             <p style="text-align: center; margin: 30px 0;">
-                <a href="https://bunshai.com/blog" class="btn">Read Our Latest Articles</a>
+                <a href="{{ site_url|default:'https://bunshaitechnohub.com' }}/courses/" class="btn">Explore Our Courses &amp; Services</a>
             </p>
             
             <p><small>Verification Token: {{ verification_token|slice:":8" }}... (For internal use)</small></p>
@@ -52,11 +52,11 @@
         <div class="footer">
             <p>© {% now "Y" %} {{ site_name }}. All rights reserved.</p>
             <p>
-                <a href="https://bunshai.com/unsubscribe?email={{ subscriber.email|urlencode }}&token={{ verification_token }}" 
+                <a href="mailto:{{ support_email|default:'team.bunshailogicloop@gmail.com' }}?subject=Unsubscribe" 
                    style="color: #666; text-decoration: underline;">
                     Unsubscribe
                 </a> | 
-                <a href="https://bunshai.com/privacy" style="color: #666; text-decoration: underline;">
+                <a href="{{ site_url|default:'https://bunshaitechnohub.com' }}/privacy/" style="color: #666; text-decoration: underline;">
                     Privacy Policy
                 </a>
             </p>

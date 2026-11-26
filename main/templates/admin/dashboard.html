@@ -322,45 +322,27 @@
     <div class="recent-activity">
         <h2>Recent Activity</h2>
         <div class="activity-list">
+            {% for activity in recent_activities %}
             <div class="activity-item">
                 <div class="activity-icon">
-                    <i class="fas fa-user-plus"></i>
+                    <i class="{{ activity.icon }}"></i>
                 </div>
                 <div class="activity-content">
-                    <p class="activity-text">New subscriber registered: john@example.com</p>
-                    <div class="activity-time">2 minutes ago</div>
+                    <p class="activity-text">{{ activity.text }}</p>
+                    <div class="activity-time">{{ activity.timestamp|timesince }} ago</div>
                 </div>
             </div>
-            
+            {% empty %}
             <div class="activity-item">
                 <div class="activity-icon">
-                    <i class="fas fa-comment"></i>
+                    <i class="fas fa-info-circle"></i>
                 </div>
                 <div class="activity-content">
-                    <p class="activity-text">New contact message from Sarah Johnson</p>
-                    <div class="activity-time">15 minutes ago</div>
+                    <p class="activity-text">No recent submissions recorded yet.</p>
+                    <div class="activity-time">Live database feed</div>
                 </div>
             </div>
-            
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-briefcase"></i>
-                </div>
-                <div class="activity-content">
-                    <p class="activity-text">Career application submitted for Software Developer</p>
-                    <div class="activity-time">1 hour ago</div>
-                </div>
-            </div>
-            
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <div class="activity-content">
-                    <p class="activity-text">Security event detected: Multiple failed login attempts</p>
-                    <div class="activity-time">3 hours ago</div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
     

@@ -9,17 +9,18 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description"
-        content="BunShai TECHNOHUB - Leading IT consulting, software development, cloud solutions, cybersecurity, and digital marketing services provider.">
+        content="{% block meta_description %}BunShai TECHNOHUB - Leading IT consulting, software development, cloud solutions, cybersecurity, digital marketing, and live career mentorship programs.{% endblock %}">
     <meta name="keywords"
-        content="IT consulting, software development, cloud solutions, cybersecurity, digital marketing, web development, mobile apps">
+        content="IT consulting, software development, cloud solutions, cybersecurity, digital marketing, web development, mobile apps, mentorship programs">
     <meta name="author" content="BunShai TECHNOHUB">
     <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="BunShai TECHNOHUB - Your Technology Partner">
+    <meta property="og:title" content="{% block og_title %}BunShai TECHNOHUB - Your Technology Partner{% endblock %}">
     <meta property="og:description"
         content="Innovation that inspires - Creating digital experiences that transform brands and drive business growth">
-    <meta property="og:image" content="{% static 'images/Logo1.png' %}">
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/Logo1.png' %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
 
@@ -27,6 +28,24 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="BunShai TECHNOHUB">
     <meta name="twitter:description" content="Your Global Technology Partner">
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/Logo1.png' %}">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "BunShai TECHNOHUB",
+      "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/Logo1.png' %}",
+      "email": "team.bunshailogicloop@gmail.com",
+      "telephone": "+91-8091401208",
+      "sameAs": [
+        "https://www.facebook.com/share/1DFuBTBXN2/",
+        "https://www.youtube.com/@Bun_Shai",
+        "https://www.linkedin.com/company/bunshai-technohub"
+      ]
+    }
+    </script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'images/Logo1.png' %}">
@@ -368,13 +387,6 @@
                         <a href="https://www.linkedin.com/company/bunshai-technohub" target="_blank"
                             rel="noopener noreferrer" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                            aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
                         </a>
                         <a href="https://wa.me/918091401208" target="_blank" rel="noopener noreferrer"
                             aria-label="WhatsApp">

@@ -10,10 +10,14 @@ def send_form_submission_email(form_type, data):
         subject = f'New {form_type} - BunShai TECHNOHUB'
         
         # Create email content
+        site_url = getattr(settings, 'SITE_URL', 'http://127.0.0.1:8000').rstrip('/')
         context = {
             'form_type': form_type,
             'data': data,
             'site_name': settings.SITE_NAME,
+            'site_url': site_url,
+            'admin_url': f"{site_url}/admin/",
+            'support_email': getattr(settings, 'SUPPORT_EMAIL', settings.DEFAULT_FROM_EMAIL),
             'timestamp': data.get('timestamp', '')
         }
         
@@ -44,11 +48,14 @@ def send_user_confirmation_email(form_type, data):
     try:
         subject = f'Thank you for your {form_type} - BunShai TECHNOHUB'
         
+        site_url = getattr(settings, 'SITE_URL', 'http://127.0.0.1:8000').rstrip('/')
         context = {
             'form_type': form_type,
             'name': data.get('name', 'User'),
             'data': data,
-            'site_name': settings.SITE_NAME
+            'site_name': settings.SITE_NAME,
+            'site_url': site_url,
+            'support_email': getattr(settings, 'SUPPORT_EMAIL', settings.DEFAULT_FROM_EMAIL),
         }
         
         html_message = render_to_string('emails/contact_confirmation.html', context)
