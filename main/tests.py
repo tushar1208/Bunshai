@@ -886,3 +886,70 @@ class SiteMetricsAndUiRegressionTests(TestCase):
         self.assertNotContains(dash, 'john@example.com')
 
 
+class BlogAndVideoOptimizationTests(TestCase):
+    def test_hero_video_compressed_and_valid(self):
+        video_path = Path(__file__).resolve().parent / 'static' / 'video' / '3.mp4'
+        self.assertTrue(video_path.is_file())
+        size_bytes = video_path.stat().st_size
+        self.assertGreater(size_bytes, 100 * 1024, 'Compressed video unexpectedly tiny')
+        self.assertLess(size_bytes, 8 * 1024 * 1024, 'Hero video should be < 8 MB for mobile speed')
+
+    def test_blog_routes_rss_sitemap_footer_and_weekly_rotation(self):
+        from datetime import date, timedelta
+        from main.blog_data import INITIAL_BLOG_POSTS
+        from main.blog_engine import get_weekly_blog_feed
+        from main.models import BlogPost
+
+        blog_resp = self.client.get('/blog/')
+        self.assertEqual(blog_resp.status_code, 200)
+        self.assertContains(blog_resp, 'application/rss+xml')
+        self.assertContains(blog_resp, 'Spotlight')
+
+        # Footer contains Blog link across pages
+        home_resp = self.client.get('/')
+        self.assertEqual(home_resp.status_code, 200)
+        self.assertContains(home_resp, 'href="/blog/"')
+
+        # Every seeded post renders 200 with BlogPosting + FAQPage JSON-LD
+        for item in INITIAL_BLOG_POSTS:
+            detail_resp = self.client.get(f"/blog/{item['slug']}/")
+            self.assertEqual(detail_resp.status_code, 200, f"Blog {item['slug']} failed")
+            self.assertContains(detail_resp, 'BlogPosting')
+            self.assertContains(detail_resp, 'FAQPage')
+
+        # Weekly auto-rotation changes spotlight across consecutive weeks while preserving permanent URLs
+        week_one = get_weekly_blog_feed(today=date(2026, 11, 26))
+        week_two = get_weekly_blog_feed(today=date(2026, 12, 3))
+        self.assertNotEqual(
+            week_one['featured_post'].slug,
+            week_two['featured_post'].slug,
+            'Featured post should automatically rotate across consecutive ISO weeks',
+        )
+
+        # Scheduled future blog post stays hidden until publish_date arrives
+        future_post = BlogPost.objects.create(
+            title='Future Scheduled Post',
+            slug='future-scheduled-post',
+            category='AI & Automation',
+            excerpt='Scheduled article test.',
+            publish_date=date(2026, 12, 20),
+            is_published=True,
+        )
+        before_feed = get_weekly_blog_feed(today=date(2026, 12, 3))
+        after_feed = get_weekly_blog_feed(today=date(2026, 12, 21))
+        self.assertNotIn(future_post.slug, [p.slug for p in before_feed['all_posts']])
+        self.assertIn(future_post.slug, [p.slug for p in after_feed['all_posts']])
+
+        # RSS feed & sitemap.xml include blog URLs
+        rss_resp = self.client.get('/blog/feed.xml')
+        self.assertEqual(rss_resp.status_code, 200)
+        self.assertContains(rss_resp, '<rss version="2.0"')
+        self.assertContains(rss_resp, INITIAL_BLOG_POSTS[0]['slug'])
+
+        sm_resp = self.client.get('/sitemap.xml')
+        self.assertEqual(sm_resp.status_code, 200)
+        self.assertContains(sm_resp, '/blog/')
+        self.assertContains(sm_resp, INITIAL_BLOG_POSTS[0]['slug'])
+
+
+

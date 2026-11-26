@@ -20,6 +20,11 @@ urlpatterns = [
     path('courses/<slug:course_slug>/syllabus-download/', views.syllabus_download, name='syllabus_download'),
     path('courses/<slug:course_slug>/', views.course_detail, name='course_detail'),
 
+    # Weekly SEO/AEO Blog
+    path('blog/', views.blog_list, name='blog'),
+    path('blog/feed.xml', views.blog_rss_feed, name='blog_feed'),
+    path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
+
     # Contact & Forms
     path('contact/', views.contact, name='contact'),
     path('subscribe/', views.subscribe_page, name='subscribe_page'),

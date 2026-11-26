@@ -710,46 +710,30 @@
 <section class="blog-preview">
     <div class="container">
         <div class="section-header">
-            <h2>Latest Insights</h2>
-            <p class="subtitle">Stay updated with technology trends and insights</p>
+            <h2>Latest Weekly Insights</h2>
+            <p class="subtitle">Week #{{ blog_week_info.iso_week }} Edition · {{ blog_week_info.theme.theme_title }}</p>
         </div>
         
         <div class="blog-grid">
+            {% for post in latest_blog_posts %}
             <div class="blog-card">
                 <div class="blog-image">
-                    <img src="{% static 'images/courses/ai-genai.png' %}" alt="AI Trends" loading="lazy">
-                    <div class="blog-category">AI/ML</div>
+                    <img src="{% static post.cover_image %}" alt="{{ post.title }}" loading="lazy">
+                    <div class="blog-category">{{ post.category }}</div>
                 </div>
                 <div class="blog-content">
-                    <h3>AI &amp; Agentic Workflows in 2026</h3>
-                    <p>Discover how Generative AI and RAG pipelines are transforming businesses across industries.</p>
-                    <a href="{% url 'course_detail' 'ai-genai-certification' %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.excerpt|truncatewords:22 }}</p>
+                    <a href="{% url 'blog_detail' post.slug %}" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
-            
-            <div class="blog-card">
-                <div class="blog-image">
-                    <img src="{% static 'images/courses/cloud-computing.png' %}" alt="Cloud Computing" loading="lazy">
-                    <div class="blog-category">Cloud</div>
-                </div>
-                <div class="blog-content">
-                    <h3>Multi-Cloud Migration Strategies</h3>
-                    <p>Best practices for AWS, Azure, Terraform, and Kubernetes cost optimization.</p>
-                    <a href="{% url 'course_detail' 'cloud-computing-aws-azure' %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <div class="blog-card">
-                <div class="blog-image">
-                    <img src="{% static 'images/courses/cyber-security.png' %}" alt="Cybersecurity" loading="lazy">
-                    <div class="blog-category">Security</div>
-                </div>
-                <div class="blog-content">
-                    <h3>Modern Cybersecurity &amp; VAPT Defense</h3>
-                    <p>Essential offensive and SOC security practices every engineering team needs.</p>
-                    <a href="{% url 'course_detail' 'ethical-hacking-bootcamp' %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
+            {% endfor %}
+        </div>
+
+        <div style="text-align:center;margin-top:34px;">
+            <a href="{% url 'blog' %}" class="btn-primary">
+                <i class="fas fa-newspaper"></i> Explore Weekly Blog &amp; Insights
+            </a>
         </div>
     </div>
 </section>

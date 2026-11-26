@@ -547,6 +547,24 @@ class SiteMetricsAdmin(BaseAdmin):
         return super().changelist_view(request, extra_context=extra_context)
 
 
+@admin.register(BlogPost)
+class BlogPostAdmin(BaseAdmin):
+    list_display = (
+        'title',
+        'category',
+        'primary_keyword',
+        'is_published',
+        'publish_date',
+        'rotation_order',
+        'views_count',
+    )
+    list_editable = ('is_published', 'publish_date', 'rotation_order')
+    list_filter = ('category', 'is_published', 'publish_date')
+    search_fields = ('title', 'slug', 'primary_keyword', 'tags', 'excerpt')
+    prepopulated_fields = {'slug': ('title',)}
+    readonly_fields = ('views_count', 'created_at', 'updated_at')
+
+
 custom_admin_site.register(ChatbotUnanswered, ChatbotUnansweredAdmin)
 custom_admin_site.register(SupportTicket, SupportTicketAdmin)
 custom_admin_site.register(CourseEnrollment, CourseEnrollmentAdmin)
@@ -556,3 +574,4 @@ custom_admin_site.register(WhatsAppConversation, WhatsAppConversationAdmin)
 custom_admin_site.register(WhatsAppAutoReplyRule, WhatsAppAutoReplyRuleAdmin)
 custom_admin_site.register(WhatsAppScheduledMessage, WhatsAppScheduledMessageAdmin)
 custom_admin_site.register(SiteMetrics, SiteMetricsAdmin)
+custom_admin_site.register(BlogPost, BlogPostAdmin)

@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Weekly Tech, AI &amp; SEO Blog - BunShai TECHNOHUB{% endblock %}
+{% block meta_description %}Read BunShai TECHNOHUB's weekly refreshed guides on Agentic AI, SEO &amp; AEO, Cloud FinOps, Full Stack Engineering, Cybersecurity VAPT, and Data Analytics.{% endblock %}
+{% block og_title %}BunShai TECHNOHUB Weekly Insights &amp; SEO Tech Blog{% endblock %}
+{% block breadcrumb_title %}Blog &amp; Insights{% endblock %}
+{% block page_header %}
+<div class="compact-breadcrumb-bar">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Blog &amp; Insights</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="alternate" type="application/rss+xml" title="BunShai TECHNOHUB Weekly Blog RSS" href="{% url 'blog_feed' %}">
+<link rel="stylesheet" href="{% static 'css/blog.css' %}">
+<script type="application/ld+json">{{ blog_schema_json|safe }}</script>
+{% endblock %}
+
+{% block content %}
+<section class="blog-hero">
+    <div class="container">
+        <div class="blog-hero-inner">
+            <span class="blog-week-pill">
+                <i class="fas fa-sync-alt"></i>
+                Week #{{ week_info.iso_week }} Edition · Auto-Refreshes Every Week ({{ week_info.days_until_refresh }}d left)
+            </span>
+            <h1>Insights That Drive Traffic, Rankings &amp; Engineering Growth</h1>
+            <p class="blog-hero-lead">
+                Practical playbooks across Agentic AI, SEO &amp; Answer Engine Optimization, Cloud FinOps, Cybersecurity, and Full Stack Engineering — automatically updated every week to keep you ahead.
+            </p>
+
+            <form method="get" action="{% url 'blog' %}" class="blog-search-form" role="search">
+                {% if selected_category %}
+                <input type="hidden" name="category" value="{{ selected_category }}">
+                {% endif %}
+                <input type="search" name="q" value="{{ search_query }}" placeholder="Search articles by keyword (e.g. SEO, RAG, Cloud FinOps, VAPT)..." aria-label="Search blog articles">
+                <button type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+
+            <div class="blog-hero-meta">
+                <span><i class="fas fa-layer-group"></i> {{ total_count }} Pillar Guides</span>
+                <span><i class="fas fa-calendar-week"></i> Window: {{ week_info.week_start|date:"M d" }} – {{ week_info.week_end|date:"M d, Y" }}</span>
+                <span><i class="fas fa-clock"></i> Next Weekly Spotlight: {{ week_info.next_refresh_date|date:"M d, Y" }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="weekly-digest-band">
+    <div class="container">
+        <div class="weekly-digest-inner">
+            <div class="weekly-digest-left">
+                <span class="weekly-digest-icon"><i class="fas fa-compass"></i></span>
+                <div>
+                    <strong>This Week's Focus: {{ week_info.theme.theme_title }}</strong>
+                    <span>{{ week_info.theme.summary }}</span>
+                </div>
+            </div>
+            <a href="{% url 'blog_feed' %}" target="_blank" rel="noopener" class="weekly-rss-link">
+                <i class="fas fa-rss"></i> Subscribe RSS Feed
+            </a>
+        </div>
+    </div>
+</div>
+
+<section class="blog-main-section">
+    <div class="container">
+        {% if featured_post and not selected_category and not search_query %}
+        <article class="featured-spotlight">
+            <div class="featured-media">
+                <img src="{% static featured_post.cover_image %}" alt="{{ featured_post.title }}" loading="eager">
+                <div class="featured-badges">
+                    <span class="spotlight-badge"><i class="fas fa-fire"></i> Week #{{ week_info.iso_week }} Spotlight</span>
+                    <span class="cat-pill-dark">{{ featured_post.category }}</span>
+                </div>
+            </div>
+            <div class="featured-body">
+                <div class="featured-meta-line">
+                    <span><i class="fas fa-user-edit"></i> {{ featured_post.author_name }}</span>
+                    <span><i class="fas fa-clock"></i> {{ featured_post.reading_time }} min read</span>
+                    <span><i class="fas fa-calendar-alt"></i> {{ featured_post.publish_date|date:"M d, Y" }}</span>
+                </div>
+                <h2>{{ featured_post.title }}</h2>
+                <p>{{ featured_post.excerpt }}</p>
+                <div class="blog-tags-row">
+                    {% for tag in featured_post.tag_list|slice:":4" %}
+                    <span class="blog-tag-chip">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <div>
+                    <a href="{% url 'blog_detail' featured_post.slug %}" class="btn-primary">
+                        <i class="fas fa-book-open"></i> Read Spotlight Guide
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endif %}
+
+        <div class="blog-filter-bar" aria-label="Filter articles by category">
+            <a href="{% url 'blog' %}{% if search_query %}?q={{ search_query|urlencode }}{% endif %}"
+               class="blog-filter-pill {% if not selected_category %}active{% endif %}">
+                <span>All Topics</span>
+                <span class="blog-filter-count">{{ total_count }}</span>
+            </a>
+            {% for cat in categories %}
+            <a href="{% url 'blog' %}?category={{ cat.name|urlencode }}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}"
+               class="blog-filter-pill {% if selected_category|lower == cat.name|lower %}active{% endif %}">
+                <span>{{ cat.name }}</span>
+                <span class="blog-filter-count">{{ cat.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if posts %}
+        <div class="articles-grid">
+            {% for post in posts %}
+            <article class="article-card">
+                <div class="article-thumb">
+                    <a href="{% url 'blog_detail' post.slug %}">
+                        <img src="{% static post.cover_image %}" alt="{{ post.title }}" loading="lazy">
+                    </a>
+                    <span class="article-cat-tag">{{ post.category }}</span>
+                </div>
+                <div class="article-card-body">
+                    <div class="article-meta-row">
+                        <span><i class="fas fa-clock"></i> {{ post.reading_time }} min read</span>
+                        <span><i class="fas fa-calendar-alt"></i> {{ post.publish_date|date:"M d, Y" }}</span>
+                    </div>
+                    <h3><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></h3>
+                    <p>{{ post.excerpt }}</p>
+                    <div class="article-card-footer">
+                        <a href="{% url 'blog_detail' post.slug %}" class="article-read-btn">
+                            Read Guide <i class="fas fa-arrow-right"></i>
+                        </a>
+                        {% if post.primary_keyword %}
+                        <span class="article-kw-pill" title="{{ post.primary_keyword }}">{{ post.primary_keyword }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="blog-empty-box">
+            <h3>No articles matched "{{ search_query }}"</h3>
+            <p style="color:#64748b;margin:10px 0 22px;">Try clearing your search filter or browsing another engineering category.</p>
+            <a href="{% url 'blog' %}" class="btn-primary">
+                <i class="fas fa-undo"></i> View All Weekly Articles
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="cta-section" style="padding:68px 0;text-align:center;">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Want Higher Rankings, Faster Software, or Custom AI?</h2>
+            <p>Turn these playbooks into measurable business results with BunShai TECHNOHUB's engineering and growth teams.</p>
+            <div class="cta-buttons" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                <button type="button" class="btn-primary" onclick="showProposalPopup()">
+                    <i class="fas fa-rocket"></i> Request Free Consultation
+                </button>
+                <a href="{% url 'courses' %}" class="btn-secondary">
+                    <i class="fas fa-graduation-cap"></i> Explore 14 Live Courses
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

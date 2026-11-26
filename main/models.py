@@ -475,3 +475,57 @@ class SiteMetrics(models.Model):
         except Exception:  # noqa: BLE001 - safe fallback before migrations run
             return cls()
 
+
+class BlogPost(models.Model):
+    """SEO/AEO pillar article with weekly auto-rotation spotlight support."""
+
+    title = models.CharField(max_length=220)
+    slug = models.SlugField(max_length=220, unique=True)
+    category = models.CharField(max_length=80, db_index=True)
+    excerpt = models.TextField(max_length=400)
+    content_sections = models.JSONField(
+        default=list,
+        help_text="List of {heading, body, bullets, tip} dicts",
+    )
+    faqs = models.JSONField(
+        default=list,
+        help_text="List of {q, a} dicts for FAQPage schema",
+    )
+    cover_image = models.CharField(max_length=200, default='images/courses/ai-genai.png')
+    primary_keyword = models.CharField(max_length=160, blank=True)
+    meta_title = models.CharField(max_length=220, blank=True)
+    meta_description = models.CharField(max_length=320, blank=True)
+    tags = models.CharField(max_length=260, blank=True, help_text="Comma-separated SEO tags")
+    author_name = models.CharField(max_length=120, default='BunShai Editorial Team')
+    author_role = models.CharField(max_length=120, default='Technology & Growth Architects')
+    reading_time = models.PositiveSmallIntegerField(default=6)
+    related_service_slug = models.CharField(max_length=80, blank=True)
+    related_course_slug = models.CharField(max_length=120, blank=True)
+    rotation_order = models.PositiveIntegerField(default=0)
+    is_published = models.BooleanField(default=True, db_index=True)
+    publish_date = models.DateField(default=timezone.localdate, db_index=True)
+    views_count = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['rotation_order', '-publish_date', '-id']
+        verbose_name = 'Blog Post'
+        verbose_name_plural = 'Blog Posts'
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def tag_list(self):
+        return [t.strip() for t in self.tags.split(',') if t.strip()]
+
+    @property
+    def seo_title(self):
+        return self.meta_title or self.title
+
+    @property
+    def seo_description(self):
+        return self.meta_description or self.excerpt
+
+

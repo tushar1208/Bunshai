@@ -3,19 +3,24 @@ import logging
 import os
 import threading
 import uuid
-from datetime import datetime
+from datetime import datetime, time as dt_time
+from email.utils import format_datetime
+from xml.sax.saxutils import escape as xml_escape
 
 from django.conf import settings
 from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
+from django.db.models import F
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_POST
 from ipware import get_client_ip
 
+from .blog_engine import ensure_blog_seeded, get_week_context, get_weekly_blog_feed
 from .courses_data import COURSE_CATEGORIES, COURSES, COURSES_BY_SLUG
 from .forms import (
     CareerApplicationForm, ContactForm, CourseEnrollmentForm, ProposalRequestForm,
@@ -23,8 +28,8 @@ from .forms import (
 )
 from .google_sheets import save_to_google_sheet
 from .models import (
-    ChatbotMessage, ChatbotSession, ChatbotUnanswered, ContactMessage, PageView, Subscriber,
-    SupportTicket, SyllabusDownload,
+    BlogPost, ChatbotMessage, ChatbotSession, ChatbotUnanswered, ContactMessage, PageView,
+    Subscriber, SupportTicket, SyllabusDownload,
 )
 from .syllabus_pdf import (
     generate_course_syllabus_pdf, generate_privacy_policy_pdf, generate_terms_pdf,
@@ -116,10 +121,184 @@ def rate_limited(request, action, limit=10):
 
 
 # ------------------------------------------------------------ static pages
+SERVICE_DISPLAY_NAMES = {
+    'it-consulting': 'IT Consulting & AI Strategy',
+    'digital-marketing': 'Digital Marketing, SEO & AEO',
+    'cloud-solutions': 'Cloud Solutions & FinOps',
+    'software-development': 'Software & Web Development',
+    'cybersecurity': 'Cybersecurity & VAPT Defense',
+    'data-analytics': 'Data Analytics & BI Consulting',
+}
+
+
 @ensure_csrf_cookie
 def home(request):
     log_page_view(request)
-    return render(request, 'index.html')
+    blog_feed = get_weekly_blog_feed()
+    return render(request, 'index.html', {
+        'latest_blog_posts': blog_feed['trending_posts'],
+        'blog_week_info': blog_feed['week_info'],
+    })
+
+
+@ensure_csrf_cookie
+def blog_list(request):
+    log_page_view(request)
+    selected_category = request.GET.get('category', '').strip()
+    search_query = request.GET.get('q', '').strip()
+    feed = get_weekly_blog_feed(category=selected_category, query=search_query)
+
+    base_url = f"{request.scheme}://{request.get_host()}"
+    blog_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Blog',
+        'name': 'BunShai TECHNOHUB Weekly Insights & SEO Tech Blog',
+        'description': 'Weekly updated engineering, AI automation, Cloud FinOps, Cybersecurity, Data Analytics, and SEO/AEO growth guides.',
+        'url': f"{base_url}/blog/",
+        'publisher': {
+            '@type': 'Organization',
+            'name': 'BunShai TECHNOHUB',
+            'url': f"{base_url}/",
+        },
+        'blogPost': [
+            {
+                '@type': 'BlogPosting',
+                'headline': p.title,
+                'description': p.seo_description,
+                'url': f"{base_url}/blog/{p.slug}/",
+                'datePublished': p.publish_date.isoformat(),
+                'author': {'@type': 'Person', 'name': p.author_name},
+            }
+            for p in feed['all_posts'][:6]
+        ],
+    }
+
+    return render(request, 'blog.html', {
+        'featured_post': feed['featured_post'],
+        'posts': feed['posts'],
+        'categories': feed['categories'],
+        'selected_category': selected_category,
+        'search_query': search_query,
+        'week_info': feed['week_info'],
+        'total_count': feed['total_count'],
+        'blog_schema_json': json.dumps(blog_schema),
+    })
+
+
+@ensure_csrf_cookie
+def blog_detail(request, slug):
+    log_page_view(request)
+    ensure_blog_seeded()
+    today = timezone.localdate()
+    post = get_object_or_404(
+        BlogPost,
+        slug=slug,
+        is_published=True,
+        publish_date__lte=today,
+    )
+    BlogPost.objects.filter(pk=post.pk).update(views_count=F('views_count') + 1)
+
+    week_info = get_week_context(today)
+    all_live = get_weekly_blog_feed(today=today)['all_posts']
+    same_cat = [p for p in all_live if p.slug != post.slug and p.category == post.category]
+    other_cat = [p for p in all_live if p.slug != post.slug and p.category != post.category]
+    related_posts = (same_cat + other_cat)[:3]
+
+    related_course = COURSES_BY_SLUG.get(post.related_course_slug)
+    related_service_title = SERVICE_DISPLAY_NAMES.get(post.related_service_slug, '')
+
+    base_url = f"{request.scheme}://{request.get_host()}"
+    post_url = f"{base_url}/blog/{post.slug}/"
+    cover_url = f"{base_url}{settings.STATIC_URL}{post.cover_image}"
+
+    schemas = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            'mainEntityOfPage': {'@type': 'WebPage', '@id': post_url},
+            'headline': post.seo_title,
+            'description': post.seo_description,
+            'image': [cover_url],
+            'keywords': post.tags,
+            'articleSection': post.category,
+            'datePublished': post.publish_date.isoformat(),
+            'dateModified': post.updated_at.date().isoformat(),
+            'author': {'@type': 'Person', 'name': post.author_name},
+            'publisher': {
+                '@type': 'Organization',
+                'name': 'BunShai TECHNOHUB',
+                'logo': {
+                    '@type': 'ImageObject',
+                    'url': f"{base_url}{settings.STATIC_URL}images/Logo1.png",
+                },
+            },
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+                {'@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': f"{base_url}/"},
+                {'@type': 'ListItem', 'position': 2, 'name': 'Blog', 'item': f"{base_url}/blog/"},
+                {'@type': 'ListItem', 'position': 3, 'name': post.title, 'item': post_url},
+            ],
+        },
+    ]
+    if post.faqs:
+        schemas.append({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            'mainEntity': [
+                {
+                    '@type': 'Question',
+                    'name': item.get('q', ''),
+                    'acceptedAnswer': {'@type': 'Answer', 'text': item.get('a', '')},
+                }
+                for item in post.faqs
+            ],
+        })
+
+    return render(request, 'blog_detail.html', {
+        'post': post,
+        'week_info': week_info,
+        'related_posts': related_posts,
+        'related_course': related_course,
+        'related_service_title': related_service_title,
+        'post_schemas_json': json.dumps(schemas),
+    })
+
+
+@require_GET
+def blog_rss_feed(request):
+    feed = get_weekly_blog_feed()
+    base_url = f"{request.scheme}://{request.get_host()}"
+    items_xml = []
+    tz = timezone.get_current_timezone()
+    for p in feed['all_posts']:
+        pub_dt = timezone.make_aware(datetime.combine(p.publish_date, dt_time(9, 0)), tz)
+        link = f"{base_url}/blog/{p.slug}/"
+        items_xml.append(
+            f"<item>"
+            f"<title>{xml_escape(p.title)}</title>"
+            f"<link>{xml_escape(link)}</link>"
+            f"<guid isPermaLink=\"true\">{xml_escape(link)}</guid>"
+            f"<category>{xml_escape(p.category)}</category>"
+            f"<description>{xml_escape(p.seo_description)}</description>"
+            f"<pubDate>{xml_escape(format_datetime(pub_dt))}</pubDate>"
+            f"</item>"
+        )
+    rss = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        '<channel>\n'
+        f'<title>BunShai TECHNOHUB Weekly Insights</title>\n'
+        f'<link>{xml_escape(base_url)}/blog/</link>\n'
+        f'<atom:link href="{xml_escape(base_url)}/blog/feed.xml" rel="self" type="application/rss+xml"/>\n'
+        '<description>Weekly SEO, AI, Cloud, Security, and Software Engineering articles from BunShai TECHNOHUB.</description>\n'
+        '<language>en-us</language>\n'
+        + '\n'.join(items_xml)
+        + '\n</channel>\n</rss>'
+    )
+    return HttpResponse(rss, content_type='application/rss+xml; charset=utf-8')
 
 
 @ensure_csrf_cookie
