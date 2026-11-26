@@ -951,5 +951,26 @@ class BlogAndVideoOptimizationTests(TestCase):
         self.assertContains(sm_resp, '/blog/')
         self.assertContains(sm_resp, INITIAL_BLOG_POSTS[0]['slug'])
 
+    def test_brand_logo_and_favicon_assets(self):
+        img_root = Path(__file__).resolve().parent / 'static' / 'images'
+        for name in ('Logo1.png', 'Logo1-dark.png', 'favicon.ico', 'favicon.png', 'apple-touch-icon.png'):
+            p = img_root / name
+            self.assertTrue(p.is_file() and p.stat().st_size > 1000, f'Missing or empty brand asset {name}')
+
+        home = self.client.get('/')
+        self.assertContains(home, 'images/favicon.ico')
+        self.assertContains(home, 'images/favicon.png')
+        self.assertContains(home, 'images/apple-touch-icon.png')
+
+        fav_redirect = self.client.get('/favicon.ico')
+        self.assertEqual(fav_redirect.status_code, 301)
+        self.assertIn('images/favicon.ico', fav_redirect['Location'])
+
+        course_resp = self.client.get(f"/courses/{COURSES[0]['slug']}/")
+        self.assertContains(course_resp, 'images/Logo1-dark.png')
+        cp_resp = self.client.get('/company-profile/')
+        self.assertContains(cp_resp, 'images/Logo1-dark.png')
+
+
 
 
