@@ -1,8 +1,17 @@
+import logging
 import os
 
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
+from django.db import IntegrityError, OperationalError, ProgrammingError, close_old_connections
+
+
+def _clean_env(name):
+    val = os.getenv(name, '').strip()
+    if len(val) >= 2 and val[0] == val[-1] and val[0] in ('"', "'"):
+        val = val[1:-1].strip()
+    return val
 
 
 def sync_env_superuser():
@@ -10,8 +19,8 @@ def sync_env_superuser():
     Create or sync a Django superuser from DJANGO_SUPERUSER_* env vars.
     Concurrency-safe for multi-worker Gunicorn boot; returns (status, username, fields).
     """
-    username = os.getenv('DJANGO_SUPERUSER_USERNAME', '').strip()
-    email = os.getenv('DJANGO_SUPERUSER_EMAIL', '').strip()
+    username = _clean_env('DJANGO_SUPERUSER_USERNAME')
+    email = _clean_env('DJANGO_SUPERUSER_EMAIL')
     password = os.getenv('DJANGO_SUPERUSER_PASSWORD', '').strip()
 
     if not (username and password):
@@ -50,6 +59,33 @@ def sync_env_superuser():
         return ('synced', username, update_fields)
 
     return ('unchanged', username, [])
+
+
+def bootstrap_production_superuser(logger_name='bunshai_technohub.startup'):
+    """
+    Ensure migrations are applied if starting against an unmigrated DB and sync
+    the superuser from environment variables without crashing WSGI/ASGI startup.
+    """
+    log = logging.getLogger(logger_name)
+    try:
+        try:
+            status, username, fields = sync_env_superuser()
+        except (OperationalError, ProgrammingError):
+            log.info('Database tables missing on startup; running pending migrations first.')
+            call_command('migrate', interactive=False, verbosity=0)
+            status, username, fields = sync_env_superuser()
+
+        if status == 'created':
+            log.info('Created superuser "%s" on startup.', username)
+        elif status == 'synced':
+            log.info('Synced superuser "%s" on startup (%s).', username, ', '.join(fields))
+    except Exception as exc:  # noqa: BLE001
+        log.warning('Startup superuser sync skipped: %s', exc)
+    finally:
+        try:
+            close_old_connections()
+        except Exception:  # noqa: BLE001
+            pass
 
 
 class Command(BaseCommand):

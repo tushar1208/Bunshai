@@ -36,12 +36,21 @@ def _append_unique(target, item):
         target.append(item)
 
 
+def _env_bool(name, default=False):
+    val = os.getenv(name)
+    if val is None:
+        return default
+    return val.strip().lower() in ('1', 'true', 'yes', 'on')
+
+
 # Security Settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-insecure-key-change-me-in-production')
 RENDER_EXTERNAL_HOSTNAME = _normalize_host(os.getenv('RENDER_EXTERNAL_HOSTNAME', ''))
-CUSTOM_DOMAIN = _normalize_host(os.getenv('CUSTOM_DOMAIN', ''))
+CUSTOM_DOMAIN = _normalize_host(os.getenv('CUSTOM_DOMAIN', '')) or (
+    'bunshaitechnohub.com' if os.getenv('RENDER') else ''
+)
 CANONICAL_HOST = _normalize_host(os.getenv('CANONICAL_HOST', '')) or CUSTOM_DOMAIN
-ENFORCE_CUSTOM_DOMAIN = os.getenv('ENFORCE_CUSTOM_DOMAIN', 'False') == 'True'
+ENFORCE_CUSTOM_DOMAIN = _env_bool('ENFORCE_CUSTOM_DOMAIN', False)
 
 ALLOWED_HOSTS = []
 for _raw_host in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(','):
@@ -52,7 +61,7 @@ _append_unique(ALLOWED_HOSTS, RENDER_EXTERNAL_HOSTNAME)
 for _variant in _domain_variants(CUSTOM_DOMAIN) + _domain_variants(CANONICAL_HOST):
     _append_unique(ALLOWED_HOSTS, _variant)
 
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = _env_bool('DEBUG', True)
 if DEBUG:
     _append_unique(ALLOWED_HOSTS, '*')
 
@@ -126,11 +135,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bunshai_technohub.wsgi.application'
 
 # Database
+_database_url = os.getenv('DATABASE_URL', '')
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
         conn_health_checks=True,
+        ssl_require='render.com' in _database_url,
     )
 }
 
@@ -192,7 +203,7 @@ if not DEBUG:
 # Email settings (credentials come from .env, never hard-code them)
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_USE_TLS = _env_bool('EMAIL_USE_TLS', True)
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'team.bunshailogicloop@gmail.com')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 _has_real_smtp = bool(EMAIL_HOST_PASSWORD) and 'your-app-password' not in EMAIL_HOST_PASSWORD
@@ -277,8 +288,8 @@ LOGGING = {
 }
 
 # WhatsApp Cloud API Automation Settings
-WHATSAPP_ENABLED = os.getenv('WHATSAPP_ENABLED', 'True') == 'True'
-WHATSAPP_DRY_RUN = os.getenv('WHATSAPP_DRY_RUN', 'True') == 'True'
+WHATSAPP_ENABLED = _env_bool('WHATSAPP_ENABLED', True)
+WHATSAPP_DRY_RUN = _env_bool('WHATSAPP_DRY_RUN', True)
 WHATSAPP_API_VERSION = os.getenv('WHATSAPP_API_VERSION', 'v21.0').strip()
 WHATSAPP_PHONE_NUMBER_ID = os.getenv('WHATSAPP_PHONE_NUMBER_ID', '').strip()
 WHATSAPP_ACCESS_TOKEN = os.getenv('WHATSAPP_ACCESS_TOKEN', '').strip()
@@ -286,6 +297,6 @@ WHATSAPP_VERIFY_TOKEN = os.getenv('WHATSAPP_VERIFY_TOKEN', 'bunshai-whatsapp-ver
 WHATSAPP_APP_SECRET = os.getenv('WHATSAPP_APP_SECRET', '').strip()
 WHATSAPP_ADMIN_PHONE = os.getenv('WHATSAPP_ADMIN_PHONE', '918091401208').strip()
 WHATSAPP_DEFAULT_COUNTRY_CODE = os.getenv('WHATSAPP_DEFAULT_COUNTRY_CODE', '91').strip()
-WHATSAPP_AUTO_NOTIFY_USERS = os.getenv('WHATSAPP_AUTO_NOTIFY_USERS', 'True') == 'True'
-WHATSAPP_AUTO_NOTIFY_TEAM = os.getenv('WHATSAPP_AUTO_NOTIFY_TEAM', 'True') == 'True'
+WHATSAPP_AUTO_NOTIFY_USERS = _env_bool('WHATSAPP_AUTO_NOTIFY_USERS', True)
+WHATSAPP_AUTO_NOTIFY_TEAM = _env_bool('WHATSAPP_AUTO_NOTIFY_TEAM', True)
 WHATSAPP_API_KEY = os.getenv('WHATSAPP_API_KEY', '').strip()

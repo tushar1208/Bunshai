@@ -15,3 +15,7 @@ from django.core.asgi import get_asgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bunshai_technohub.settings')
 
 application = get_asgi_application()
+
+from main.management.commands.ensure_superuser import bootstrap_production_superuser
+
+bootstrap_production_superuser('bunshai_technohub.asgi')

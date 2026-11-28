@@ -1,62 +1,87 @@
-# Render Deployment & Custom Domain Guide — BunShai TECHNOHUB
+# Render Deployment & Custom Domain Guide — BunShai TECHNOHUB (`bunshaitechnohub.com`)
 
-This project is pre-configured for **Render Blueprint** deployment (`render.yaml` + `build.sh`) with PostgreSQL, WhiteNoise static files, `/healthz/` health checks, and automatic custom-domain support.
-
-## 1. Deploy on Render (Blueprint)
-
-1. Push your repository to GitHub (`main` branch).
-2. In the [Render Dashboard](https://dashboard.render.com/), click **New + -> Blueprint**.
-3. Connect your GitHub repository. Render reads `render.yaml` and provisions:
-   - **PostgreSQL database**: `bunshai-db` (automatically wired to `DATABASE_URL`).
-   - **Web service**: `bunshai-technohub` running Gunicorn (`buildCommand: bash build.sh`, `healthCheckPath: /healthz/`).
-4. Set your secret / optional environment variables in Render Dashboard -> **Environment**:
-   - **Email (SMTP)**:
-     - `EMAIL_HOST_PASSWORD`: 16-character Gmail App Password for `team.bunshailogicloop@gmail.com`.
-   - **Google Sheets Sync (optional)**:
-     - `GOOGLE_SHEET_ID`: Target Google Sheet ID.
-     - `GOOGLE_SHEETS_JSON`: Full contents of your service-account JSON.
-   - **Admin Bootstrap (optional, free-tier friendly without Shell access)**:
-     - `DJANGO_SUPERUSER_USERNAME`
-     - `DJANGO_SUPERUSER_EMAIL`
-     - `DJANGO_SUPERUSER_PASSWORD`
-     *(Used once by `python manage.py ensure_superuser` during `build.sh`; safe to leave set or remove after first deploy.)*
-   - **WhatsApp Cloud API (optional)**:
-     - `WHATSAPP_DRY_RUN` (`True` until Meta credentials are ready), `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`, `WHATSAPP_API_KEY`.
-5. Wait for the first deploy to turn **Live** and verify:
-   - `https://<your-service>.onrender.com/healthz/` returns `{"status": "ok"}`.
-   - `https://<your-service>.onrender.com/admin/` loads cleanly.
+This project is pre-configured for Render with PostgreSQL, WhiteNoise static files, `/healthz/` health checks, automatic superuser sync, and custom-domain support (`bunshaitechnohub.com` + `www.bunshaitechnohub.com`).
 
 ---
 
-## 2. Connect Your Custom Domain (Apex + `www`)
+## Option A: If You Already Created the Web Service Manually on Render
 
-### Step A: Configure `CUSTOM_DOMAIN` in Render Environment
-1. In Render Dashboard -> your web service -> **Environment**:
-   - Set `CUSTOM_DOMAIN` to your bare domain (e.g. `bunshaitechnohub.com`).
-   - Leave `ENFORCE_CUSTOM_DOMAIN=False` initially until DNS + SSL are verified.
-   - *(Optional)* `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `CORS_ALLOWED_ORIGINS`, and `SITE_URL` are automatically populated from `CUSTOM_DOMAIN` (including both `example.com` and `www.example.com`). You only need to set `ALLOWED_HOSTS` / `CSRF_TRUSTED_ORIGINS` / `SITE_URL` manually if you want extra subdomains or overrides.
-2. Save changes (Render will redeploy).
+### Step 1: Ensure PostgreSQL Database Is Linked
+1. Open [Render Dashboard](https://dashboard.render.com/).
+2. If you haven't created a PostgreSQL database yet, click **New + -> PostgreSQL**, name it `bunshai-db` (Free plan), and click **Create Database**.
+3. Copy the **Internal Database URL** from `bunshai-db` -> **Info / Connections**.
+4. Open your Web Service (`bunshai-technohub`) -> **Environment** and ensure `DATABASE_URL` is set to that **Internal Database URL** (without `DATABASE_URL`, SQLite resets on every deploy).
 
-### Step B: Add Custom Domains in Render Dashboard
-1. Go to your web service -> **Settings -> Custom Domains -> + Add Custom Domain**.
+### Step 2: Check Settings -> Build & Deploy
+Open your Web Service -> **Settings** and set:
+- **Branch**: `main`
+- **Build Command**:
+  ```bash
+  bash build.sh
+  ```
+- **Start Command**:
+  ```bash
+  python manage.py migrate --no-input && python manage.py ensure_superuser && gunicorn bunshai_technohub.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120 --max-requests 1000 --max-requests-jitter 50
+  ```
+- **Health Check Path**:
+  ```text
+  /healthz/
+  ```
+
+### Step 3: Set Environment Variables
+Open your Web Service -> **Environment** and verify/add:
+
+| Key | Value |
+| --- | --- |
+| `PYTHON_VERSION` | `3.12.8` |
+| `DEBUG` | `False` |
+| `SECRET_KEY` | Click **Generate** (or paste a strong 50+ char random key — do not keep `django-insecure-...`) |
+| `DATABASE_URL` | Your Render Postgres **Internal Database URL** |
+| `CUSTOM_DOMAIN` | `bunshaitechnohub.com` |
+| `ENFORCE_CUSTOM_DOMAIN` | `False` (switch to `True` after DNS & SSL verify) |
+| `DJANGO_SUPERUSER_USERNAME` | `admin` (no quotes/spaces) |
+| `DJANGO_SUPERUSER_EMAIL` | `team.bunshailogicloop@gmail.com` |
+| `DJANGO_SUPERUSER_PASSWORD` | Your strong admin password (change from any screenshot value) |
+| `EMAIL_HOST` | `smtp.gmail.com` |
+| `EMAIL_PORT` | `587` |
+| `EMAIL_USE_TLS` | `True` |
+| `EMAIL_HOST_USER` | `team.bunshailogicloop@gmail.com` |
+| `DEFAULT_FROM_EMAIL` | `team.bunshailogicloop@gmail.com` |
+| `EMAIL_HOST_PASSWORD` | Your 16-char Gmail App Password |
+
+Optional integrations:
+- `GOOGLE_SHEET_ID` and `GOOGLE_SHEETS_JSON` (full service-account JSON)
+- `WHATSAPP_DRY_RUN` (`True` until Meta credentials are ready), `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`, `WHATSAPP_ADMIN_PHONE`, `WHATSAPP_API_KEY`
+
+> Note: `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `CORS_ALLOWED_ORIGINS`, and `SITE_URL` are automatically populated from `CUSTOM_DOMAIN` and `RENDER_EXTERNAL_HOSTNAME`.
+
+### Step 4: Deploy & Verify Logs + Admin Login
+1. Click **Save Changes** (or **Manual Deploy -> Deploy latest commit**).
+2. Open **Logs** and confirm you see:
+   - `Created superuser "admin"` / `Synced superuser "admin"` (or `on startup`).
+   - Gunicorn listening on `0.0.0.0:$PORT`.
+3. Visit `https://bunshaitechnohub.com/healthz/` -> should return `{"status": "ok"}`.
+4. Visit `https://bunshaitechnohub.com/admin/` and sign in with `DJANGO_SUPERUSER_USERNAME` (`admin`) and `DJANGO_SUPERUSER_PASSWORD`.
+
+---
+
+## Option B: Fresh Blueprint Deploy (`render.yaml`)
+1. Push your repository to GitHub (`main` branch).
+2. In Render Dashboard, click **New + -> Blueprint** and connect `tushar1208/Bunshai`.
+3. Render automatically provisions `bunshai-db` + `bunshai-technohub` with `DATABASE_URL`, `SECRET_KEY`, `CUSTOM_DOMAIN=bunshaitechnohub.com`, `build.sh`, and `/healthz/`.
+4. Fill in the prompted `sync: false` secrets (`EMAIL_HOST_PASSWORD`, `DJANGO_SUPERUSER_*`, optional Sheets/WhatsApp), wait for the deploy to turn **Live**, then connect your domain below.
+
+---
+
+## Connect `bunshaitechnohub.com` & `www.bunshaitechnohub.com`
+1. Go to Web Service -> **Settings -> Custom Domains -> + Add Custom Domain**.
 2. Add both:
-   - `yourdomain.com` (apex/root domain)
-   - `www.yourdomain.com`
-3. Render will display the exact DNS records to create at your domain registrar (GoDaddy, Namecheap, Cloudflare, Hostinger, Route53, etc.).
-
-### Step C: Update DNS Records at Your Registrar
-Create the records shown by Render (typically):
-- **Apex/Root (`@`)**:
-  - `ALIAS` / `ANAME` record (or CNAME flattening in Cloudflare) pointing `@` to `<your-service>.onrender.com`, **OR**
-  - `A` record pointing `@` to Render's static IP shown in the Custom Domains panel (commonly `216.24.57.1` — always use the exact IP shown in your Render dashboard).
-- **`www` subdomain**:
-  - `CNAME` record with Host/Name `www` pointing to `<your-service>.onrender.com`.
-- Remove any conflicting old `A`, `AAAA`, or `CNAME` records on `@` or `www`.
-- If using **Cloudflare**, start with DNS-only (**grey cloud**) until Render issues the TLS certificate, or ensure SSL mode is **Full (strict)** so there are no redirect loops.
-
-### Step D: Verify SSL & Optionally Enforce Canonical Domain
-1. Click **Verify** in Render's Custom Domains panel. Once DNS propagates, Render automatically issues a free **Let's Encrypt TLS certificate** for both `yourdomain.com` and `www.yourdomain.com`.
-2. Test `https://yourdomain.com/healthz/`, `https://yourdomain.com/`, and form/CSRF submissions.
-3. Once both domains work over HTTPS, if you want `www.yourdomain.com` and `.onrender.com` URLs to permanently 301-redirect to `https://yourdomain.com` (recommended for SEO), set in Render **Environment**:
-   - `ENFORCE_CUSTOM_DOMAIN=True`
-   - *(Optional)* `CANONICAL_HOST=www.yourdomain.com` if you prefer `www.` as the canonical host instead of the apex domain.
+   - `bunshaitechnohub.com`
+   - `www.bunshaitechnohub.com`
+3. In your domain registrar's DNS panel, create the exact records Render shows:
+   - **Root (`@`)**: `A` record to Render's IP shown in the dashboard (commonly `216.24.57.1`), or `ALIAS`/`ANAME` to `<your-service>.onrender.com`.
+   - **`www`**: `CNAME` record with Host `www` pointing to `<your-service>.onrender.com`.
+   - Remove any conflicting old `A`, `AAAA`, or `CNAME` records on `@` or `www`.
+   - If using Cloudflare, use **DNS only (grey cloud)** while issuing TLS, or SSL mode **Full (strict)**.
+4. Click **Verify** in Render so Let's Encrypt provisions SSL certificates for both hosts.
+5. Once both `https://bunshaitechnohub.com` and `https://www.bunshaitechnohub.com` load cleanly over HTTPS, optionally set `ENFORCE_CUSTOM_DOMAIN=True` in **Environment** to 301-redirect `www.` and `.onrender.com` to `https://bunshaitechnohub.com`.

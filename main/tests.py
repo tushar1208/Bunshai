@@ -1086,6 +1086,24 @@ class RenderDeploymentAndMobileMenuTests(TestCase):
         self.assertIn("window.innerWidth > 992", site_js)
         self.assertIn("scrollIntoView", site_js)
 
+    def test_env_bool_and_asgi_startup_bootstrap(self):
+        import importlib
+        import os
+        from unittest.mock import patch
+        from bunshai_technohub.settings import _env_bool
+        import bunshai_technohub.asgi as asgi_mod
+
+        with patch.dict(os.environ, {'TEST_BOOL_FLAG': 'true'}):
+            self.assertTrue(_env_bool('TEST_BOOL_FLAG', False))
+        with patch.dict(os.environ, {'TEST_BOOL_FLAG': 'FALSE'}):
+            self.assertFalse(_env_bool('TEST_BOOL_FLAG', True))
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop('TEST_BOOL_MISSING', None)
+            self.assertTrue(_env_bool('TEST_BOOL_MISSING', True))
+
+        importlib.reload(asgi_mod)
+        self.assertTrue(hasattr(asgi_mod, 'application'))
+
 
 
 

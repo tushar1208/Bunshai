@@ -24,7 +24,7 @@ services:
           name: bunshai-db
           property: connectionString
       - key: CUSTOM_DOMAIN
-        sync: false
+        value: "bunshaitechnohub.com"
       - key: ENFORCE_CUSTOM_DOMAIN
         value: "False"
       - key: ALLOWED_HOSTS
