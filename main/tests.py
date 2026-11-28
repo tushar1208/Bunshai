@@ -1058,6 +1058,15 @@ class RenderDeploymentAndMobileMenuTests(TestCase):
             self.assertEqual(admin_user.email, 'updated@bunshaitechnohub.com')
             self.assertTrue(admin_user.check_password('UpdatedRenderPass!2026'))
 
+            # Direct helper and WSGI startup import stay safe and idempotent
+            from main.management.commands.ensure_superuser import sync_env_superuser
+            import importlib
+            import bunshai_technohub.wsgi as wsgi_mod
+
+            importlib.reload(wsgi_mod)
+            self.assertEqual(sync_env_superuser(), ('unchanged', 'renderadmin', []))
+            self.assertTrue(hasattr(wsgi_mod, 'application'))
+
     def test_mobile_courses_mega_menu_responsive_rules(self):
         static_root = Path(__file__).resolve().parent / 'static'
         theme_css = (static_root / 'css' / 'theme.css').read_text(encoding='utf-8')
