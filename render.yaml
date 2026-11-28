@@ -10,7 +10,7 @@ services:
     runtime: python
     plan: free
     buildCommand: "bash build.sh"
-    startCommand: "gunicorn bunshai_technohub.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120 --max-requests 1000 --max-requests-jitter 50"
+    startCommand: "python manage.py migrate --no-input && python manage.py ensure_superuser && gunicorn bunshai_technohub.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120 --max-requests 1000 --max-requests-jitter 50"
     healthCheckPath: "/healthz/"
     envVars:
       - key: PYTHON_VERSION

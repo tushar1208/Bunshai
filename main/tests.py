@@ -1035,9 +1035,28 @@ class RenderDeploymentAndMobileMenuTests(TestCase):
             admin_user = User.objects.get(username='renderadmin')
             self.assertTrue(admin_user.is_superuser)
             self.assertTrue(admin_user.is_staff)
-            # Idempotent second run
+            # Idempotent second run (no-op when unchanged)
             call_command('ensure_superuser')
             self.assertEqual(User.objects.filter(username='renderadmin').count(), 1)
+
+            # Syncs password and restores staff/superuser/active flags if changed
+            admin_user.is_staff = False
+            admin_user.is_superuser = False
+            admin_user.is_active = False
+            admin_user.save()
+
+        with patch.dict(os.environ, {
+            'DJANGO_SUPERUSER_USERNAME': 'renderadmin',
+            'DJANGO_SUPERUSER_EMAIL': 'updated@bunshaitechnohub.com',
+            'DJANGO_SUPERUSER_PASSWORD': 'UpdatedRenderPass!2026',
+        }):
+            call_command('ensure_superuser')
+            admin_user.refresh_from_db()
+            self.assertTrue(admin_user.is_staff)
+            self.assertTrue(admin_user.is_superuser)
+            self.assertTrue(admin_user.is_active)
+            self.assertEqual(admin_user.email, 'updated@bunshaitechnohub.com')
+            self.assertTrue(admin_user.check_password('UpdatedRenderPass!2026'))
 
     def test_mobile_courses_mega_menu_responsive_rules(self):
         static_root = Path(__file__).resolve().parent / 'static'
