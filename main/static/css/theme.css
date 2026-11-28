@@ -261,43 +261,137 @@ select:focus-visible, textarea:focus-visible {
   padding-left: 14px !important;
 }
 @media (max-width: 992px) {
-  .nav-dropdown .dropdown-content {
+  .nav-dropdown .dropdown-content,
+  .nav-dropdown:hover .dropdown-content,
+  .nav-dropdown-mega .mega-dropdown-wscube,
+  .nav-dropdown-mega:hover .mega-dropdown-wscube {
     display: none;
-    position: static;
-    transform: none !important;
-    opacity: 1;
-    visibility: visible;
-    width: 100%;
+    position: static !important;
     left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border-radius: 12px !important;
+    box-sizing: border-box;
     background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: none;
     margin: 6px 0 12px;
-    max-height: 55vh;
-    overflow-y: auto;
   }
-  .nav-dropdown.open .dropdown-content { display: block; }
+  .nav-dropdown.open > .dropdown-content,
+  .nav-dropdown.open:hover > .dropdown-content,
+  .nav-dropdown-mega.open > .mega-dropdown-wscube,
+  .nav-dropdown-mega.open:hover > .mega-dropdown-wscube {
+    display: block !important;
+  }
   .nav-dropdown .dropdown-content a { color: #f8fafc !important; }
-  .mega-wscube-layout { grid-template-columns: 1fr; min-height: 0; }
+  .mega-wscube-layout {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
   .mega-sidebar {
     background: transparent;
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    padding: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    scrollbar-width: thin;
   }
-  .mega-cat-btn { color: #f8fafc; padding: 9px 10px; }
+  .mega-cat-btn {
+    flex: 0 0 auto;
+    width: auto;
+    white-space: nowrap;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .mega-arrow { display: none; }
   .mega-cat-btn-left i { color: var(--accent); }
   .mega-cat-btn.active,
-  .mega-cat-btn:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(245, 158, 11, 0.5); color: #ffffff; }
+  .mega-cat-btn:hover {
+    background: rgba(245, 158, 11, 0.22);
+    border-color: rgba(245, 158, 11, 0.75);
+    color: #ffffff;
+  }
   .mega-panels { background: transparent; padding: 12px; }
-  .mega-panel-head { flex-direction: column; border-bottom-color: rgba(255, 255, 255, 0.14); }
+  .mega-panel-head {
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom-color: rgba(255, 255, 255, 0.14);
+  }
   .mega-panel-head h5 { color: #ffffff; }
   .mega-panel-head p { color: rgba(255, 255, 255, 0.78); }
-  .mega-programs-grid { grid-template-columns: 1fr; }
-  .mega-program-card { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.14); }
-  .mega-prog-info strong { color: #ffffff; }
+  .mega-cat-view { align-self: flex-start; }
+  .mega-programs-grid { grid-template-columns: 1fr; gap: 10px; }
+  .mega-program-card {
+    display: grid !important;
+    grid-template-columns: 36px minmax(0, 1fr);
+    column-gap: 10px;
+    row-gap: 6px;
+    align-items: start;
+    padding: 11px !important;
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+  .mega-prog-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+  .mega-prog-info strong {
+    color: #ffffff;
+    font-size: 0.86rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
   .mega-prog-info small { color: rgba(255, 255, 255, 0.75); }
-  .mega-dropdown-footer { background: transparent; border-top-color: rgba(255, 255, 255, 0.14); flex-direction: column; align-items: flex-start; color: rgba(255, 255, 255, 0.8); }
+  .mega-prog-badge {
+    position: static !important;
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 0;
+  }
+  .mega-dropdown-footer {
+    background: transparent;
+    border-top-color: rgba(255, 255, 255, 0.14);
+    padding: 12px;
+    gap: 10px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    flex-direction: column;
+    align-items: stretch;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .mega-all-link {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: normal !important;
+    padding: 10px 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .compact-breadcrumb-bar { padding: 78px 0 12px; }
 }
 
 /* ---- Syllabus Download Modal ---- */

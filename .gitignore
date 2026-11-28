@@ -14,3 +14,6 @@ google_credentials.json
 *.log
 .DS_Store
 Thumbs.db
+ngrok.exe
+ngrok.zip
+nodejs.msi

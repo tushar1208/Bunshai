@@ -2,6 +2,10 @@ from django.urls import path
 from . import views, whatsapp_views
 
 urlpatterns = [
+    # Health check
+    path('healthz/', views.healthz, name='healthz'),
+    path('healthz', views.healthz),
+
     # Main pages
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),

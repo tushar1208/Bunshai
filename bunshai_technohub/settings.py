@@ -4,29 +4,75 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 
-load_dotenv()
+if not os.getenv('RENDER'):
+    load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def _normalize_host(value):
+    host = (value or '').strip().lower()
+    if not host or host == '*':
+        return host
+    if '://' in host:
+        host = host.split('://', 1)[1]
+    host = host.split('/', 1)[0].strip()
+    if ':' in host:
+        host = host.split(':', 1)[0].strip()
+    return host
+
+
+def _domain_variants(host):
+    if not host or host == '*':
+        return []
+    if host.startswith('www.'):
+        bare = host[4:]
+        return [v for v in (bare, host) if v]
+    return [host, f'www.{host}']
+
+
+def _append_unique(target, item):
+    if item and item not in target:
+        target.append(item)
+
+
 # Security Settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-insecure-key-change-me-in-production')
-RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME', '').strip()
+RENDER_EXTERNAL_HOSTNAME = _normalize_host(os.getenv('RENDER_EXTERNAL_HOSTNAME', ''))
+CUSTOM_DOMAIN = _normalize_host(os.getenv('CUSTOM_DOMAIN', ''))
+CANONICAL_HOST = _normalize_host(os.getenv('CANONICAL_HOST', '')) or CUSTOM_DOMAIN
+ENFORCE_CUSTOM_DOMAIN = os.getenv('ENFORCE_CUSTOM_DOMAIN', 'False') == 'True'
 
-ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h.strip()]
-if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+ALLOWED_HOSTS = []
+for _raw_host in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(','):
+    _host = _normalize_host(_raw_host)
+    _append_unique(ALLOWED_HOSTS, _host)
+
+_append_unique(ALLOWED_HOSTS, RENDER_EXTERNAL_HOSTNAME)
+for _variant in _domain_variants(CUSTOM_DOMAIN) + _domain_variants(CANONICAL_HOST):
+    _append_unique(ALLOWED_HOSTS, _variant)
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 if DEBUG:
-    ALLOWED_HOSTS.extend(['*'])
+    _append_unique(ALLOWED_HOSTS, '*')
 
-CSRF_TRUSTED_ORIGINS = [
-    o.strip() for o in os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',') if o.strip()
-]
-if RENDER_EXTERNAL_HOSTNAME:
-    _render_origin = f'https://{RENDER_EXTERNAL_HOSTNAME}'
-    if _render_origin not in CSRF_TRUSTED_ORIGINS:
-        CSRF_TRUSTED_ORIGINS.append(_render_origin)
+CSRF_TRUSTED_ORIGINS = []
+for _raw_origin in os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(','):
+    _append_unique(CSRF_TRUSTED_ORIGINS, _raw_origin.strip().rstrip('/'))
+
+CORS_ALLOWED_ORIGINS = []
+for _raw_origin in os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(','):
+    _append_unique(CORS_ALLOWED_ORIGINS, _raw_origin.strip().rstrip('/'))
+
+for _host in [RENDER_EXTERNAL_HOSTNAME, *_domain_variants(CUSTOM_DOMAIN), *_domain_variants(CANONICAL_HOST), *ALLOWED_HOSTS]:
+    if not _host or _host in ('localhost', '127.0.0.1', 'testserver', '*'):
+        continue
+    if _host.startswith('.'):
+        _append_unique(CSRF_TRUSTED_ORIGINS, f'https://*{_host}')
+    else:
+        _origin = f'https://{_host}'
+        _append_unique(CSRF_TRUSTED_ORIGINS, _origin)
+        _append_unique(CORS_ALLOWED_ORIGINS, _origin)
 
 # Application definition
 INSTALLED_APPS = [
@@ -46,6 +92,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'main.middleware.CanonicalDomainMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -114,6 +161,7 @@ STORAGES = {
         'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
     },
 }
+WHITENOISE_MAX_AGE = 86400 if not DEBUG else 0
 
 # Media files
 MEDIA_URL = '/media/'
@@ -135,6 +183,7 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_SSL_REDIRECT = True
+    SECURE_REDIRECT_EXEMPT = [r'^healthz/?$']
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
@@ -168,10 +217,12 @@ SITE_NAME = "BunShai TECHNOHUB"
 SITE_DESCRIPTION = "Your trusted technology partner for digital transformation"
 SITE_KEYWORDS = "IT Consulting, Software Development, Digital Marketing, Cloud Solutions"
 SITE_AUTHOR = "BunShai TECHNOHUB Team"
-SITE_URL = os.getenv(
-    'SITE_URL',
-    f'https://{RENDER_EXTERNAL_HOSTNAME}' if RENDER_EXTERNAL_HOSTNAME else 'http://127.0.0.1:8000',
+_default_site_url = (
+    f'https://{CANONICAL_HOST}'
+    if CANONICAL_HOST
+    else (f'https://{RENDER_EXTERNAL_HOSTNAME}' if RENDER_EXTERNAL_HOSTNAME else 'http://127.0.0.1:8000')
 )
+SITE_URL = os.getenv('SITE_URL', '').strip().rstrip('/') or _default_site_url
 
 # Contact Information
 SITE_EMAIL = "team.bunshailogicloop@gmail.com"
@@ -192,15 +243,38 @@ BUSINESS_HOURS_END = "6:00 PM"
 BUSINESS_DAYS = "Monday to Friday"
 EMERGENCY_CONTACT = "+91 8091401208"
 
-# CORS Settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
-if RENDER_EXTERNAL_HOSTNAME:
-    _render_cors = f'https://{RENDER_EXTERNAL_HOSTNAME}'
-    if _render_cors not in CORS_ALLOWED_ORIGINS:
-        CORS_ALLOWED_ORIGINS.append(_render_cors)
+# Logging for Render / production stdout
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '[%(levelname)s] %(asctime)s %(name)s: %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': os.getenv('LOG_LEVEL', 'INFO'),
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}
 
 # WhatsApp Cloud API Automation Settings
 WHATSAPP_ENABLED = os.getenv('WHATSAPP_ENABLED', 'True') == 'True'

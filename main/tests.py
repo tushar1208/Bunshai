@@ -972,5 +972,93 @@ class BlogAndVideoOptimizationTests(TestCase):
         self.assertContains(cp_resp, 'images/Logo1-dark.png')
 
 
+class RenderDeploymentAndMobileMenuTests(TestCase):
+    def test_healthz_endpoint_and_ssl_exempt(self):
+        before_views = PageView.objects.count()
+        resp = self.client.get('/healthz/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json(), {'status': 'ok'})
+        self.assertEqual(PageView.objects.count(), before_views)
+
+        with override_settings(
+            DEBUG=False,
+            SECURE_SSL_REDIRECT=True,
+            SECURE_REDIRECT_EXEMPT=[r'^healthz/?$'],
+            ALLOWED_HOSTS=['testserver', 'bunshaitechnohub.com'],
+        ):
+            prod_health = self.client.get('/healthz/')
+            self.assertEqual(prod_health.status_code, 200)
+            self.assertEqual(prod_health.json(), {'status': 'ok'})
+
+    def test_canonical_domain_middleware_and_production_csp(self):
+        with override_settings(
+            DEBUG=False,
+            ENFORCE_CUSTOM_DOMAIN=True,
+            CANONICAL_HOST='bunshaitechnohub.com',
+            SECURE_SSL_REDIRECT=False,
+            ALLOWED_HOSTS=['www.bunshaitechnohub.com', 'bunshaitechnohub.com', 'testserver'],
+        ):
+            redir = self.client.get('/courses/?category=ai-programs', HTTP_HOST='www.bunshaitechnohub.com')
+            self.assertEqual(redir.status_code, 301)
+            self.assertEqual(redir['Location'], 'https://bunshaitechnohub.com/courses/?category=ai-programs')
+
+            # /healthz/ must never redirect even when canonical enforcement is active
+            health = self.client.get('/healthz/', HTTP_HOST='www.bunshaitechnohub.com')
+            self.assertEqual(health.status_code, 200)
+
+            # Canonical host serves normally with updated production CSP allowing Google Maps frames
+            ok_resp = self.client.get('/', HTTP_HOST='bunshaitechnohub.com')
+            self.assertEqual(ok_resp.status_code, 200)
+            csp = ok_resp.headers.get('Content-Security-Policy', '')
+            self.assertIn('frame-src', csp)
+            self.assertIn('https://www.google.com', csp)
+            self.assertIn('https://maps.google.com', csp)
+
+    def test_ensure_superuser_command(self):
+        import os
+        from unittest.mock import patch
+
+        with patch.dict(os.environ, {
+            'DJANGO_SUPERUSER_USERNAME': '',
+            'DJANGO_SUPERUSER_EMAIL': '',
+            'DJANGO_SUPERUSER_PASSWORD': '',
+        }):
+            call_command('ensure_superuser')
+            self.assertEqual(User.objects.filter(is_superuser=True).count(), 0)
+
+        with patch.dict(os.environ, {
+            'DJANGO_SUPERUSER_USERNAME': 'renderadmin',
+            'DJANGO_SUPERUSER_EMAIL': 'admin@bunshaitechnohub.com',
+            'DJANGO_SUPERUSER_PASSWORD': 'VeryStrongRenderPass!2026',
+        }):
+            call_command('ensure_superuser')
+            admin_user = User.objects.get(username='renderadmin')
+            self.assertTrue(admin_user.is_superuser)
+            self.assertTrue(admin_user.is_staff)
+            # Idempotent second run
+            call_command('ensure_superuser')
+            self.assertEqual(User.objects.filter(username='renderadmin').count(), 1)
+
+    def test_mobile_courses_mega_menu_responsive_rules(self):
+        static_root = Path(__file__).resolve().parent / 'static'
+        theme_css = (static_root / 'css' / 'theme.css').read_text(encoding='utf-8')
+        responsive_css = (static_root / 'css' / 'responsive.css').read_text(encoding='utf-8')
+        site_js = (static_root / 'js' / 'site.js').read_text(encoding='utf-8')
+
+        self.assertIn('.nav-dropdown-mega:hover .mega-dropdown-wscube', theme_css)
+        self.assertIn('.nav-dropdown-mega.open > .mega-dropdown-wscube', theme_css)
+        self.assertIn('overflow-x: auto', theme_css)
+        self.assertIn('grid-template-columns: 36px minmax(0, 1fr)', theme_css)
+        self.assertIn('position: static !important', theme_css)
+
+        self.assertIn('justify-content: flex-start', responsive_css)
+        self.assertIn('.nav-dropdown.open > .nav-link .fa-chevron-down', responsive_css)
+
+        self.assertIn("parent.classList.toggle('open', willOpen)", site_js)
+        self.assertIn("window.innerWidth > 992", site_js)
+        self.assertIn("scrollIntoView", site_js)
+
+
+
 
 

@@ -827,3 +827,9 @@ def custom_403(request, exception=None):
 
 def custom_400(request, exception=None):
     return render(request, '400.html', status=400)
+
+
+@require_GET
+def healthz(request):
+    """Lightweight health check endpoint for Render (no DB writes)."""
+    return JsonResponse({'status': 'ok'})

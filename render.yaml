@@ -10,8 +10,8 @@ services:
     runtime: python
     plan: free
     buildCommand: "bash build.sh"
-    startCommand: "gunicorn bunshai_technohub.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120"
-    healthCheckPath: "/"
+    startCommand: "gunicorn bunshai_technohub.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120 --max-requests 1000 --max-requests-jitter 50"
+    healthCheckPath: "/healthz/"
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.8"
@@ -23,6 +23,22 @@ services:
         fromDatabase:
           name: bunshai-db
           property: connectionString
+      - key: CUSTOM_DOMAIN
+        sync: false
+      - key: ENFORCE_CUSTOM_DOMAIN
+        value: "False"
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: SITE_URL
+        sync: false
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
       - key: EMAIL_HOST
         value: "smtp.gmail.com"
       - key: EMAIL_PORT

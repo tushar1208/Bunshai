@@ -1770,3 +1770,19 @@
     .cert-border-gold { padding: 18px 14px; }
     .cert-footer-row { grid-template-columns: 1fr 1fr; gap: 16px; }
 }
+
+@media (max-width: 576px) {
+    .cat-pill {
+        padding: 7px 13px;
+        font-size: 0.84rem;
+    }
+    .course-media-top {
+        flex-wrap: wrap;
+    }
+    .course-card-body {
+        padding: 18px 16px 14px;
+    }
+    .course-card-footer {
+        padding: 14px 16px 18px;
+    }
+}
